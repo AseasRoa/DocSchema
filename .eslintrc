@@ -1,0 +1,82 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es6": true,
+    "es2021": true,
+    "vitest-globals/env": true
+  },
+  "ignorePatterns": ["node_modules/", "dist/", ".idea/", ".vscode/", ".env"],
+  "extends": [
+    "airbnb-typescript",
+    "plugin:jsdoc/recommended",
+    "plugin:vitest/recommended",
+    "plugin:vitest-globals/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "jsdoc"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "tsconfigRootDir": ".",
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "rules": {
+    "brace-style": "off",
+    "class-methods-use-this": "off",
+    "curly": ["error", "multi-line"],
+    "eqeqeq": "error",
+    "guard-for-in": "off",
+    "indent": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "linebreak-style": ["error", "unix"],
+    "no-cond-assign": "off",
+    "no-continue": "off",
+    "no-console": "off",
+    "no-constant-condition": "off",
+    "no-extend-native": "off",
+    "no-lonely-if": "off",
+    "no-plusplus": [
+      "warn", {"allowForLoopAfterthoughts": true}
+    ],
+    "no-restricted-syntax": "off",
+    "no-tabs": "off",
+    "no-var": "error",
+    "no-unused-vars": "off",
+    "nonblock-statement-body-position": "off",
+    "prefer-destructuring": "off",
+    "semi": "off",
+    "space-infix-ops": "off",
+    "strict": ["error", "global"],
+    "react/jsx-filename-extension": "off",
+    // TypeScript
+    "@typescript-eslint/brace-style": [
+      "error", "stroustrup", {"allowSingleLine": false}
+    ],
+    "@typescript-eslint/comma-dangle": "off",
+    "@typescript-eslint/dot-notation": "off",
+    "@typescript-eslint/indent": [
+      "error", 2, {"SwitchCase": 1, "MemberExpression": 2}
+    ],
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/semi": ["error", "never"],
+    "@typescript-eslint/space-infix-ops": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    // JsDoc
+    // "jsdoc/newline-after-description": ["error", "always"],
+    "jsdoc/tag-lines": "off",
+    "jsdoc/check-types": "off",
+    "jsdoc/require-param-description": "off",
+    "jsdoc/require-property-description": "off",
+    // TypeScript deals with this
+    "jsdoc/no-undefined-files": "off",
+    // TypeScript deals with this
+    "jsdoc/no-undefined-types": "off",
+    "jsdoc/require-returns": "error",
+    "jsdoc/require-returns-description": 0,
+    // Vitest
+    "vitest/expect-expect": "warn"
+  }
+}
