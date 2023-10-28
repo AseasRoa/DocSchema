@@ -21,6 +21,7 @@
   },
   "private": false,
   "devDependencies": {
+    "@types/benchmark": "^2.1.4",
     "@vitest/coverage-v8": "^0.34.6",
     "benchmark": "^2.1.4",
     "eslint": "^8.52.0",
