@@ -70,7 +70,7 @@ function getStackTraceBrowser(level = 1) {
     return null
   }
 
-  const pattern = /((?:http[s]?:\/\/).*):(\d+):(\d+)/
+  const pattern = /((?:http[s]?:\/\/).*):(\d+):(\d+)/u
   const match = pattern.exec(stack[level])
 
   if (!match) {
@@ -304,7 +304,7 @@ export function findEOL(inputString, start = 0) {
  * @returns {string}
  */
 export function flattenMultilineDescription(description) {
-  return description.replace(/^\s*\/\/\s*|\n\s*\/\/\s*/g, ' ').trim()
+  return description.replace(/^\s*\/\/\s*|\n\s*\/\/\s*/ug, ' ').trim()
 }
 
 /**
@@ -487,7 +487,7 @@ export function enquoteString(value, quote = '"') {
  * @returns {string}
  */
 export function removeWrappingBraces(str) {
-  return str.replace(/^\s*\((.*)\)\s*$/m, '$1').trim()
+  return str.replace(/^\s*\((.*)\)\s*$/um, '$1').trim()
 }
 
 /**

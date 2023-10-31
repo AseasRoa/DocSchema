@@ -49,7 +49,7 @@ class DocSchema {
 
     const schemaLine    = (caller.lineNumber)
     const schemaColumn = (caller.columnNumber)
-    const fileName     = (caller.fileName).replace(/^file:[\/]+/, '')
+    const fileName     = (caller.fileName).replace(/^file:[\/]+/u, '')
     const comments     = docSchemaParser.parseFile(fileName)
 
     /** @type {DocSchemaAst | null} */

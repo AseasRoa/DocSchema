@@ -69,7 +69,7 @@ const simpleTypeParsers = {
   tryNumberType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
-    if (/^-?\d+\.?\d*$/.exec(cleanedExpression) === null) {
+    if (/^-?\d+\.?\d*$/u.exec(cleanedExpression) === null) {
       return false
     }
 
@@ -140,7 +140,7 @@ const complexTypeParsers = {
    */
   tryArrayType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
-    const match             = /^array\.?<(.+)>$/mi.exec(cleanedExpression)
+    const match             = /^array\.?<(.+)>$/umi.exec(cleanedExpression)
 
     if (match === null) return false
 
@@ -164,7 +164,7 @@ const complexTypeParsers = {
      * 1: typeName[]
      * 2: (typeName)[]
      */
-    const match = /^((?=[^(]).+(?<=[^)]))\[]$|^\((.*)\)\[]$/mi.exec(cleanedExpression)
+    const match = /^((?=[^(]).+(?<=[^)]))\[\]$|^\((.*)\)\[\]$/umi.exec(cleanedExpression)
 
     if (match === null) return false
 
@@ -182,7 +182,7 @@ const complexTypeParsers = {
    */
   tryObjectType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
-    const match             = /^(?:object|record)\.?<(.+)>$/mi.exec(cleanedExpression)
+    const match             = /^(?:object|record)\.?<(.+)>$/umi.exec(cleanedExpression)
 
     if (match === null) return false
 
@@ -205,7 +205,7 @@ const complexTypeParsers = {
    */
   tryObjectLiteralType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
-    const match             = /^{(.*)}$/smi.exec(cleanedExpression)
+    const match             = /^\{(.*)\}$/usmi.exec(cleanedExpression)
 
     if (match === null) return false
 
@@ -228,7 +228,6 @@ const complexTypeParsers = {
       const pairsLength       = pairs.length
 
       if (pairsLength > 0) {
-        // @ts-ignore
         pairs[pairsLength - 1].description = frontCommentTuple[0]
       }
 
@@ -271,7 +270,7 @@ const complexTypeParsers = {
    */
   tryTypedef : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
-    const match             = /^\w+$/.exec(cleanedExpression)
+    const match             = /^\w+$/u.exec(cleanedExpression)
 
     if (match === null) return false
 

@@ -146,7 +146,7 @@ class DocSchemaParser {
 
     /** @type {ExtractedCommentInfo[]} */
     const output  = []
-    const pattern = /(\/\*\*[\t ]*\n(?:[ \t]* \*.*\n)+[ \t*]*\*\/|\/\*\*.*\*\/)(?:\s*\n)*(\s*[^\s\/].*)?/g
+    const pattern = /(\/\*\*[\t ]*\n(?:[ \t]* \*.*\n)+[ \t*]*\*\/|\/\*\*.*\*\/)(?:\s*\n)*(\s*[^\s\/].*)?/ug
 
     while (true) {
       const match = pattern.exec(code)
@@ -188,7 +188,7 @@ class DocSchemaParser {
      * @type {number[]}
      */
     const output = [-1, 0]
-    const pattern = /\n/g
+    const pattern = /\n/ug
 
     while (true) {
       const match = pattern.exec(code)
@@ -215,7 +215,7 @@ class DocSchemaParser {
     const output = []
 
     if (!tagPatterns.has(tagName)) {
-      tagPatterns.set(tagName, new RegExp(`^@${tagName}[^\w\d]`))
+      tagPatterns.set(tagName, new RegExp(`^@${tagName}[^\w\d]`, 'u'))
     }
 
     const tagPattern = tagPatterns.get(tagName)
@@ -264,7 +264,7 @@ class DocSchemaParser {
     hasName        = true,
     hasDescription = true
   ) {
-    let withoutTagName  = tagContents.replace(/^ *@[a-z]+ */m, '')
+    let withoutTagName  = tagContents.replace(/^ *@[a-z]+ */um, '')
 
     /** @type {DocSchemaParsedTag} */
     const parsedTag = {
@@ -334,7 +334,7 @@ class DocSchemaParser {
 
       // Remove the '-' and empty chars from the beginning
       parsedTag.description = parsedTag.description.replace(
-        /^ *-? */m,
+        /^ *-? */um,
         ''
       )
 
@@ -363,7 +363,7 @@ class DocSchemaParser {
    * @returns {Set<string>}
    */
   #extractUsedTags(choppedComment) {
-    const pattern = /^[ \t]*@([a-zA-Z]+)(?: .*)?$/m
+    const pattern = /^[ \t]*@([a-zA-Z]+)(?: .*)?$/um
     /** @type {Set<string>} */
     const usedTags = new Set()
 
@@ -387,7 +387,7 @@ class DocSchemaParser {
    */
   #fixTagSynonymsFromComment(comment) {
     return comment.replaceAll(
-      /@[a-z]+/g,
+      /@[a-z]+/ug,
       (tag) => TAG_REPLACEMENTS[tag] ?? tag
     )
   }
@@ -611,7 +611,7 @@ class DocSchemaParser {
      * (Scenario 1) Optional parameter defined in the name, like this: [name=123]
      */
     if (parsedTag.name) {
-      const pattern = /^\[(?<name>[^\]=]+)(?:=(?<defaultValue>[^=]+))?]$/m
+      const pattern = /^\[(?<name>[^\]=]+)(?:=(?<defaultValue>[^=]+))?\]$/um
       const match   = pattern.exec(parsedTag.name)
 
       if (match) {
@@ -628,7 +628,7 @@ class DocSchemaParser {
      * like this: {TypeName=}
      */
     if (parsedTag.typeExpression) {
-      const match = /(?<typeExpression>.+)= *$/m.exec(parsedTag.typeExpression)
+      const match = /(?<typeExpression>.+)= *$/um.exec(parsedTag.typeExpression)
 
       if (match) {
         parsedTag.optional = true
@@ -693,7 +693,7 @@ class DocSchemaParser {
    * @returns {string}
    */
   #removeStarsFromComment(comment) {
-    const pattern = /\n?[ \t]*\*\/$|^[ \t]*(?:\/\*\* *\r?\n?| \* *)/gm
+    const pattern = /\n?[ \t]*\*\/$|^[ \t]*(?:\/\*\* *\r?\n?| \* *)/ugm
 
     return comment.trim().replace(pattern, '')
   }
