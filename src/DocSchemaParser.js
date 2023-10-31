@@ -8,14 +8,6 @@ import {
 } from './functions.js'
 import { TypesParser } from './TypesParser.js'
 
-const fs = await importFileSystem()
-
-/** @type {Map<string, DocSchemaAst[]>} */
-const astCacheForFiles = new Map()
-
-/** @type {Map<string, RegExp>} */
-const tagPatterns = new Map()
-
 /**
  * @typedef ExtractedCommentInfo
  * @type {object}
@@ -26,7 +18,15 @@ const tagPatterns = new Map()
  * @property {string} lineAfterComment
  */
 
-/** A simple parser for JsDoc comments in code */
+/** @type {import('fs') | null} */
+const fs = await importFileSystem()
+
+/** @type {Map<string, DocSchemaAst[]>} */
+const astCacheForFiles = new Map()
+
+/** @type {Map<string, RegExp>} */
+const tagPatterns = new Map()
+
 class DocSchemaParser {
   /** @type {TypesParser} */
   typesParser = new TypesParser()
