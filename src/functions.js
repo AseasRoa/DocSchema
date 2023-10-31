@@ -489,3 +489,14 @@ export function enquoteString(value, quote = '"') {
 export function removeWrappingBraces(str) {
   return str.replace(/^\s*\((.*)\)\s*$/m, '$1').trim()
 }
+
+/**
+ * Trim each value of the chopped commend (array)
+ *
+ * @param {string[]} array
+ */
+export function trimArrayElements(array) {
+  for (let index = 0; index < array.length; index++) {
+    array[index] = array[index].trim()
+  }
+}

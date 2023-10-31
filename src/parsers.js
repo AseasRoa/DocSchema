@@ -98,7 +98,7 @@ const simpleTypeParsers = {
   // Something like: 'some-text'
   tryStringType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
-    const quote             = cleanedExpression?.[0] ?? ''
+    const quote             = cleanedExpression[0] ?? ''
 
     if (!quotes.includes(quote)) return false
 
@@ -144,7 +144,7 @@ const complexTypeParsers = {
 
     if (match === null) return false
 
-    const arrayValueTypes = match?.[1] ?? '*'
+    const arrayValueTypes = match[1] ?? '*'
 
     return {
       typeName       : 'array',
@@ -168,7 +168,7 @@ const complexTypeParsers = {
 
     if (match === null) return false
 
-    const arrayValueTypes = match?.[1] ?? match?.[2] ?? ''
+    const arrayValueTypes = match[1] ?? match[2] ?? ''
 
     return {
       typeName       : 'array',
@@ -193,8 +193,8 @@ const complexTypeParsers = {
       typeName       : 'object',
       typeExpression : typeExpression,
       typePairs      : [{
-        keyTypes   : typeParser(pair?.[0] ?? '*'),
-        valueTypes : typeParser(pair?.[1] ?? '*')
+        keyTypes   : typeParser(pair[0] ?? '*'),
+        valueTypes : typeParser(pair[1] ?? '*')
       }]
     }
   },

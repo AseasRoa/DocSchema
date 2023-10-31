@@ -100,7 +100,7 @@ class DocSchemaValidator {
    */
   validateTag(tagName, ast, value, throwOnError = true) {
     this.lastError   = null
-    const parsedTags = ast.elements?.[tagName]
+    const parsedTags = ast.elements[tagName]
 
     if (parsedTags === undefined) {
       throw new Error('The AST you are trying to use is not valid')

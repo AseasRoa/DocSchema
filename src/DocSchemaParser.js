@@ -3,7 +3,7 @@ import {
   binarySearchFirstGTE,
   findClosingBracketPosition,
   importFileSystem,
-  isBrowserEnvironment
+  isBrowserEnvironment, trimArrayElements
 } from './functions.js'
 import { TypesParser } from './TypesParser.js'
 
@@ -11,6 +11,9 @@ const fs = await importFileSystem()
 
 /** @type {Map<string, DocSchemaAst[]>} */
 const astCacheForFiles = new Map()
+
+/** @type {Map<string, RegExp>} */
+const tagPatterns = new Map()
 
 /**
  * @typedef ExtractedCommentInfo
@@ -63,6 +66,8 @@ class DocSchemaParser {
       comment = this.#removeStarsFromComment(comment)
 
       const chopped = this.#chopComment(comment)
+
+      /** @type {DocSchemaAst} */
       const ast     = {
         elements         : this.#parseChoppedComment(chopped),
         file             : file,
@@ -142,9 +147,14 @@ class DocSchemaParser {
     /** @type {ExtractedCommentInfo[]} */
     const output  = []
     const pattern = /(\/\*\*[\t ]*\n(?:[ \t]* \*.*\n)+[ \t*]*\*\/|\/\*\*.*\*\/)(?:\s*\n)*(\s*[^\s\/].*)?/g
-    const matches = code.matchAll(pattern)
 
-    for (const match of matches) {
+    while (true) {
+      const match = pattern.exec(code)
+
+      if (!match) {
+        break
+      }
+
       const comment          = match[1] ?? ''
       const lineAfterComment = match[2] ?? ''
       const index            = match.index ?? 0
@@ -179,10 +189,13 @@ class DocSchemaParser {
      */
     const output = [-1, 0]
     const pattern = /\n/g
-    const matches = code.matchAll(pattern)
 
-    for (const match of matches) {
-      output.push((match.index ?? 0) + 1)
+    while (true) {
+      const match = pattern.exec(code)
+
+      if (!match) break
+
+      output[output.length] = (match.index ?? 0) + 1 // push()
     }
 
     return output
@@ -201,13 +214,19 @@ class DocSchemaParser {
     /** @type {string[]} */
     const output = []
 
+    if (!tagPatterns.has(tagName)) {
+      tagPatterns.set(tagName, new RegExp(`^@${tagName}[^\w\d]`))
+    }
+
+    const tagPattern = tagPatterns.get(tagName)
+
     let isParsing = false
     let wholeData = ''
 
     for (let row of choppedComment) {
       row = row.trim()
 
-      if (new RegExp(`^${tagName}[^\w\d]`).test(row)) {
+      if (tagPattern?.test(row)) {
         isParsing = true
 
         if (wholeData) output.push(wholeData) // Push intermediate data
@@ -378,32 +397,31 @@ class DocSchemaParser {
    * @returns {DocSchemaAstElements}
    */
   #parseChoppedComment(choppedComment) {
-    const chopped  = this.#trimChoppedComment(choppedComment)
     const usedTags = this.#extractUsedTags(choppedComment)
 
     return {
-      description : this.#parseDescription(chopped),
-      scope       : this.#parseScope(chopped),
+      description : this.#parseDescription(choppedComment),
+      scope       : this.#parseScope(choppedComment),
       returns     : (usedTags.has('returns'))
-        ? this.#parseSingleLineTag(chopped, '@returns')
+        ? this.#parseSingleLineTag(choppedComment, 'returns')
         : null,
       param : (usedTags.has('param'))
-        ? this.#parseMultiLineTag(chopped, '@param')
+        ? this.#parseMultiLineTag(choppedComment, 'param')
         : [],
       enum : (usedTags.has('enum'))
-        ? this.#parseSingleLineTag(chopped, '@enum')
+        ? this.#parseSingleLineTag(choppedComment, 'enum')
         : null,
       type : (usedTags.has('type'))
-        ? this.#parseSingleLineTag(chopped, '@type')
+        ? this.#parseSingleLineTag(choppedComment, 'type')
         : null,
       typedef : (usedTags.has('typedef'))
-        ? this.#parseSingleLineTag(chopped, '@typedef')
+        ? this.#parseSingleLineTag(choppedComment, 'typedef')
         : null,
       yields : (usedTags.has('yields'))
-        ? this.#parseSingleLineTag(chopped, '@yields')
+        ? this.#parseSingleLineTag(choppedComment, 'yields')
         : null,
       property : (usedTags.has('property'))
-        ? this.#parseMultiLineTag(chopped, '@property')
+        ? this.#parseMultiLineTag(choppedComment, 'property')
         : [],
     }
   }
@@ -465,7 +483,7 @@ class DocSchemaParser {
 
   /**
    * @param {string[]} choppedComment
-   * @param {'@param' | '@property' | string} tagName
+   * @param {'param' | 'property' | string} tagName
    * @returns {DocSchemaParsedTag[]}
    */
   #parseMultiLineTag(choppedComment, tagName) {
@@ -526,7 +544,7 @@ class DocSchemaParser {
    * For tags like '@returns'
    *
    * @param {string[]} choppedComment
-   * @param {'@returns' | '@type' | '@enum' | '@typedef' | string} tagName
+   * @param {'returns' | 'type' | 'enum' | 'typedef' | string} tagName
    * @returns {DocSchemaParsedTag | null}
    */
   #parseSingleLineTag(choppedComment, tagName) {
@@ -678,22 +696,6 @@ class DocSchemaParser {
     const pattern = /\n?[ \t]*\*\/$|^[ \t]*(?:\/\*\* *\r?\n?| \* *)/gm
 
     return comment.trim().replace(pattern, '')
-  }
-
-  /**
-   * Trim each value of the chopped commend (array)
-   *
-   * @param {string[]} choppedComment
-   * @returns {string[]}
-   */
-  #trimChoppedComment(choppedComment) {
-    const chopped = []
-
-    for (const line of choppedComment) {
-      chopped.push(line.trim())
-    }
-
-    return chopped
   }
 }
 

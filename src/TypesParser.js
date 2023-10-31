@@ -58,7 +58,7 @@ class TypesParser {
 
     for (const member of split) {
       if (member) {
-        const processedType = this.parseType(member)[0]
+        const [ processedType ] = this.parseType(member)
 
         if (processedType) output.push(processedType)
       }
