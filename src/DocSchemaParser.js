@@ -3,7 +3,8 @@ import {
   binarySearchFirstGTE,
   findClosingBracketPosition,
   importFileSystem,
-  isBrowserEnvironment, trimArrayElements
+  isBrowserEnvironment,
+  trimArrayElements
 } from './functions.js'
 import { TypesParser } from './TypesParser.js'
 
@@ -66,6 +67,8 @@ class DocSchemaParser {
       comment = this.#removeStarsFromComment(comment)
 
       const chopped = this.#chopComment(comment)
+
+      trimArrayElements(chopped)
 
       /** @type {DocSchemaAst} */
       const ast     = {
