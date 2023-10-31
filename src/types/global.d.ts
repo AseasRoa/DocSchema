@@ -25,10 +25,21 @@ declare module 'docschema' {
     parseFile(
       file: string
     ): Promise<DocSchemaAst[]>
+
+    removeFileFromCache(
+      file: string
+    ): void
   }
 
   export class DocSchemaValidator {
+    validateFunctionArguments(
+      ast: DocSchemaAst,
+      args: any,
+      throwOnError?: boolean
+    ): boolean
+
     validateParams(
+      name: 'param' | 'property',
       ast: DocSchemaAst,
       args: any,
       throwOnError?: boolean
@@ -40,6 +51,12 @@ declare module 'docschema' {
       value: any,
       throwOnError?: boolean
     ): Promise<DocSchemaAst[]>
+
+    validateTypedef(
+      ast: DocSchemaAst,
+      value: any,
+      throwOnError?: boolean
+    ) : TypeError | Error
   }
 
   /**
