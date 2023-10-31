@@ -4,8 +4,8 @@ import {
   findEOL
 } from '../functions.js'
 
-describe('functions', function() {
-  test('findClosingQuotePosition', function() {
+describe('functions', () => {
+  test('findClosingQuotePosition', () => {
     expect(findClosingQuotePosition(``)).toBe(0)
     expect(findClosingQuotePosition(`'`)).toBe(0)
     expect(findClosingQuotePosition(`''`)).toBe(1)
@@ -14,7 +14,7 @@ describe('functions', function() {
     expect(findClosingQuotePosition(`previous-text 'some-text'`, 14)).toBe(10)
   })
 
-  test('findClosingBracketPosition', function() {
+  test('findClosingBracketPosition', () => {
     expect(findClosingBracketPosition(``)).toBe(0)
     expect(findClosingBracketPosition(`{`)).toBe(0)
     expect(findClosingBracketPosition(`{}`)).toBe(1)
@@ -24,7 +24,7 @@ describe('functions', function() {
     expect(findClosingBracketPosition(`previous-text {{}some-text{}}`, 14)).toBe(14)
   })
 
-  test('findEOL', function() {
+  test('findEOL', () => {
     expect(findEOL(``)).toBe(0)
     expect(findEOL(`\n`)).toBe(0)
     expect(findEOL(`some-text\n`)).toBe(9)

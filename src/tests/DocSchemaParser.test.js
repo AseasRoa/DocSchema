@@ -1,14 +1,14 @@
 import { DocSchemaParser } from '../DocSchemaParser.js'
 
-describe('DocSchemaParser', function() {
+describe('DocSchemaParser', () => {
   const parser = new DocSchemaParser()
 
   /** @type {DocSchemaAst[]} */
-  let astComments           = []
+  const astComments           = []
   /** @type {DocSchemaAst[]} */
-  let astCommentsWithScopes = []
+  const astCommentsWithScopes = []
 
-  beforeAll(function() {
+  beforeAll(() => {
     const comments = `
     /** @type {string} */
     Code, code, code...
@@ -77,97 +77,88 @@ describe('DocSchemaParser', function() {
      */
     `
 
-    astComments           = parser.parseComments(comments.trim())
-    astCommentsWithScopes = parser.parseComments(commentsWithScopes.trim())
+    astComments.push(
+      ...parser.parseComments(comments.trim())
+    )
+    astCommentsWithScopes.push(
+      ...parser.parseComments(commentsWithScopes.trim())
+    )
   })
 
-  describe('Multiple comments', function() {
-    test('correct number of comments', function() {
+  describe('Multiple comments', () => {
+    test('correct number of comments', () => {
       expect(astComments.length).toBe(4)
     })
   })
 
-  describe('Rows after comments', function() {
-    test('correct rows after comments', function() {
-      expect(
-        astComments?.[0]?.lineAfterComment.trim())
-      .toBe(
-        'Code, code, code...'
-      )
-      expect(
-        astComments?.[1]?.lineAfterComment.trim())
-      .toBe(
-        'More code, code, code...'
-      )
-      expect(
-        astComments?.[2]?.lineAfterComment.trim())
-      .toBe(
-        ''
-      )
-      expect(
-        astComments?.[3]?.lineAfterComment.trim())
-      .toBe(
-        ''
-      )
+  describe('Rows after comments', () => {
+    test('correct rows after comments', () => {
+      expect(astComments[0]?.lineAfterComment.trim())
+      .toBe('Code, code, code...')
+
+      expect(astComments[1]?.lineAfterComment.trim())
+      .toBe('More code, code, code...')
+
+      expect(astComments[2]?.lineAfterComment.trim())
+      .toBe('')
+
+      expect(astComments[3]?.lineAfterComment.trim())
+      .toBe('')
     })
   })
 
-  describe('Descriptions', function() {
-    test('detect correct main description', function() {
+  describe('Descriptions', () => {
+    test('detect correct main description', () => {
       const description = astComments[1]?.elements.description
 
       expect(description).toBe(`Main Description 1\nMain Description 2\nSecondary Description\nThird Description`)
     })
 
-    test('detect correct param descriptions', function() {
+    test('detect correct param descriptions', () => {
       const params = astComments?.[1]?.elements.param
 
-      expect(params?.[0]?.description).toBe('')
-      expect(params?.[1]?.description).toBe('description two')
-      expect(params?.[2]?.description).toBe('description three')
-      expect(params?.[3]?.description).toBe('this is multiline description')
+      expect(params[0]?.description).toBe('')
+      expect(params[1]?.description).toBe('description two')
+      expect(params[2]?.description).toBe('description three')
+      expect(params[3]?.description).toBe('this is multiline description')
     })
   })
 
-  describe('Parameter scopes', function() {
-    test('detect correct scopes', function() {
-      /** @type {DocSchemaAstScope} */
-      let scope = {
-        private   : false,
-        protected : false,
-        public    : false
-      }
+  describe('Parameter scopes', () => {
+    test('detect correct scopes', () => {
+      /** @type {DocSchemaAstScope | undefined} */
+      let scope = undefined
 
       // Public scope
-      scope = astCommentsWithScopes?.[0]?.elements.scope ?? scope
+      scope = astCommentsWithScopes[0]?.elements.scope
 
       expect(scope.private).toBe(false)
       expect(scope.protected).toBe(false)
       expect(scope.public).toBe(true)
 
       // Public scope
-      scope = astCommentsWithScopes?.[1]?.elements.scope ?? scope
+      scope = astCommentsWithScopes[1]?.elements.scope
 
       expect(scope.private).toBe(false)
       expect(scope.protected).toBe(false)
       expect(scope.public).toBe(true)
 
       // Private scope
-      scope = astCommentsWithScopes?.[2]?.elements.scope ?? scope
+      scope = astCommentsWithScopes[2]?.elements.scope
 
       expect(scope.private).toBe(true)
       expect(scope.protected).toBe(false)
       expect(scope.public).toBe(false)
 
       // Protected scope
-      scope = astCommentsWithScopes?.[3]?.elements.scope ?? scope
+      scope = astCommentsWithScopes[3]?.elements.scope
 
       expect(scope.private).toBe(false)
       expect(scope.protected).toBe(true)
       expect(scope.public).toBe(false)
 
       // Mixed scope
-      scope = astCommentsWithScopes?.[4]?.elements.scope ?? scope
+      scope = astCommentsWithScopes[4]?.elements.scope
 
       expect(scope.private).toBe(true)
       expect(scope.protected).toBe(true)

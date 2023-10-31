@@ -8,3 +8,4 @@ node_modules/
 # Files
 .env
 package-lock.json
+**/*.ts

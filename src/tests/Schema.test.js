@@ -2,16 +2,16 @@
 
 import { docSchema } from '../index.js'
 
-describe('Schema', function() {
-  describe('Schema', function() {
-    test('try to create schema, but no JsDoc comment above', function() {
-      expect(async () => {
+describe('Schema', () => {
+  describe('Schema', () => {
+    test('try to create schema, but no JsDoc comment above', () => {
+      expect(() => {
         // No JsDoc comment at all
 
         const schema = docSchema()
-      }).rejects.toThrowError(Error)
+      }).toThrow(Error)
 
-      expect(async () => {
+      expect(() => {
         /**
          * This JsDoc comment has an empty space below, which makes it invalid
          *
@@ -19,19 +19,20 @@ describe('Schema', function() {
          */
 
         const schema = docSchema()
-      }).rejects.toThrowError(Error)
+      }).toThrow(Error)
 
-      expect(async () => {
+      expect(() => {
+        /* eslint-disable-next-line jsdoc/no-bad-blocks */
         /*
          * This JsDoc comment is wrong, because it doesn't start with two stars
          *
          * @enum {string}
          */
         const schema = docSchema()
-      }).rejects.toThrowError(Error)
+      }).toThrow(Error)
     })
 
-    test('correct validation', function() {
+    test('correct validation', () => {
       /**
        * @enum {{
        *   key1: string,
@@ -45,7 +46,7 @@ describe('Schema', function() {
       expect(schema.check({ key1: '1', key2: 2})).toBe(true)
     })
 
-    test('correct invalidation', function() {
+    test('correct invalidation', () => {
       /**
        * @enum {{
        *   key1: string,
@@ -54,11 +55,11 @@ describe('Schema', function() {
        */
       const schema = docSchema()
 
-      expect(() => schema.validate({ key1: 1, key2: '2'})).toThrowError(TypeError)
+      expect(() => schema.validate({ key1: 1, key2: '2'})).toThrow(TypeError)
       expect(schema.check({ key1: 1, key2: '2'})).toBe(false)
     })
 
-    test('correct validation with typedef', function() {
+    test('correct validation with typedef', () => {
       /**
        * @typedef {string} StringTypedef
        */

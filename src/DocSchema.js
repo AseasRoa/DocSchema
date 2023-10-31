@@ -47,7 +47,7 @@ class DocSchema {
       throw new Error('Could not create schema')
     }
 
-    let schemaLine     = (caller.lineNumber)
+    const schemaLine    = (caller.lineNumber)
     const schemaColumn = (caller.columnNumber)
     const fileName     = (caller.fileName).replace(/^file:[\/]+/, '')
     const comments     = docSchemaParser.parseFile(fileName)
@@ -64,7 +64,6 @@ class DocSchema {
     }
 
     if (!ast) {
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       throw new Error(`Could not create schema. Make sure there is a valid JsDoc comment just above.\n> ${fileName}:${schemaLine}:${schemaColumn}`)
     }
 

@@ -3,9 +3,9 @@
 import { simpleTypeParsers } from '../parsers.js'
 import { TypesParser } from '../TypesParser.js'
 
-describe('Parsers', function() {
-  describe('Simple types', function() {
-    test('should parse any types - * or any', function() {
+describe('Parsers', () => {
+  describe('Simple types', () => {
+    test('should parse any types - * or any', () => {
       const parser = simpleTypeParsers.tryAnyType
 
       expect(parser('any'))
@@ -18,51 +18,63 @@ describe('Parsers', function() {
       .toBe(false)
     })
 
-    test('should parse boolean values - true or false', function() {
+    test('should parse boolean values - true or false', () => {
       const parser = simpleTypeParsers.tryBooleanType
 
-      expect(
-        parser('true'))
-      .toStrictEqual(
-        { typeName : 'boolean', typeExpression : 'true', value : true }
-      )
-      expect(
-        parser('false'))
-      .toStrictEqual(
-        { typeName : 'boolean', typeExpression : 'false', value : false }
-      )
-      expect(
-        parser(' ( true ) '))
-      .toStrictEqual(
-        { typeName : 'boolean', typeExpression : ' ( true ) ', value : true }
-      )
+      expect(parser('true'))
+      .toStrictEqual({
+        typeName : 'boolean',
+        typeExpression : 'true',
+        value : true
+      })
+
+      expect(parser('false'))
+      .toStrictEqual({
+        typeName : 'boolean',
+        typeExpression : 'false',
+        value : false
+      })
+
+      expect(parser(' ( true ) '))
+      .toStrictEqual({
+        typeName : 'boolean',
+        typeExpression : ' ( true ) ',
+        value : true
+      })
+
       expect(parser('')).toBe(false)
       expect(parser('something')).toBe(false)
     })
 
-    test('should parse numeric values - integer or float', function() {
+    test('should parse numeric values - integer or float', () => {
       const parser = simpleTypeParsers.tryNumberType
 
-      expect(
-        parser('123'))
-      .toStrictEqual(
-        { typeName : 'number', typeExpression : '123', value : 123 }
-      )
-      expect(
-        parser('123.4'))
-      .toStrictEqual(
-        { typeName : 'number', typeExpression : '123.4', value : 123.4 }
-      )
-      expect(
-        parser(' ( 123.4 ) '))
-      .toStrictEqual(
-        { typeName : 'number', typeExpression : ' ( 123.4 ) ', value : 123.4 }
-      )
+      expect(parser('123'))
+      .toStrictEqual({
+        typeName : 'number',
+        typeExpression : '123',
+        value : 123
+      })
+
+      expect(parser('123.4'))
+      .toStrictEqual({
+        typeName : 'number',
+        typeExpression : '123.4',
+        value : 123.4
+      })
+
+      expect(parser(' ( 123.4 ) '))
+      .toStrictEqual({
+        typeName : 'number',
+        typeExpression : ' ( 123.4 ) ',
+        value : 123.4
+      })
+
       expect(parser('')).toBe(false)
       expect(parser('something')).toBe(false)
     })
 
-    test('should parse primitive types - string, number, boolean...', function() {
+    test('should parse primitive types - string, number, boolean...', () => {
       const parser     = simpleTypeParsers.tryPrimitiveType
       const primitives = [
         'string',
@@ -108,33 +120,41 @@ describe('Parsers', function() {
       expect(parser('something')).toBe(false)
     })
 
-    test('should parse string values', function() {
+    test('should parse string values', () => {
       const parser = simpleTypeParsers.tryStringType
 
       // ''
-      expect(
-        parser(`'a string'`))
-      .toStrictEqual(
-        { typeName : 'string', typeExpression : `'a string'`, value : 'a string' }
-      )
+      expect(parser(`'a string'`))
+      .toStrictEqual({
+        typeName : 'string',
+        typeExpression : `'a string'`,
+        value : 'a string'
+      })
+
       // ""
-      expect(
-        parser(`"a string"`))
-      .toStrictEqual(
-        { typeName : 'string', typeExpression : `"a string"`, value : 'a string' }
-      )
+      expect(parser(`"a string"`))
+      .toStrictEqual({
+        typeName : 'string',
+        typeExpression : `"a string"`,
+        value : 'a string'
+      })
+
       // ``
-      expect(
-        parser('`a string`'))
-      .toStrictEqual(
-        { typeName : 'string', typeExpression : '`a string`', value : 'a string' }
-      )
+      expect(parser('`a string`'))
+      .toStrictEqual({
+        typeName : 'string',
+        typeExpression : '`a string`',
+        value : 'a string'
+      })
+
       // Wrapped with ( and )
-      expect(
-        parser(` ( 'a string' ) `))
-      .toStrictEqual(
-        { typeName : 'string', typeExpression : ` ( 'a string' ) `, value : 'a string' }
-      )
+      expect(parser(` ( 'a string' ) `))
+      .toStrictEqual({
+        typeName : 'string',
+        typeExpression : ` ( 'a string' ) `,
+        value : 'a string'
+      })
+
       // Doesn't have both quotes
       expect(parser(`'a string`)).toBe(false)
       expect(parser(`a string"`)).toBe(false)
@@ -147,16 +167,14 @@ describe('Parsers', function() {
     })
   })
 
-  describe('Complex types', function() {
+  describe('Complex types', () => {
     const typesParser = new TypesParser()
-    // eslint-disable-next-line mocha/no-setup-in-describe
-    const parseType   = typesParser.parseType.bind(typesParser)
 
-    test('should parse Array complex types', function() {
-      // With dot
-      expect(
-        typesParser.parseType('Array.<number>')[0]
-      )
+    test('should parse Array complex types', () => {
+      /*
+       * With dot
+       */
+      expect(typesParser.parseType('Array.<number>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -165,10 +183,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Without the dot
-      expect(
-        typesParser.parseType('Array<number>')[0]
-      )
+      /*
+       * Without the dot
+       */
+      expect(typesParser.parseType('Array<number>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -177,10 +195,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Upper case
-      expect(
-        typesParser.parseType('ARRAY.<NUMBER>')[0]
-      )
+      /*
+       * Upper case
+       */
+      expect(typesParser.parseType('ARRAY.<NUMBER>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -189,10 +207,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Custom type
-      expect(
-        typesParser.parseType('Array.<MyType>')[0]
-      )
+      /*
+       * Custom type
+       */
+      expect(typesParser.parseType('Array.<MyType>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -201,10 +219,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Multiple types with OR
-      expect(
-        typesParser.parseType('Array<number | string>')[0]
-      )
+      /*
+       * Multiple types with OR
+       */
+      expect(typesParser.parseType('Array<number | string>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -219,11 +237,11 @@ describe('Parsers', function() {
         }
       )
 
-      // Kinda wrong type.
-      // It seems that JsDoc doesn't support & union, so it should be parsed as | union.
-      expect(
-        typesParser.parseType('Array<number & string>')[0]
-      )
+      /*
+       * Kinda wrong type.
+       * It seems that JsDoc doesn't support & union, so it should be parsed as | union.
+       */
+      expect(typesParser.parseType('Array<number & string>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -238,10 +256,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Kinda wrong type
-      expect(
-        typesParser.parseType('Array<number, string>')[0]
-      )
+      /*
+       * Kinda wrong type
+       */
+      expect(typesParser.parseType('Array<number, string>')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -254,11 +272,11 @@ describe('Parsers', function() {
       )
     })
 
-    test('should parse array literal types', function() {
-      // Lower case type
-      expect(
-        typesParser.parseType('string[]')[0]
-      )
+    test('should parse array literal types', () => {
+      /*
+       * Lower case type
+       */
+      expect(typesParser.parseType('string[]')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -267,10 +285,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Upper case type
-      expect(
-        typesParser.parseType('NUMBER[]')[0]
-      )
+      /*
+       * Upper case type
+       */
+      expect(typesParser.parseType('NUMBER[]')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -279,10 +297,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Custom type
-      expect(
-        typesParser.parseType('MyType[]')[0]
-      )
+      /*
+       * Custom type
+       */
+      expect(typesParser.parseType('MyType[]')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -291,11 +309,11 @@ describe('Parsers', function() {
         }
       )
 
-      // Union types, mixed case.
-      // The & union is not in JsDoc, but it should work as | here
-      expect(
-        typesParser.parseType('(MyType | Boolean & Number)[]')[0]
-      )
+      /*
+       * Union types, mixed case.
+       * The & union is not in JsDoc, but it should work as | here
+       */
+      expect(typesParser.parseType('(MyType | Boolean & Number)[]')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -308,10 +326,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Object type
-      expect(
-        typesParser.parseType('(MyType | Boolean & Number)[]')[0]
-      )
+      /*
+       * Object type
+       */
+      expect(typesParser.parseType('(MyType | Boolean & Number)[]')[0])
       .toStrictEqual(
         {
           typeName       : 'array',
@@ -325,11 +343,11 @@ describe('Parsers', function() {
       )
     })
 
-    test('should parse Object type', function() {
-      // With dot
-      expect(
-        typesParser.parseType('Object.<string, number>')[0]
-      )
+    test('should parse Object type', () => {
+      /*
+       * With dot
+       */
+      expect(typesParser.parseType('Object.<string, number>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -341,10 +359,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Without the dot
-      expect(
-        typesParser.parseType('Object<string, number>')[0]
-      )
+      /*
+       * Without the dot
+       */
+      expect(typesParser.parseType('Object<string, number>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -356,10 +374,10 @@ describe('Parsers', function() {
         }
       )
 
-      // As Record (used in TypeScript)
-      expect(
-        typesParser.parseType('Record<string, number>')[0]
-      )
+      /*
+       * As Record (used in TypeScript)
+       */
+      expect(typesParser.parseType('Record<string, number>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -371,10 +389,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Upper case
-      expect(
-        typesParser.parseType('OBJECT.<STRING, NUMBER>')[0]
-      )
+      /*
+       * Upper case
+       */
+      expect(typesParser.parseType('OBJECT.<STRING, NUMBER>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -386,10 +404,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Missed type for values
-      expect(
-        typesParser.parseType('Object.<number>')[0]
-      )
+      /*
+       * Missed type for values
+       */
+      expect(typesParser.parseType('Object.<number>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -401,10 +419,10 @@ describe('Parsers', function() {
         }
       )
 
-      // Unions
-      expect(
-        typesParser.parseType('Object.<string | number, (number | MyType)>')[0]
-      )
+      /*
+       * Unions
+       */
+      expect(typesParser.parseType('Object.<string | number, (number | MyType)>')[0])
       .toStrictEqual(
         {
           typeName       : 'object',
@@ -424,14 +442,12 @@ describe('Parsers', function() {
       )
     })
 
-    test('should parse object literal types', function() {
+    test('should parse object literal types', () => {
       let expression = ''
 
       expression = ' {keys: string, values: number} '
 
-      expect(
-        typesParser.parseType(expression)[0]
-      )
+      expect(typesParser.parseType(expression)[0])
       .toStrictEqual(
         {
           typeName       : 'objectLiteral',
@@ -452,9 +468,8 @@ describe('Parsers', function() {
       )
 
       expression = ' {keys: ( string & NUMBER ) , values: ( NUMBER | MyType ) } '
-      expect(
-        typesParser.parseType(expression)[0]
-      )
+
+      expect(typesParser.parseType(expression)[0])
       .toStrictEqual(
         {
           typeName       : 'objectLiteral',
@@ -482,9 +497,7 @@ describe('Parsers', function() {
 
       expression = ' {key?: string} '
 
-      expect(
-        typesParser.parseType(expression)[0]
-      )
+      expect(typesParser.parseType(expression)[0])
       .toStrictEqual(
         {
           typeName       : 'objectLiteral',
@@ -512,9 +525,7 @@ describe('Parsers', function() {
         // part 3
       } `
 
-      expect(
-        typesParser.parseType(expression)[0]
-      )
+      expect(typesParser.parseType(expression)[0])
       .toStrictEqual(
         {
           typeName       : 'objectLiteral',

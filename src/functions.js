@@ -6,7 +6,9 @@ export async function importFileSystem() {
   let fs = null
 
   if (!isBrowserEnvironment()) {
-    fs = await import('fs')
+    // Use a variable in import() to prevent the module name from being overwritten
+    const moduleName = 'fs'
+    fs = await import(moduleName)
   }
 
   return fs
@@ -56,9 +58,9 @@ function getStackTraceBrowser(level = 1) {
   catch (error) {
     if (error instanceof Error) {
       stack = (error.stack ?? '')
-          .replaceAll('\r', '')
-          .split('\n')
-          .map((line) => line.trim())
+      .replaceAll('\r', '')
+      .split('\n')
+      .map((line) => line.trim())
 
       stack = stack.splice(stack[0] === 'Error' ? 2 : 1)
     }
@@ -134,7 +136,6 @@ function getStackTraceV8(level = 3) {
  */
 export function isBrowserEnvironment() {
   if (isBrowserEnvironment.isIt === undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const isBrowser = new Function('try {return this===window;}catch(e){ return false;}')
 
     isBrowserEnvironment.isIt = isBrowser()
@@ -334,11 +335,15 @@ const quotes          = Object.freeze(['\'', '"', '`'])
  */
 export function splitTypeExpression(typeExpression, separators = ['|']) {
   const union = []
-  // First, cleanup the type expression by trimming it and removing wrapping braces
+  /*
+   * First, cleanup the type expression by trimming it and removing wrapping braces
+   */
   const expression = removeWrappingBraces(typeExpression.trim())
-  // + 1 is given to the length, so in case the type definition ends with bracket
-  // or quote, (which makes a jump in the loop beyond the closing bracket or quote),
-  // there is one extra iteration available to push the final member
+  /*
+   * + 1 is given to the length, so in case the type definition ends with bracket
+   * or quote, (which makes a jump in the loop beyond the closing bracket or quote),
+   * there is one extra iteration available to push the final member
+   */
   const length = expression.length + 1
 
   let start = 0 // The start position of each member of the union
@@ -469,7 +474,6 @@ export function isolateEndComment(expression) {
  * @returns {string}
  */
 export function enquoteString(value, quote = '"') {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return (typeof value === 'string')
     ? `${quote}${value}${quote}`
     : (value ?? '').toString() // Remember, don't use toString() on undefined or null

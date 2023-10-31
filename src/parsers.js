@@ -33,7 +33,7 @@ const quotes = ['\'', '"', '`']
  */
 const simpleTypeParsers = {
   // any or *
-  'tryAnyType' : (typeExpression) => {
+  tryAnyType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
     if (
@@ -51,7 +51,7 @@ const simpleTypeParsers = {
   },
 
   // true or false
-  'tryBooleanType' : (typeExpression) => {
+  tryBooleanType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
     if (cleanedExpression !== 'true' && cleanedExpression !== 'false') {
@@ -66,7 +66,7 @@ const simpleTypeParsers = {
   },
 
   // Something like: 12345
-  'tryNumberType' : (typeExpression) => {
+  tryNumberType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
     if (/^-?\d+\.?\d*$/.exec(cleanedExpression) === null) {
@@ -81,7 +81,7 @@ const simpleTypeParsers = {
   },
 
   // Something like: "number"
-  'tryPrimitiveType' : (typeExpression) => {
+  tryPrimitiveType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
     /** @type {DocSchemaPrimitives} */
@@ -96,7 +96,7 @@ const simpleTypeParsers = {
   },
 
   // Something like: 'some-text'
-  'tryStringType' : (typeExpression) => {
+  tryStringType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
     const quote             = cleanedExpression?.[0] ?? ''
 
@@ -135,8 +135,10 @@ const simpleTypeParsers = {
  * }}
  */
 const complexTypeParsers = {
-  // Something like: Array.<number>
-  'tryArrayType' : (typeExpression, typeParser) => {
+  /*
+   * Something like: Array.<number>
+   */
+  tryArrayType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
     const match             = /^array\.?<(.+)>$/mi.exec(cleanedExpression)
 
@@ -151,11 +153,13 @@ const complexTypeParsers = {
     }
   },
 
-  // Something like: string[]
-  'tryArrayLiteral' : (typeExpression, typeParser) => {
+  /*
+   * Something like: string[]
+   */
+  tryArrayLiteral : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
-    /**
+    /*
      * The pattern matches two situations:
      * 1: typeName[]
      * 2: (typeName)[]
@@ -173,8 +177,10 @@ const complexTypeParsers = {
     }
   },
 
-  // Something like: Object.<string, string>
-  'tryObjectType' : (typeExpression, typeParser) => {
+  /*
+   * Something like: Object.<string, string>
+   */
+  tryObjectType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
     const match             = /^(?:object|record)\.?<(.+)>$/mi.exec(cleanedExpression)
 
@@ -193,15 +199,17 @@ const complexTypeParsers = {
     }
   },
 
-  // Something like: {a:number, b:string}
-  // Also, multiline object literal, with or without comments as descriptions
-  'tryObjectLiteralType' : (typeExpression, typeParser) => {
+  /*
+   * Something like: {a:number, b:string}
+   * Also, multiline object literal, with or without comments as descriptions
+   */
+  tryObjectLiteralType : (typeExpression, typeParser) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
     const match             = /^{(.*)}$/smi.exec(cleanedExpression)
 
     if (match === null) return false
 
-    /**
+    /*
      * When separating by comma, the first expression will likely be fine.
      * But it would be expected to have single-line descriptions after the type
      * definition. In this case, the description for a given expression will be
@@ -239,8 +247,10 @@ const complexTypeParsers = {
 
       let valueTypes = typeParser(types)
 
-      // Deal with optional parameters like {key?:string}
-      // by removing the ? and adding undefined as one more possible type
+      /*
+       * Deal with optional parameters like {key?:string}
+       * by removing the ? and adding undefined as one more possible type
+       */
       if (key.endsWith('?')) {
         key = key.substring(0, key.length - 1)
 
@@ -256,8 +266,10 @@ const complexTypeParsers = {
       pairs          : pairs
     }
   },
-  // Something like: MyTypeName
-  'tryTypedef' : (typeExpression) => {
+  /*
+   * Something like: MyTypeName
+   */
+  tryTypedef : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
     const match             = /^\w+$/.exec(cleanedExpression)
 

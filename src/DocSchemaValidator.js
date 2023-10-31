@@ -64,7 +64,7 @@ class DocSchemaValidator {
   validateParams(name, ast, value, throwOnError = true) {
     const params = ast.elements[name]
 
-    for (let param of params) {
+    for (const param of params) {
       const key    = param.name
       const val    = value[key]
       const result = typesValidator(param.types, val, ast.typedefs)

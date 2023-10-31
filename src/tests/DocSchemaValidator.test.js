@@ -1,20 +1,20 @@
 import { DocSchemaParser } from '../DocSchemaParser.js'
 import { DocSchemaValidator } from '../DocSchemaValidator.js'
 
-describe('DocSchemaValidator', function() {
+describe('DocSchemaValidator', () => {
   const parser    = new DocSchemaParser()
   const validator = new DocSchemaValidator()
 
   /** @type {DocSchemaAst[]} */
-  let astCommentPrimitives         = []
+  const astCommentPrimitives         = []
   /** @type {DocSchemaAst[]} */
-  let astCommentUnions             = []
+  const astCommentUnions             = []
   /** @type {DocSchemaAst[]} */
-  let astCommentOptionalParameters = []
+  const astCommentOptionalParameters = []
   /** @type {DocSchemaAst[]} */
-  let astCommentDestructured       = []
+  const astCommentDestructured       = []
 
-  beforeAll(function() {
+  beforeAll(() => {
     const commentPrimitives = `
     /**
      * @param arg1
@@ -67,24 +67,22 @@ describe('DocSchemaValidator', function() {
      function check({ arg1, arg2, arg3 }) {}
     `
 
-    astCommentPrimitives         = parser.parseComments(commentPrimitives.trim())
-    astCommentUnions             = parser.parseComments(commentUnions.trim())
-    astCommentOptionalParameters = parser.parseComments(
-      commentOptionalParameters.trim()
+    astCommentPrimitives.push(
+      ...parser.parseComments(commentPrimitives.trim())
     )
-    astCommentDestructured       = parser.parseComments(
-      commentDestructured.trim()
+    astCommentUnions.push(
+      ...parser.parseComments(commentUnions.trim())
+    )
+    astCommentOptionalParameters.push(
+      ...parser.parseComments(commentOptionalParameters.trim())
+    )
+    astCommentDestructured.push(
+      ...parser.parseComments(commentDestructured.trim())
     )
   })
 
-  test('comment with primitives: all types correct', function() {
-    const ast = astCommentPrimitives?.[0]
-
-    if (!ast) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment with primitives: all types correct', () => {
+    const [ ast ] = astCommentPrimitives
 
     expect(
       validator.validateFunctionArguments(
@@ -105,36 +103,28 @@ describe('DocSchemaValidator', function() {
     )
   })
 
-  test('comment with primitives: error on incorrect type', function() {
-    const ast = astCommentPrimitives?.[0]
+  test('comment with primitives: error on incorrect type', () => {
+    const [ ast ] = astCommentPrimitives
 
     expect(() => {
-      if (ast) {
-        validator.validateFunctionArguments(
-          ast,
-          [
-            'anything',
-            'string',
-            123,
-            BigInt(123),
-            true,
-            undefined,
-            Symbol('symbol'),
-            'null' // this is the one with wrong type
-          ]
-        )
-      }
-    }).toThrowError(TypeError)
+      validator.validateFunctionArguments(
+        ast,
+        [
+          'anything',
+          'string',
+          123,
+          BigInt(123),
+          true,
+          undefined,
+          Symbol('symbol'),
+          'null' // this is the one with wrong type
+        ]
+      )
+    }).toThrow(TypeError)
   })
 
-  test('comment with union types: all types correct', function() {
-    const ast = astCommentUnions?.[0]
-
-    if (!ast) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment with union types: all types correct', () => {
+    const [ ast ] = astCommentUnions
 
     expect(
       validator.validateFunctionArguments(
@@ -165,32 +155,24 @@ describe('DocSchemaValidator', function() {
     )
   })
 
-  test('comment with union types: error on incorrect type', function() {
-    const ast = astCommentUnions?.[0]
+  test('comment with union types: error on incorrect type', () => {
+    const [ ast ] = astCommentUnions
 
     expect(() => {
-      if (ast) {
-        validator.validateFunctionArguments(
-          ast,
-          [
-            'string',
-            BigInt(123),
-            undefined,
-            'null' // this is the one with wrong type
-          ]
-        )
-      }
-    }).toThrowError(TypeError)
+      validator.validateFunctionArguments(
+        ast,
+        [
+          'string',
+          BigInt(123),
+          undefined,
+          'null' // this is the one with wrong type
+        ]
+      )
+    }).toThrow(TypeError)
   })
 
-  test('comment with optional parameters: all types correct', function() {
-    const ast = astCommentOptionalParameters?.[0]
-
-    if (!ast) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment with optional parameters: all types correct', () => {
+    const [ ast ] = astCommentOptionalParameters
 
     expect(
       validator.validateFunctionArguments(
@@ -211,14 +193,8 @@ describe('DocSchemaValidator', function() {
     )
   })
 
-  test('comment with destructured object', function() {
-    const ast = astCommentDestructured?.[0]
-
-    if (!ast) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment with destructured object', () => {
+    const [ ast ] = astCommentDestructured
 
     expect(
       validator.validateFunctionArguments(
@@ -247,47 +223,33 @@ describe('DocSchemaValidator', function() {
     )
   })
 
-  test('comment: returns type correct', function() {
-    const ast       = astCommentPrimitives?.[0]
-    const astUnions = astCommentUnions?.[0]
-
-    if (!ast || !astUnions) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment: returns type correct', () => {
+    const [ ast ]       = astCommentPrimitives
+    const [ astUnions ] = astCommentUnions
 
     expect(validator.validateTag('returns', ast, 'string')).toBe(true)
     expect(validator.validateTag('returns', astUnions, 'string')).toBe(true)
     expect(validator.validateTag('returns', astUnions, 123)).toBe(true)
   })
 
-  test('comment: error on returns', function() {
-    const ast       = astCommentPrimitives?.[0]
-    const astUnions = astCommentUnions?.[0]
-
-    if (!ast || !astUnions) {
-      expect(true).toBe(false)
-
-      return
-    }
+  test('comment: error on returns', () => {
+    const [ ast ]       = astCommentPrimitives
+    const [ astUnions ] = astCommentUnions
 
     expect(() => {
       validator.validateTag('returns', ast, 123)
-    }).toThrowError(TypeError)
+    }).toThrow(TypeError)
 
     expect(() => {
       validator.validateTag('returns', astUnions, true)
-    }).toThrowError(TypeError)
+    }).toThrow(TypeError)
   })
 
-  test('check throwing error when unspecified arguments', function() {
-    const ast = astCommentPrimitives?.[0]
+  test('check throwing error when unspecified arguments', () => {
+    const [ ast ] = astCommentPrimitives
 
     expect(() => {
-      if (ast) {
-        validator.validateFunctionArguments(ast, [''])
-      }
-    }).toThrowError(TypeError)
+      validator.validateFunctionArguments(ast, [''])
+    }).toThrow(TypeError)
   })
 })

@@ -2,12 +2,12 @@ import { TAG_REPLACEMENTS } from './constants.js'
 import {
   binarySearchFirstGTE,
   findClosingBracketPosition,
-  isBrowserEnvironment,
-  importFileSystem
+  importFileSystem,
+  isBrowserEnvironment
 } from './functions.js'
 import { TypesParser } from './TypesParser.js'
 
-let fs = await importFileSystem()
+const fs = await importFileSystem()
 
 /** @type {Map<string, DocSchemaAst[]>} */
 const astCacheForFiles = new Map()
@@ -57,7 +57,7 @@ class DocSchemaParser {
     const typedefs = []
 
     for (const info of commentsInfo) {
-      let comment = info.comment
+      let {comment} = info
 
       comment = this.#fixTagSynonymsFromComment(comment)
       comment = this.#removeStarsFromComment(comment)
@@ -114,10 +114,7 @@ class DocSchemaParser {
    * @returns {string[]}
    */
   #chopComment(comment) {
-    return (comment
-        .replaceAll('\r', '')
-        .split('\n')
-    )
+    return (comment.replaceAll('\r', '').split('\n'))
   }
 
   /**
@@ -281,8 +278,10 @@ class DocSchemaParser {
 
         if (closingBracketPosition > 0) {
           parsedTag.typeExpression = withoutTagName.slice(1, closingBracketPosition)
-          // Cut off the type from the string,
-          // leaving the name and the description
+          /*
+           * Cut off the type from the string,
+           * leaving the name and the description
+           */
           withoutTagName = withoutTagName.slice(closingBracketPosition + 1)
         }
       }
@@ -590,7 +589,9 @@ class DocSchemaParser {
    * @returns {void} Return by reference
    */
   #processOptionalValue(parsedTag) {
-    // (Scenario 1) Optional parameter defined in the name, like this: [name=123]
+    /*
+     * (Scenario 1) Optional parameter defined in the name, like this: [name=123]
+     */
     if (parsedTag.name) {
       const pattern = /^\[(?<name>[^\]=]+)(?:=(?<defaultValue>[^=]+))?]$/m
       const match   = pattern.exec(parsedTag.name)
@@ -604,8 +605,10 @@ class DocSchemaParser {
       }
     }
 
-    // (Scenario 2) Optional parameter defined in the type expression,
-    // like this: {TypeName=}
+    /*
+     * (Scenario 2) Optional parameter defined in the type expression,
+     * like this: {TypeName=}
+     */
     if (parsedTag.typeExpression) {
       const match = /(?<typeExpression>.+)= *$/m.exec(parsedTag.typeExpression)
 
