@@ -79,10 +79,9 @@
         "prefer-destructuring": "warn",
         "prefer-object-has-own": "error",
         "prefer-rest-params": "error",
-        "prefer-spread": "error",
         "prefer-template": "warn",
         "quote-props": ["error", "consistent-as-needed"],
-        "require-await": "error",
+        "require-await": "warn",
         "require-unicode-regexp": "error",
         "require-yield": "error",
         "sort-imports": [
@@ -108,7 +107,7 @@
             "ObjectExpression": "first",
             "ImportDeclaration": 1,
             "flatTernaryExpressions": false,
-            "offsetTernaryExpressions": true,
+            "offsetTernaryExpressions": false,
             "ignoreComments": false
           }
         ],
@@ -146,8 +145,6 @@
         // Vitest
         "vitest/no-alias-methods": "error",
         "vitest/no-conditional-expect": "error",
-        "vitest/no-conditional-in-test": "error",
-        "vitest/no-conditional-tests": "error",
         "vitest/no-disabled-tests": "warn",
         "vitest/no-duplicate-hooks": "error",
         "vitest/no-focused-tests": "error",
