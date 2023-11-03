@@ -28,7 +28,7 @@ export default defineConfig({
       preserveEntrySignatures: 'exports-only',
       // https://rollupjs.org/guide/en/#big-list-of-options
       input: {
-        docschema: 'src/index.js',
+        bundle: 'src/index.js',
       },
       output: [
         {
