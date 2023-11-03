@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-
 import { simpleTypeParsers } from '../parsers.js'
 import { TypesParser } from '../TypesParser.js'
 

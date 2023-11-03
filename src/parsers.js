@@ -228,6 +228,7 @@ const complexTypeParsers = {
       const pairsLength       = pairs.length
 
       if (pairsLength > 0) {
+        // @ts-ignore
         pairs[pairsLength - 1].description = frontCommentTuple[0]
       }
 

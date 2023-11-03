@@ -1,5 +1,4 @@
-import { DocSchemaParser } from '../DocSchemaParser.js'
-import { DocSchemaValidator } from '../DocSchemaValidator.js'
+import { DocSchemaParser, DocSchemaValidator } from '#docschema'
 
 describe('DocSchemaValidator', () => {
   const parser    = new DocSchemaParser()
@@ -86,6 +85,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'anything',
@@ -108,6 +108,7 @@ describe('DocSchemaValidator', () => {
 
     expect(() => {
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'anything',
@@ -128,6 +129,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'string',
@@ -142,6 +144,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           123,
@@ -160,6 +163,7 @@ describe('DocSchemaValidator', () => {
 
     expect(() => {
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'string',
@@ -176,6 +180,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         ['string', true, 123, { a : '', b : 1 }, { adesc : '', bdesc : 1 }]
       ))
@@ -185,6 +190,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         ['string', undefined, undefined, { a : '' }, { adesc : '' }]
       ))
@@ -198,6 +204,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'firstArg',
@@ -211,6 +218,7 @@ describe('DocSchemaValidator', () => {
 
     expect(
       validator.validateFunctionArguments(
+        // @ts-ignore
         ast,
         [
           'firstArg',
@@ -227,8 +235,11 @@ describe('DocSchemaValidator', () => {
     const [ ast ]       = astCommentPrimitives
     const [ astUnions ] = astCommentUnions
 
+    // @ts-ignore
     expect(validator.validateTag('returns', ast, 'string')).toBe(true)
+    // @ts-ignore
     expect(validator.validateTag('returns', astUnions, 'string')).toBe(true)
+    // @ts-ignore
     expect(validator.validateTag('returns', astUnions, 123)).toBe(true)
   })
 
@@ -237,10 +248,12 @@ describe('DocSchemaValidator', () => {
     const [ astUnions ] = astCommentUnions
 
     expect(() => {
+      // @ts-ignore
       validator.validateTag('returns', ast, 123)
     }).toThrow(TypeError)
 
     expect(() => {
+      // @ts-ignore
       validator.validateTag('returns', astUnions, true)
     }).toThrow(TypeError)
   })
@@ -249,6 +262,7 @@ describe('DocSchemaValidator', () => {
     const [ ast ] = astCommentPrimitives
 
     expect(() => {
+      // @ts-ignore
       validator.validateFunctionArguments(ast, [''])
     }).toThrow(TypeError)
   })

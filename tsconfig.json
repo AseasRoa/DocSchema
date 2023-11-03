@@ -1,38 +1,60 @@
+/**
+ * @see https://www.typescriptlang.org/tsconfig
+ */
 {
   "compilerOptions" : {
-    "allowJs"   : true,
-    "checkJs"   : true,
-    "noEmit"    : true,
-    "emitDeclarationOnly": false,
-    "lib"       : ["DOM", "ESNext", "DOM.Iterable"],
-    "moduleResolution" : "Node",
-    "module"    : "ESNext",
-    "target"    : "ESNext",
-    "strict"    : true,
-    "sourceMap" : true,
-    "baseUrl"   : ".",
-    "declaration": true,
-    "declarationDir": "./dist/types",
-    "declarationMap": true,
-    "outDir": "./lib",
+    /**
+     * JavaScript Support
+     */
+    "allowJs": true,
+    "checkJs": true,
+    /**
+     * Emit
+     */
+    "noEmit": true,
+    /**
+     * Language and Environment
+     */
+    "target": "ESNext",
+    /**
+     * Modules
+     *
+     * https://www.typescriptlang.org/docs/handbook/modules/reference.html
+     */
+    "allowUmdGlobalAccess": true,
+    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "types": ["node", "vitest/globals"],
-    "paths": {
-      "*": ["./src/types/*.d.ts", "./types/*.d.ts"]
-    },
+    /**
+     * Interop Constraints
+     */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    /**
+     * Completeness
+     */
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports" : true
+    /*
+     * Type Checking
+     */
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    /*
+     * Type Checking - strict
+     */
+    "strict": true, // Enable all strict type-checking options
+    "noImplicitAny" : false,
+    "useUnknownInCatchVariables": false
   },
   "include" : [
-    "*.js",
-    "src/**/*",
     "dev/**/*",
-    "tests/**/*",
-    "examples/**/*"
-  ],
-  "exclude" : [
-    "node_modules/**/*",
-    "dist/**/*",
-    "docs/**/*",
-    "types/**/*"
+    "lib/**/*",
+    "src/**/*",
+    "tests/**/*"
   ]
 }

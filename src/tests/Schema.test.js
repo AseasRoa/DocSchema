@@ -1,6 +1,4 @@
-/* eslint-disable max-len */
-
-import { docSchema } from '../index.js'
+import { docSchema } from '#docschema'
 
 describe('Schema', () => {
   describe('Schema', () => {

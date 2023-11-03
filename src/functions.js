@@ -71,16 +71,16 @@ function getStackTraceBrowser(level = 1) {
   }
 
   const pattern = /((?:http[s]?:\/\/).*):(\d+):(\d+)/u
-  const match = pattern.exec(stack[level])
+  const match = pattern.exec(stack[level] ?? '')
 
   if (!match) {
     return null
   }
 
   return {
-    fileName: match[1],
-    lineNumber: parseInt(match[2]),
-    columnNumber: parseInt(match[3])
+    fileName: match[1] ?? '',
+    lineNumber: parseInt(match[2] ?? '0'),
+    columnNumber: parseInt(match[3] ?? '0')
   }
 }
 
@@ -497,6 +497,6 @@ export function removeWrappingBraces(str) {
  */
 export function trimArrayElements(array) {
   for (let index = 0; index < array.length; index++) {
-    array[index] = array[index].trim()
+    array[index] = (array[index] ?? '').trim()
   }
 }
