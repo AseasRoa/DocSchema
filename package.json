@@ -8,9 +8,19 @@
   "license": "MIT",
   "type": "module",
   "types": "./src/types/global.d.ts",
-  "main": "./dist/docschema.js",
-  "module": "./dist/docschema.js",
-  "exports": "./dist/docschema.js",
+  "main": "./src/index.js",
+  "browser": "./dist/bundle.js",
+  "exports": {
+    "types": "./src/types/global.d.ts",
+    "browser": "./dist/bundle.js",
+    "import": "./src/index.js",
+    "default": "./src/index.js"
+  },
+  "imports": {
+    "#docschema": {
+      "default": "./src/index.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
