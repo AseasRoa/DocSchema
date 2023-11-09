@@ -1,3 +1,9 @@
+/**
+ * This file must be an ambient module
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
+ */
+
 type DocSchemaAst = import('./app').DocSchemaAst
 
 declare module 'docschema' {
