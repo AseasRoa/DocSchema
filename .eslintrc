@@ -144,7 +144,6 @@
       "rules": {
         // Vitest
         "vitest/no-alias-methods": "error",
-        "vitest/no-conditional-expect": "error",
         "vitest/no-disabled-tests": "warn",
         "vitest/no-duplicate-hooks": "error",
         "vitest/no-focused-tests": "error",
