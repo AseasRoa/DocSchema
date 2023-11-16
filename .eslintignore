@@ -9,3 +9,7 @@ node_modules/
 .env*
 package-lock.json
 **/*.ts
+
+# To lint files and folders with names starting with a dot
+# https://github.com/eslint/eslint/issues/8429
+!.*
