@@ -48,7 +48,7 @@ class DocSchema {
       throw new Error('Could not create schema')
     }
 
-    const schemaLine    = (caller.lineNumber)
+    const schemaLine   = (caller.lineNumber)
     const schemaColumn = (caller.columnNumber)
     const fileName     = (caller.fileName).replace(/^file:[\/]+/u, '')
     const comments     = docSchemaParser.parseFile(fileName)
@@ -65,7 +65,10 @@ class DocSchema {
     }
 
     if (!ast) {
-      throw new Error(`Could not create schema. Make sure there is a valid JsDoc comment just above.\n> ${fileName}:${schemaLine}:${schemaColumn}`)
+      throw new Error(
+        `Could not create schema. Make sure there is a valid JsDoc`
+        + ` comment just above.\n> ${fileName}:${schemaLine}:${schemaColumn}`
+      )
     }
 
     if (
@@ -73,7 +76,10 @@ class DocSchema {
       && !ast.elements.typedef
       && ast.elements.param.length === 0
     ) {
-      throw new Error(`The schema at "${fileName}:${schemaLine}:${schemaColumn}" must be defined with one @enum tag, one or more @param tags, or a @typedef.`)
+      throw new Error(
+        `The schema at "${fileName}:${schemaLine}:${schemaColumn}"`
+        + ` must be defined with one @enum tag, one or more @param tags, or a @typedef.`
+      )
     }
 
     this.#ast = ast
@@ -102,7 +108,10 @@ class DocSchema {
       return docSchemaValidator.validateTypedef(this.#ast, value, throwOnError)
     }
 
-    throw new Error('The schema must be defined with one @enum tag, one or more @param tags, or a @typedef')
+    throw new Error(
+      'The schema must be defined with one @enum tag, '
+      + 'one or more @param tags, or a @typedef'
+    )
   }
 }
 

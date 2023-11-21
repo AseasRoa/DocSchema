@@ -25,11 +25,11 @@ const quotes = ['\'', '"', '`']
  * expressions that does not contain other expressions in them.
  *
  * @type {{
- * tryAnyType : DocSchemaSimpleParserFunction,
- * tryBooleanType : DocSchemaSimpleParserFunction,
- * tryNumberType : DocSchemaSimpleParserFunction,
- * tryPrimitiveType : DocSchemaSimpleParserFunction,
- * tryStringType : DocSchemaSimpleParserFunction
+ *   tryAnyType       : DocSchemaSimpleParserFunction,
+ *   tryBooleanType   : DocSchemaSimpleParserFunction,
+ *   tryNumberType    : DocSchemaSimpleParserFunction,
+ *   tryPrimitiveType : DocSchemaSimpleParserFunction,
+ *   tryStringType    : DocSchemaSimpleParserFunction
  * }}
  */
 const simpleTypeParsers = {
@@ -128,11 +128,11 @@ const simpleTypeParsers = {
  * expressions that could contain other expressions in them.
  *
  * @type {{
- * tryArrayType : DocSchemaComplexParserFunction,
- * tryArrayLiteral : DocSchemaComplexParserFunction,
- * tryObjectType : DocSchemaComplexParserFunction,
- * tryObjectLiteralType : DocSchemaComplexParserFunction,
- * tryTypedef : DocSchemaComplexParserFunction
+ *   tryArrayType         : DocSchemaComplexParserFunction,
+ *   tryArrayLiteral      : DocSchemaComplexParserFunction,
+ *   tryObjectType        : DocSchemaComplexParserFunction,
+ *   tryObjectLiteralType : DocSchemaComplexParserFunction,
+ *   tryTypedef           : DocSchemaComplexParserFunction
  * }}
  */
 const complexTypeParsers = {

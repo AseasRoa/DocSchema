@@ -1,5 +1,4 @@
-import { docSchema } from '#docschema'
-import { ValidationError } from '../../ValidationError.js'
+import { docSchema, ValidationError } from '#docschema'
 
 describe('Schema', () => {
   describe('Schema', () => {
@@ -39,7 +38,6 @@ describe('Schema', () => {
        * }}
        */
       const schema = docSchema()
-
 
       expect(schema.validate({ key1: '1', key2: 2})).toBe(true)
       expect(schema.check({ key1: '1', key2: 2})).toBe(true)

@@ -5,18 +5,18 @@
  * - Return an error when the value doesn't match the type
  *
  * @type {{
- *   'array'         : JsDocCheckerFunction,
- *   'object'        : JsDocCheckerFunction,
- *   'objectLiteral' : JsDocCheckerFunction,
- *   'any'           : JsDocCheckerFunction,
- *   'null'          : JsDocCheckerFunction,
- *   'undefined'     : JsDocCheckerFunction,
- *   'string'        : JsDocCheckerFunction,
- *   'number'        : JsDocCheckerFunction,
- *   'bigint'        : JsDocCheckerFunction,
- *   'boolean'       : JsDocCheckerFunction,
- *   'symbol'        : JsDocCheckerFunction,
- *   'typedef'       : JsDocCheckerFunction
+ *   array         : DocCheckerFunction,
+ *   object        : DocCheckerFunction,
+ *   objectLiteral : DocCheckerFunction,
+ *   any           : DocCheckerFunction,
+ *   null          : DocCheckerFunction,
+ *   undefined     : DocCheckerFunction,
+ *   string        : DocCheckerFunction,
+ *   number        : DocCheckerFunction,
+ *   bigint        : DocCheckerFunction,
+ *   boolean       : DocCheckerFunction,
+ *   symbol        : DocCheckerFunction,
+ *   typedef       : DocCheckerFunction
  * }}
  */
 const validators = {
@@ -147,14 +147,6 @@ function tryPrimitiveType(parsedType, value) {
   }
 
   return false
-
-  //
-  // /** @type {string} */
-  // const gotType = value?.constructor?.name ?? typeof value
-  //
-  // return new TypeError(
-  //   `Wrong type. Expected primitive type ${typeName}, got ${gotType}.`
-  // )
 }
 
 export { validators }

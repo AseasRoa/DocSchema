@@ -268,7 +268,7 @@ class DocSchemaParser {
     hasName        = true,
     hasDescription = true
   ) {
-    let withoutTagName  = tagContents.replace(/^ *@[a-z]+ */um, '')
+    let withoutTagName = tagContents.replace(/^ *@[a-z]+ */um, '')
 
     /** @type {DocSchemaParsedTag} */
     const parsedTag = {

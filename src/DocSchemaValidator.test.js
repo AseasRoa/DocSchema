@@ -1,5 +1,4 @@
-import { DocSchemaParser, DocSchemaValidator } from '#docschema'
-import { ValidationError } from './ValidationError.js'
+import { DocSchemaParser, DocSchemaValidator, ValidationError } from '#docschema'
 
 describe('DocSchemaValidator', () => {
   const parser    = new DocSchemaParser()
