@@ -4,7 +4,7 @@
  * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
  */
 
-type DocSchemaAst = import('./app').DocSchemaAst
+type DocSchemaAst = import('./app').Ast
 
 declare module 'docschema' {
   export class ValidationError extends Error {
@@ -29,11 +29,11 @@ declare module 'docschema' {
     parseComments(
       code: string,
       file?: string
-    ): Promise<DocSchemaAst[]>
+    ): Promise<Ast[]>
 
     parseFile(
       file: string
-    ): Promise<DocSchemaAst[]>
+    ): Promise<Ast[]>
 
     removeFileFromCache(
       file: string
@@ -42,27 +42,27 @@ declare module 'docschema' {
 
   export class DocSchemaValidator {
     validateFunctionArguments(
-      ast: DocSchemaAst,
+      ast: Ast,
       args: any,
       throwOnError?: boolean
     ): boolean
 
     validateParams(
       name: 'param' | 'property',
-      ast: DocSchemaAst,
+      ast: Ast,
       args: any,
       throwOnError?: boolean
     ): boolean
 
     validateTag(
       tagName: 'enum' | 'type' | 'returns' | 'yields',
-      ast: DocSchemaAst,
+      ast: Ast,
       value: any,
       throwOnError?: boolean
-    ): Promise<DocSchemaAst[]>
+    ): Promise<Ast[]>
 
     validateTypedef(
-      ast: DocSchemaAst,
+      ast: Ast,
       value: any,
       throwOnError?: boolean
     ) : ValidationError | Error

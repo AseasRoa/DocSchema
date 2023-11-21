@@ -22,7 +22,7 @@ import { separateDescriptionAndLimits } from './limits.js'
 /** @type {import('fs') | null} */
 const fs = await importFileSystem()
 
-/** @type {Map<string, DocSchemaAst[]>} */
+/** @type {Map<string, Ast[]>} */
 const astCacheForFiles = new Map()
 
 /** @type {Map<string, RegExp>} */
@@ -34,7 +34,7 @@ class DocSchemaParser {
 
   /**
    * @param {string} file
-   * @returns {DocSchemaAst[]}
+   * @returns {Ast[]}
    * @throws {Error} If the input file has not been parsed yet
    */
   getParsedAst(file) {
@@ -50,15 +50,15 @@ class DocSchemaParser {
   /**
    * @param {string} code Input code (string), containing one or more JsDoc comments
    * @param {string} [file]
-   * @returns {DocSchemaAst[]}
+   * @returns {Ast[]}
    */
   parseComments(code, file = '') {
     const commentsInfo = this.#extractCommentsInfo(code)
 
-    /** @type {DocSchemaAst[]} */
+    /** @type {Ast[]} */
     const parsedComments = []
 
-    /** @type {DocSchemaAst[]} */
+    /** @type {Ast[]} */
     const typedefs = []
 
     for (const info of commentsInfo) {
@@ -71,7 +71,7 @@ class DocSchemaParser {
 
       trimArrayElements(chopped)
 
-      /** @type {DocSchemaAst} */
+      /** @type {Ast} */
       const ast     = {
         elements         : this.#parseChoppedComment(chopped),
         file             : file,
@@ -96,7 +96,7 @@ class DocSchemaParser {
 
   /**
    * @param {string} file
-   * @returns {DocSchemaAst[]}
+   * @returns {Ast[]}
    */
   parseFile(file) {
     if (!astCacheForFiles.has(file)) {
@@ -260,7 +260,7 @@ class DocSchemaParser {
    * @param {boolean} [hasType] This tag is expected to have a type?
    * @param {boolean} [hasName] This tag is expected to have a name?
    * @param {boolean} [hasDescription] This tag is expected to have a description?
-   * @returns {DocSchemaParsedTag}
+   * @returns {ParsedTag}
    */
   #extractTagComponents(
     tagContents,
@@ -270,7 +270,7 @@ class DocSchemaParser {
   ) {
     let withoutTagName = tagContents.replace(/^ *@[a-z]+ */um, '')
 
-    /** @type {DocSchemaParsedTag} */
+    /** @type {ParsedTag} */
     const parsedTag = {
       id             : 0,
       typeExpression : '',
@@ -394,7 +394,7 @@ class DocSchemaParser {
 
   /**
    * @param {string[]} choppedComment
-   * @returns {DocSchemaAstElements}
+   * @returns {AstElements}
    */
   #parseChoppedComment(choppedComment) {
     const usedTags = this.#extractUsedTags(choppedComment)
@@ -484,10 +484,10 @@ class DocSchemaParser {
   /**
    * @param {string[]} choppedComment
    * @param {'param' | 'property' | string} tagName
-   * @returns {DocSchemaParsedTag[]}
+   * @returns {ParsedTag[]}
    */
   #parseMultiLineTag(choppedComment, tagName) {
-    /** @type {DocSchemaParsedTag[]} */
+    /** @type {ParsedTag[]} */
     const parsedTags = []
     const tagLines   = this.#extractLinesWhereTagIsUsed(choppedComment, tagName)
 
@@ -545,7 +545,7 @@ class DocSchemaParser {
    *
    * @param {string[]} choppedComment
    * @param {'returns' | 'type' | 'enum' | 'typedef' | string} tagName
-   * @returns {DocSchemaParsedTag | null}
+   * @returns {ParsedTag | null}
    */
   #parseSingleLineTag(choppedComment, tagName) {
     let tagLines = this.#extractLinesWhereTagIsUsed(choppedComment, tagName)
@@ -553,7 +553,7 @@ class DocSchemaParser {
     // In case of multiple @returns, only the last one is important
     tagLines = tagLines.slice(-1)
 
-    /** @type {DocSchemaParsedTag[]} */
+    /** @type {ParsedTag[]} */
     const parsedTags = []
 
     for (const line of tagLines) {
@@ -576,7 +576,7 @@ class DocSchemaParser {
    * Extract the scope - private, public, protected
    *
    * @param {string[]} choppedComment
-   * @returns {DocSchemaAstScope}
+   * @returns {AstScope}
    */
   #parseScope(choppedComment) {
     const scope = { private : false, protected : false, public : true }
@@ -603,7 +603,7 @@ class DocSchemaParser {
   /**
    * Find whether type expression is defined like this: {Type=}
    *
-   * @param {DocSchemaParsedTag} parsedTag
+   * @param {ParsedTag} parsedTag
    * @returns {void} Return by reference
    */
   #processOptionalValue(parsedTag) {

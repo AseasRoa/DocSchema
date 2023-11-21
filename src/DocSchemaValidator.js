@@ -8,7 +8,7 @@ class DocSchemaValidator {
   lastError = null
 
   /**
-   * @param {DocSchemaAst} ast
+   * @param {Ast} ast
    * @param {any[]} args
    * @param {boolean} [throwOnError]
    * @returns {boolean}
@@ -59,7 +59,7 @@ class DocSchemaValidator {
 
   /**
    * @param {'param' | 'property'} name
-   * @param {DocSchemaAst} ast
+   * @param {Ast} ast
    * @param {any} value
    * @param {boolean} [throwOnError]
    * @returns {boolean}
@@ -100,7 +100,7 @@ class DocSchemaValidator {
 
   /**
    * @param {'enum' | 'type' | 'returns' | 'yields'} tagName
-   * @param {DocSchemaAst} ast
+   * @param {Ast} ast
    * @param {any} value
    * @param {boolean} [throwOnError]
    * @returns {boolean}
@@ -145,7 +145,7 @@ class DocSchemaValidator {
   }
 
   /**
-   * @param {DocSchemaAst} ast
+   * @param {Ast} ast
    * @param {any} value
    * @param {boolean} [throwOnError]
    * @returns {boolean}
@@ -168,7 +168,7 @@ class DocSchemaValidator {
 }
 
 /**
- * @type {DocTypesValidator}
+ * @type {TypesValidator}
  * @throws {Error} If missing validator function (should never happen)
  */
 function typesValidator(parsedTypes, value, typedefs, limits) {

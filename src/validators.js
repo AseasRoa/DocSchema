@@ -5,18 +5,18 @@
  * - Return an error when the value doesn't match the type
  *
  * @type {{
- *   array         : DocCheckerFunction,
- *   object        : DocCheckerFunction,
- *   objectLiteral : DocCheckerFunction,
- *   any           : DocCheckerFunction,
- *   null          : DocCheckerFunction,
- *   undefined     : DocCheckerFunction,
- *   string        : DocCheckerFunction,
- *   number        : DocCheckerFunction,
- *   bigint        : DocCheckerFunction,
- *   boolean       : DocCheckerFunction,
- *   symbol        : DocCheckerFunction,
- *   typedef       : DocCheckerFunction
+ *   array         : ValidatorFunction,
+ *   object        : ValidatorFunction,
+ *   objectLiteral : ValidatorFunction,
+ *   any           : ValidatorFunction,
+ *   null          : ValidatorFunction,
+ *   undefined     : ValidatorFunction,
+ *   string        : ValidatorFunction,
+ *   number        : ValidatorFunction,
+ *   bigint        : ValidatorFunction,
+ *   boolean       : ValidatorFunction,
+ *   symbol        : ValidatorFunction,
+ *   typedef       : ValidatorFunction
  * }}
  */
 const validators = {
@@ -133,7 +133,7 @@ const validators = {
 }
 
 /**
- * @param {DocSchemaParsedType} parsedType
+ * @param {ParsedType} parsedType
  * @param {any} value
  * @returns {boolean}
  */

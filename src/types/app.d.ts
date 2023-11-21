@@ -1,17 +1,30 @@
-type DocSchemaPrimitives = 'string'|'number'|'bigint'|'boolean'|'undefined'|'symbol'|'null'
+type Primitives =
+  'string'|'number'|'bigint'|'boolean'|'undefined'|'symbol'|'null'
 
-type DocSchemaAstScope = {
+type AstScope = {
   private: boolean,
   protected: boolean,
   public: boolean
 }
 
-type DocSchemaAstTypeNames = DocSchemaPrimitives|'any'|'array'|'object'|'objectLiteral'|'typedef'
+type AstTypeNames =
+  Primitives|'any'|'array'|'object'|'objectLiteral'|'typedef'
 
-type DocSchemaLimits = {
+type Limits = {
+  // array, number, string
   min?: number,
   max?: number,
   length?: number,
+  // number
+  gte?: number,
+  gt?: number,
+  lte?: number,
+  lt?: number,
+  int?: boolean,
+  step?: number,
+  finite?: boolean,
+  safeInt?: boolean,
+  // string
   startsWith?: string,
   endsWith?: string,
   includes?: string,
@@ -25,97 +38,89 @@ type DocSchemaLimits = {
   ulid?: boolean,
   cuid?: boolean,
   cuid2?: boolean,
-  pattern?: RegExp,
-  gte?: number,
-  gt?: number,
-  lte?: number,
-  lt?: number,
-  int?: boolean,
-  step?: number,
-  finite?: boolean,
-  safeInt?: boolean
+  pattern?: RegExp
 }
 
-type DocSchemaObjectLiteralPair = {
+type ObjectLiteralPair = {
   key: string,
-  valueTypes: DocSchemaParsedType[],
+  valueTypes: ParsedType[],
   description: string,
-  limits: DocSchemaLimits
+  limits: Limits
 }
 
-type DocSchemaObjectPairs = Array<{
-  keyTypes: DocSchemaParsedType[],
-  valueTypes: DocSchemaParsedType[]
+type ObjectPairs = Array<{
+  keyTypes: ParsedType[],
+  valueTypes: ParsedType[]
 }>
 
-type DocSchemaParsedType = {
-  typeName: DocSchemaAstTypeNames,
+type ParsedType = {
+  typeName: AstTypeNames,
   typeExpression: string,
   value?: any, // If not defined, it means any value
-  types?: DocSchemaParsedType[], // Used for Array
-  typePairs?: DocSchemaObjectPairs, // Used for Object types
-  pairs?: DocSchemaObjectLiteralPair[] // Used for Object literal types
+  types?: ParsedType[], // Used for Array
+  typePairs?: ObjectPairs, // Used for Object types
+  pairs?: ObjectLiteralPair[] // Used for Object literal types
 }
 
-type DocSchemaParsedTag = {
+type ParsedTag = {
   id: number,
-  types: DocSchemaParsedType[],
+  types: ParsedType[],
   typeExpression: string,
   name: string,
   description: string,
-  limits: DocSchemaLimits,
+  limits: Limits,
   optional: boolean,
   defaultValue: string | undefined,
   destructured: [string, string] | undefined // \[ Param name, Property name \] tuple
 }
 
-type DocSchemaAstElements = {
+type AstElements = {
   description: string,
-  scope: DocSchemaAstScope,
-  returns: DocSchemaParsedTag | null,
-  param: DocSchemaParsedTag[],
-  enum: DocSchemaParsedTag | null,
-  type: DocSchemaParsedTag | null,
-  typedef: DocSchemaParsedTag | null,
-  yields: DocSchemaParsedTag | null,
-  property: DocSchemaParsedTag[]
+  scope: AstScope,
+  returns: ParsedTag | null,
+  param: ParsedTag[],
+  enum: ParsedTag | null,
+  type: ParsedTag | null,
+  typedef: ParsedTag | null,
+  yields: ParsedTag | null,
+  property: ParsedTag[]
 }
 
-type DocSchemaAst = {
-  elements: DocSchemaAstElements,
+type Ast = {
+  elements: AstElements,
   file: string,
   startLine: number,
   endLine: number,
   lineAfterComment: string, // The contents of the first non-empty line after the comment
-  typedefs: DocSchemaAst[] // Other parsed AST from the same file that are 'typedef'
+  typedefs: Ast[] // Other parsed AST from the same file that are 'typedef'
 }
 
-type DocSchemaTypeParser = (
+type TypeParser = (
   typeExpression: string
-) => DocSchemaParsedType[]
+) => ParsedType[]
 
-type DocSchemaSimpleParserFunction = (
+type SimpleParserFunction = (
   typeExpression: string
-) => DocSchemaParsedType | false
+) => ParsedType | false
 
-type DocSchemaComplexParserFunction = (
+type ComplexParserFunction = (
   typeExpression: string,
-  typeParser: DocSchemaTypeParser
-) => DocSchemaParsedType | false
+  typeParser: TypeParser
+) => ParsedType | false
 
-type DocSchemaParserFunction = DocSchemaSimpleParserFunction | DocSchemaComplexParserFunction
+type ParserFunction = SimpleParserFunction | ComplexParserFunction
 
-type DocTypesValidator = (
-  types: DocSchemaParsedType[],
+type TypesValidator = (
+  types: ParsedType[],
   value: any,
-  typedefs: DocSchemaAst[],
-  limits: DocSchemaLimits
+  typedefs: Ast[],
+  limits: Limits
 ) => boolean
 
-type DocCheckerFunction = (
-  parsedType: DocSchemaParsedType,
+type ValidatorFunction = (
+  parsedType: ParsedType,
   value: any,
-  typedefs: DocSchemaAst[],
-  limits: DocSchemaLimits,
-  typesValidator: DocTypesValidator
+  typedefs: Ast[],
+  limits: Limits,
+  typesValidator: TypesValidator
 ) => boolean

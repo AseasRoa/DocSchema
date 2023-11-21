@@ -51,7 +51,7 @@ const paramsMap = {
 
 /**
  * @param {string} typeName
- * @param {DocSchemaLimits} limitsObject
+ * @param {Limits} limitsObject
  */
 export function limitsParsers(typeName, limitsObject) {
   if (!(typeName in paramsMap)) {

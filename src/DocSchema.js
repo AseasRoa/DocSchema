@@ -7,7 +7,7 @@ const docSchemaParser    = new DocSchemaParser()
 const docSchemaValidator = new DocSchemaValidator()
 
 class DocSchema {
-  /** @type {DocSchemaAst | null} */
+  /** @type {Ast | null} */
   #ast = null
 
   constructor() {
@@ -53,7 +53,7 @@ class DocSchema {
     const fileName     = (caller.fileName).replace(/^file:[\/]+/u, '')
     const comments     = docSchemaParser.parseFile(fileName)
 
-    /** @type {DocSchemaAst | null} */
+    /** @type {Ast | null} */
     let ast = null
 
     for (const comment of comments) {

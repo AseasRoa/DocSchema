@@ -367,9 +367,9 @@ const validValidations = {
 
 /**
  * @type {{
- *   array: (limitsObject: DocSchemaLimits, value: Array<any>) => boolean,
- *   number: (limitsObject: DocSchemaLimits, value: number) => boolean,
- *   string: (limitsObject: DocSchemaLimits, value: string) => boolean,
+ *   array: (limitsObject: Limits, value: Array<any>) => boolean,
+ *   number: (limitsObject: Limits, value: number) => boolean,
+ *   string: (limitsObject: Limits, value: string) => boolean,
  * }}
  */
 export const limitsValidators = {

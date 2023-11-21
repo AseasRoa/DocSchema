@@ -26,7 +26,7 @@ class TypesParser {
 
   /**
    * @param {string} typeExpression
-   * @returns {DocSchemaParsedType[]}
+   * @returns {ParsedType[]}
    */
   parseType(typeExpression) {
     const expression      = this.#fixCommonTypeMistakes(typeExpression)
@@ -50,10 +50,10 @@ class TypesParser {
 
   /**
    * @param {string[]} split
-   * @returns {DocSchemaParsedType[]}
+   * @returns {ParsedType[]}
    */
   #parseMultipleTypes(split) {
-    /** @type {DocSchemaParsedType[]} */
+    /** @type {ParsedType[]} */
     const output = []
 
     for (const member of split) {
@@ -69,7 +69,7 @@ class TypesParser {
 
   /**
    * @param {string} typeExpression
-   * @returns {DocSchemaParsedType[]}
+   * @returns {ParsedType[]}
    */
   #parseSingleType(typeExpression) {
     for (const parsers of this.#parsers) {
@@ -88,8 +88,8 @@ class TypesParser {
 
   /**
    * @param {string} typeExpression
-   * @param {Object<string, DocSchemaParserFunction>} typeParsers
-   * @returns {DocSchemaParsedType | false}
+   * @param {Object<string, ParserFunction>} typeParsers
+   * @returns {ParsedType | false}
    */
   #tryToParseTypes(typeExpression, typeParsers) {
     for (const name in typeParsers) {

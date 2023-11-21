@@ -12,7 +12,7 @@ import { separateDescriptionAndLimits } from './limits.js'
  *
  * @see https://developer.mozilla.org/en-US/docs/Glossary/Primitive
  * @see https://github.com/jsdoc/jsdoc/issues/1066
- * @type {DocSchemaPrimitives[]}
+ * @type {Primitives[]}
  */
 const primitiveTypes = [
   'string', 'number', 'bigint', 'boolean', 'undefined', 'symbol', 'null'
@@ -25,11 +25,11 @@ const quotes = ['\'', '"', '`']
  * expressions that does not contain other expressions in them.
  *
  * @type {{
- *   tryAnyType       : DocSchemaSimpleParserFunction,
- *   tryBooleanType   : DocSchemaSimpleParserFunction,
- *   tryNumberType    : DocSchemaSimpleParserFunction,
- *   tryPrimitiveType : DocSchemaSimpleParserFunction,
- *   tryStringType    : DocSchemaSimpleParserFunction
+ *   tryAnyType       : SimpleParserFunction,
+ *   tryBooleanType   : SimpleParserFunction,
+ *   tryNumberType    : SimpleParserFunction,
+ *   tryPrimitiveType : SimpleParserFunction,
+ *   tryStringType    : SimpleParserFunction
  * }}
  */
 const simpleTypeParsers = {
@@ -85,7 +85,7 @@ const simpleTypeParsers = {
   tryPrimitiveType : (typeExpression) => {
     const cleanedExpression = removeWrappingBraces(typeExpression.trim())
 
-    /** @type {DocSchemaPrimitives} */
+    /** @type {Primitives} */
     // @ts-ignore
     const typeName = cleanedExpression.toLowerCase()
 
@@ -128,11 +128,11 @@ const simpleTypeParsers = {
  * expressions that could contain other expressions in them.
  *
  * @type {{
- *   tryArrayType         : DocSchemaComplexParserFunction,
- *   tryArrayLiteral      : DocSchemaComplexParserFunction,
- *   tryObjectType        : DocSchemaComplexParserFunction,
- *   tryObjectLiteralType : DocSchemaComplexParserFunction,
- *   tryTypedef           : DocSchemaComplexParserFunction
+ *   tryArrayType         : ComplexParserFunction,
+ *   tryArrayLiteral      : ComplexParserFunction,
+ *   tryObjectType        : ComplexParserFunction,
+ *   tryObjectLiteralType : ComplexParserFunction,
+ *   tryTypedef           : ComplexParserFunction
  * }}
  */
 const complexTypeParsers = {
@@ -219,7 +219,7 @@ const complexTypeParsers = {
      */
     const pairExpressions = splitTypeExpression((match?.[1] ?? '').trim(), [','])
 
-    /** @type {DocSchemaObjectLiteralPair[]} */
+    /** @type {ObjectLiteralPair[]} */
     const pairs = []
 
     for (const pairExpression of pairExpressions) {
@@ -267,7 +267,7 @@ const complexTypeParsers = {
         valueTypes
       )
 
-      /** @type {DocSchemaObjectLiteralPair} */
+      /** @type {ObjectLiteralPair} */
       const pair = { key, valueTypes, description, limits }
 
       pairs.push(pair)

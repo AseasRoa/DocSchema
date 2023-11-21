@@ -4,14 +4,14 @@ describe('DocSchemaValidator', () => {
   const parser    = new DocSchemaParser()
   const validator = new DocSchemaValidator()
 
-  /** @type {DocSchemaAst[]} */
-  const astCommentPrimitives         = []
-  /** @type {DocSchemaAst[]} */
-  const astCommentUnions             = []
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
+  const astCommentPrimitives = []
+  /** @type {Ast[]} */
+  const astCommentUnions = []
+  /** @type {Ast[]} */
   const astCommentOptionalParameters = []
-  /** @type {DocSchemaAst[]} */
-  const astCommentDestructured       = []
+  /** @type {Ast[]} */
+  const astCommentDestructured = []
 
   beforeAll(() => {
     const commentPrimitives = `
@@ -272,11 +272,11 @@ describe('DocSchemaValidator limits', () => {
   const parser    = new DocSchemaParser()
   const validator = new DocSchemaValidator()
 
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astCommentWithLimitsArray = []
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astCommentWithLimitsString = []
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astCommentWithLimitsObjectLiteral = []
 
   beforeAll(() => {

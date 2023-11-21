@@ -31,10 +31,10 @@ function relaxJsonString(jsonString) {
 
 /**
  * @param {string} inputDescription
- * @param {DocSchemaParsedType[]} types
+ * @param {ParsedType[]} types
  * @returns {{
  *   description: string,
- *   limits: DocSchemaLimits
+ *   limits: Limits
  * }}
  */
 function separateDescriptionAndLimits(inputDescription, types) {

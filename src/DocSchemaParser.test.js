@@ -3,11 +3,11 @@ import { DocSchemaParser } from '#docschema'
 describe('DocSchemaParser', () => {
   const parser = new DocSchemaParser()
 
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astComments           = []
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astCommentsWithScopes = []
-  /** @type {DocSchemaAst[]} */
+  /** @type {Ast[]} */
   const astCommentsWithLimits = []
 
   beforeAll(() => {
@@ -161,7 +161,7 @@ describe('DocSchemaParser', () => {
 
   describe('Parameter scopes', () => {
     test('detect correct scopes', () => {
-      /** @type {DocSchemaAstScope | undefined} */
+      /** @type {AstScope | undefined} */
       let scope = undefined
 
       // Public scope
