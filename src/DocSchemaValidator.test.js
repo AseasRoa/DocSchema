@@ -268,75 +268,221 @@ describe('DocSchemaValidator', () => {
   })
 })
 
-describe('DocSchemaValidator limits', () => {
+describe('DocSchemaValidator - Limits', () => {
   const parser    = new DocSchemaParser()
   const validator = new DocSchemaValidator()
 
-  /** @type {Ast[]} */
-  const astCommentWithLimitsArray = []
-  /** @type {Ast[]} */
-  const astCommentWithLimitsString = []
-  /** @type {Ast[]} */
-  const astCommentWithLimitsObjectLiteral = []
+  describe('in @type tag', () => {
+    test('array', () => {
+      const [ ast ] = parser.parseComments(`
+      /** @type {number[]} {min: 2} */
+      `)
 
-  beforeAll(() => {
-    const commentWithLimitsArray = `
-    /**
-     * @type {number[]} {min: 3}
-     */
-    `
+      if (!ast) throw new Error('Ast is missing')
 
-    const commentWithLimitsString = `
-    /**
-     * @param {string} minVal {min: 3}
-     * @param {string} maxVal {max: 3}
-     * @param {string} lengthVal {length: 3}
-     */
-    `
+      // correct
+      expect(
+        validator.validateTag('type', ast, [1, 2])
+      ).toBe(true)
 
-    const commentWithLimitsObjectLiteral = `
-    /**
-     * @type {{
-     *   minKey: string, // {min: 3}
-     * }} minVal
-     */
-    `
+      // wrong
+      expect(() => {
+        validator.validateTag('type', ast, [1])
+      }).toThrow(ValidationError)
+    })
 
-    astCommentWithLimitsArray.push(
-      ...parser.parseComments(commentWithLimitsArray.trim())
-    )
-    astCommentWithLimitsString.push(
-      ...parser.parseComments(commentWithLimitsString.trim())
-    )
-    astCommentWithLimitsObjectLiteral.push(
-      ...parser.parseComments(commentWithLimitsObjectLiteral.trim())
-    )
+    test('number', () => {
+      const [ ast ] = parser.parseComments(`
+      /** @type {number} {min: 2} */
+      `)
+
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateTag('type', ast, 2)
+      ).toBe(true)
+
+      // wrong
+      expect(() => {
+        validator.validateTag('type', ast, 1)
+      }).toThrow(ValidationError)
+    })
+
+    test('string', () => {
+      const [ ast ] = parser.parseComments(`
+      /** @type {string} {length: 2} */
+      `)
+
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateTag('type', ast, '12')
+      ).toBe(true)
+
+      // wrong
+      expect(() => {
+        validator.validateTag('type', ast, '1')
+      }).toThrow(ValidationError)
+    })
   })
 
-  test('validate limits for array', () => {
-    const [ ast ] = astCommentWithLimitsArray
+  describe('in function arguments', () => {
+    test('array, number, string', () => {
+      const [ ast ] = parser.parseComments(`
+      /**
+       * @param {number[]} arrayArg {min: 2}
+       * @param {number} numberArg {min: 2}
+       * @param {string} stringArg {min: 2}
+       */
+       function validate(arrayArg, numberArg, stringArg) {}
+      `)
 
-    expect(() => {
-      // @ts-ignore
-      validator.validateTag('type', ast, [1, 2])
-    }).toThrow(ValidationError)
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateFunctionArguments(ast, [[1, 2], 2, '12'])
+      ).toBe(true)
+
+      // wrong array
+      expect(() => {
+        validator.validateFunctionArguments(ast, [[1], 2, '12'])
+      }).toThrow(ValidationError)
+
+      // wrong number
+      expect(() => {
+        validator.validateFunctionArguments(ast, [[1, 2], 1, '12'])
+      }).toThrow(ValidationError)
+
+      // wrong string
+      expect(() => {
+        validator.validateFunctionArguments(ast, [[1, 2], 2, '1'])
+      }).toThrow(ValidationError)
+    })
   })
 
-  test('validate limits', () => {
-    const [ ast ] = astCommentWithLimitsString
+  describe('in @typedef', () => {
+    test('array, number, string', () => {
+      const [ ast ] = parser.parseComments(`
+      /**
+       * @typedef {
+       *   @property {number[]} array {min: 2}
+       *   @property {number} number {min: 2}
+       *   @property {string} string {min: 2}
+       * } Type
+       */
+      `)
 
-    expect(() => {
-      // @ts-ignore
-      validator.validateFunctionArguments(ast, ['1', '2', '3'])
-    }).toThrow(ValidationError)
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateTypedef(ast, {array: [1, 2], number: 2, string: '12'})
+      ).toBe(true)
+
+      // wrong array
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1], number: 2, string: '12'})
+      }).toThrow(ValidationError)
+
+      // wrong number
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1, 2], number: 1, string: '12'})
+      }).toThrow(ValidationError)
+
+      // wrong string
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1, 2], number: 2, string: '1'})
+      }).toThrow(ValidationError)
+    })
   })
 
-  test('validate limits in object literal', () => {
-    const [ ast ] = astCommentWithLimitsObjectLiteral
+  describe('in destructured object', () => {
+    test('array, number, string', () => {
+      const [ ast ] = parser.parseComments(`
+      /**
+       * @param {Object} input
+       * @param {number[]} [input.array] {min: 2}
+       * @param {number} input.number {min: 2}
+       * @param {string} input.string {min: 2}
+       */
+      `)
 
-    expect(() => {
-      // @ts-ignore
-      validator.validateTag('type', ast, {minKey: '12'})
-    }).toThrow(ValidationError)
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateParams(
+          'param', ast, {input: {array: [1, 2], number: 2, string: '12'}}
+        )
+      ).toBe(true)
+
+      // wrong array
+      expect(() => {
+        validator.validateParams(
+          'param', ast, {input: {array: [1], number: 2, string: '12'}}
+        )
+      }).toThrow(ValidationError)
+
+      // wrong number
+      expect(() => {
+        validator.validateParams(
+          'param', ast, {input: {array: [1, 2], number: 1, string: '12'}}
+        )
+      }).toThrow(ValidationError)
+
+      // wrong string
+      expect(() => {
+        validator.validateParams(
+          'param', ast, {input: {array: [1, 2], number: 2, string: '1'}}
+        )
+      }).toThrow(ValidationError)
+    })
+  })
+
+  describe('in object literal', () => {
+    test('array, number, string', () => {
+      const [ ast ] = parser.parseComments(`
+      /**
+       * @type {{
+       *   array: number[], // {min: 2}
+       *   number: number, // {min: 2}
+       *   string: string, // {min: 2}
+       * }}
+       */
+      `)
+
+      if (!ast) throw new Error('Ast is missing')
+
+      // correct
+      expect(
+        validator.validateTag(
+          'type', ast, {array: [1, 2], number: 2, string: '12'}
+        )
+      ).toBe(true)
+
+      // wrong array
+      expect(() => {
+        validator.validateTag(
+          'type', ast, {array: [1], number: 2, string: '12'}
+        )
+      }).toThrow(ValidationError)
+
+      // wrong number
+      expect(() => {
+        validator.validateTag(
+          'type', ast, {array: [1, 2], number: 1, string: '12'}
+        )
+      }).toThrow(ValidationError)
+
+      // wrong string
+      expect(() => {
+        validator.validateTag(
+          'type', ast, {array: [1, 2], number: 2, string: '1'}
+        )
+      }).toThrow(ValidationError)
+    })
   })
 })
