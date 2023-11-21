@@ -29,7 +29,7 @@ class DocSchemaValidator {
         : args[argId]
 
       // undefined value on optional parameter is allowed
-      if (arg === undefined && param.optional) {
+      if (param.optional && arg === undefined) {
         continue
       }
 
@@ -73,8 +73,16 @@ class DocSchemaValidator {
     const params = ast.elements[name]
 
     for (const param of params) {
-      const key    = param.name
-      const val    = value[key]
+      const key = param.name
+      const val = (param.destructured)
+        ? value[param.destructured[0]]?.[param.destructured[1]]
+        : value[param.name]
+
+      // undefined value on optional parameter is allowed
+      if (param.optional && val === undefined) {
+        continue
+      }
+
       const result = typesValidator(param.types, val, ast.typedefs, param.limits)
 
       if (!result) {
