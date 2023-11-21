@@ -7,6 +7,7 @@ import {
   trimArrayElements
 } from './functions.js'
 import { TypesParser } from './TypesParser.js'
+import { separateDescriptionAndLimits } from './limits.js'
 
 /**
  * @typedef ExtractedCommentInfo
@@ -276,6 +277,7 @@ class DocSchemaParser {
       types          : [],
       name           : '',
       description    : '',
+      limits         : {},
       optional       : false,
       defaultValue   : undefined,
       /**
@@ -331,24 +333,19 @@ class DocSchemaParser {
       withoutTagName = withoutTagName.slice(chars)
     }
 
-    // 3) Search for description
-    if (hasDescription) {
-      parsedTag.description = withoutTagName
-
-      // Remove the '-' and empty chars from the beginning
-      parsedTag.description = parsedTag.description.replace(
-        /^ *-? */um,
-        ''
-      )
-
-      parsedTag.description = parsedTag.description.replaceAll('\n', ' ')
-    }
-
-    // 4) Is it optional
+    // 3) Is it optional
     this.#processOptionalValue(parsedTag)
 
-    // 5) Parse the type expression to get the parsed type
+    // 4) Parse the type expression to get the parsed type
     parsedTag.types = this.typesParser.parseType(parsedTag.typeExpression)
+
+    // 5) Search for description and limits
+    if (hasDescription && withoutTagName) {
+      const result = separateDescriptionAndLimits(withoutTagName, parsedTag.types)
+
+      parsedTag.description = result.description
+      parsedTag.limits = result.limits
+    }
 
     // 6) Is destructured
     if (parsedTag.name.includes('.')) {

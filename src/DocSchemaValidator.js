@@ -1,8 +1,10 @@
+import { ValidationError } from './ValidationError.js'
 import { enquoteString } from './functions.js'
+import { limitsValidators } from './limitsValidators.js'
 import { validators } from './validators.js'
 
 class DocSchemaValidator {
-  /** @type {TypeError | null} */
+  /** @type {ValidationError | null} */
   lastError = null
 
   /**
@@ -11,7 +13,7 @@ class DocSchemaValidator {
    * @param {boolean} [throwOnError]
    * @returns {boolean}
    * Returns true if the validation is successful
-   * @throws {TypeError}
+   * @throws {ValidationError}
    * Throws an error if the validation is not successful
    */
   validateFunctionArguments(ast, args, throwOnError = true) {
@@ -20,6 +22,7 @@ class DocSchemaValidator {
 
     for (const param of params) {
       const types = param.types
+      const limits = param.limits
       const argId = param.id
       const arg   = (param.destructured)
         ? args[argId]?.[param.destructured[1]]
@@ -30,10 +33,13 @@ class DocSchemaValidator {
         continue
       }
 
-      const result = typesValidator(types, arg, ast.typedefs)
+      const result = typesValidator(types, arg, ast.typedefs, limits)
 
       if (!result) {
-        const error = new TypeError(`Expected type ${enquoteString(types[0]?.typeName)}, got ${enquoteString(arg)}.`)
+        const error = new ValidationError(
+          `Expected type ${enquoteString(types[0]?.typeName)},`
+          + ` got ${enquoteString(arg)}.`
+        )
 
         this.lastError = error
 
@@ -44,6 +50,8 @@ class DocSchemaValidator {
           return false
         }
       }
+
+      // limitsValidator(types, param.limits, arg)
     }
 
     return true
@@ -56,8 +64,8 @@ class DocSchemaValidator {
    * @param {boolean} [throwOnError]
    * @returns {boolean}
    * Returns true if the validation is successful, or false if there is no tag
-   * @throws {TypeError | Error}
-   * Throws TypeError if the validation is not successful
+   * @throws {ValidationError | Error}
+   * Throws ValidationError if the validation is not successful
    * and is selected to throw on error.
    * Throws Error if the input AST is not right.
    */
@@ -67,10 +75,14 @@ class DocSchemaValidator {
     for (const param of params) {
       const key    = param.name
       const val    = value[key]
-      const result = typesValidator(param.types, val, ast.typedefs)
+      const result = typesValidator(param.types, val, ast.typedefs, param.limits)
 
       if (!result) {
-        const error = new TypeError(`Expected ${enquoteString(key)} of the object to be of type ${enquoteString(param.types[0]?.typeName)}, but the value is ${enquoteString(val)}.`)
+        const error = new ValidationError(
+          `Expected ${enquoteString(key)} of the object to be of type`
+          + ` ${enquoteString(param.types[0]?.typeName)},`
+          + ` but the value is ${enquoteString(val)}.`
+        )
 
         this.lastError = error
 
@@ -93,8 +105,8 @@ class DocSchemaValidator {
    * @param {boolean} [throwOnError]
    * @returns {boolean}
    * Returns true if the validation is successful, or false if there is no tag
-   * @throws {TypeError | Error}
-   * Throws TypeError if the validation is not successful
+   * @throws {ValidationError | Error}
+   * Throws ValidationError if the validation is not successful
    * and is selected to throw on error.
    * Throws Error if the input AST is not right.
    */
@@ -111,10 +123,13 @@ class DocSchemaValidator {
     }
 
     const types = parsedTags.types
-    const result = typesValidator(types, value, ast.typedefs)
+    const limits = parsedTags.limits
+    const result = typesValidator(types, value, ast.typedefs, limits)
 
     if (!result) {
-      const error = new TypeError(`Expected value ${enquoteString(value)} to be of type ${enquoteString(types[0]?.typeName)}.`)
+      const error = new ValidationError(
+        `Expected value ${enquoteString(value)} to be of type`
+        + ` ${enquoteString(types[0]?.typeExpression)}.`)
 
       this.lastError = error
 
@@ -135,8 +150,8 @@ class DocSchemaValidator {
    * @param {boolean} [throwOnError]
    * @returns {boolean}
    * Returns true if the validation is successful, or false if there is no tag
-   * @throws {TypeError | Error}
-   * Throws TypeError if the validation is not successful
+   * @throws {ValidationError | Error}
+   * Throws ValidationError if the validation is not successful
    * and is selected to throw on error.
    * Throws Error if the input AST is not right.
    */
@@ -153,23 +168,28 @@ class DocSchemaValidator {
 }
 
 /**
- * @type {JsDocTypesChecker}
+ * @type {DocTypesValidator}
  * @throws {Error} If missing validator function (should never happen)
  */
-function typesValidator(parsedTypes, value, typedefs) {
+function typesValidator(parsedTypes, value, typedefs, limits) {
   for (const parsedType of parsedTypes) {
     // @ts-ignore
-    const func = validators[parsedType.typeName]
+    const validatorFunc = validators[parsedType.typeName]
 
-    if (!(func instanceof Function)) {
+    if (!(validatorFunc instanceof Function)) {
       throw new Error(`Wrong typeName ${parsedType.typeName}`)
     }
 
-    const result = func(
-      parsedType, value, typedefs, typesValidator
-    )
+    const result = validatorFunc(parsedType, value, typedefs, limits, typesValidator)
 
     if (result) {
+      // Limits validation
+      if (parsedType.typeName in limitsValidators) {
+        const limitsValidatorFunc = limitsValidators[parsedType.typeName]
+
+        limitsValidatorFunc(limits, value)
+      }
+
       return true
     }
   }

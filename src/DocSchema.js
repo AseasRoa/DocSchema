@@ -1,6 +1,7 @@
 import { DocSchemaParser } from './DocSchemaParser.js'
 import { DocSchemaValidator } from './DocSchemaValidator.js'
-import { getStackTrace } from './functions.js'
+import { stackTrace } from './stackTrace.js'
+import { ValidationError } from './ValidationError.js'
 
 const docSchemaParser    = new DocSchemaParser()
 const docSchemaValidator = new DocSchemaValidator()
@@ -20,7 +21,7 @@ class DocSchema {
   /**
    * @param {any} value
    * @returns {boolean}
-   * @throws {Error | TypeError}
+   * @throws {ValidationError | Error}
    * If the schema has not been created yet, or if the validation is not successful
    */
   validate(value) {
@@ -41,7 +42,7 @@ class DocSchema {
    * @throws {Error}
    */
   #create() {
-    const caller = getStackTrace(3)
+    const caller = stackTrace(3)
 
     if (!caller) {
       throw new Error('Could not create schema')
@@ -82,7 +83,7 @@ class DocSchema {
    * @param {any} value
    * @param {boolean} throwOnError
    * @returns {boolean}
-   * @throws {Error | TypeError}
+   * @throws {ValidationError | Error}
    */
   #validateOrCheck(value, throwOnError) {
     if (!this.#ast) {

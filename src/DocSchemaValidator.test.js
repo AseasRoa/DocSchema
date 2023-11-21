@@ -1,4 +1,5 @@
 import { DocSchemaParser, DocSchemaValidator } from '#docschema'
+import { ValidationError } from './ValidationError.js'
 
 describe('DocSchemaValidator', () => {
   const parser    = new DocSchemaParser()
@@ -121,7 +122,7 @@ describe('DocSchemaValidator', () => {
           'null' // this is the one with wrong type
         ]
       )
-    }).toThrow(TypeError)
+    }).toThrow(ValidationError)
   })
 
   test('comment with union types: all types correct', () => {
@@ -172,7 +173,7 @@ describe('DocSchemaValidator', () => {
           'null' // this is the one with wrong type
         ]
       )
-    }).toThrow(TypeError)
+    }).toThrow(ValidationError)
   })
 
   test('comment with optional parameters: all types correct', () => {
@@ -250,12 +251,12 @@ describe('DocSchemaValidator', () => {
     expect(() => {
       // @ts-ignore
       validator.validateTag('returns', ast, 123)
-    }).toThrow(TypeError)
+    }).toThrow(ValidationError)
 
     expect(() => {
       // @ts-ignore
       validator.validateTag('returns', astUnions, true)
-    }).toThrow(TypeError)
+    }).toThrow(ValidationError)
   })
 
   test('check throwing error when unspecified arguments', () => {
@@ -264,6 +265,79 @@ describe('DocSchemaValidator', () => {
     expect(() => {
       // @ts-ignore
       validator.validateFunctionArguments(ast, [''])
-    }).toThrow(TypeError)
+    }).toThrow(ValidationError)
+  })
+})
+
+describe('DocSchemaValidator limits', () => {
+  const parser    = new DocSchemaParser()
+  const validator = new DocSchemaValidator()
+
+  /** @type {DocSchemaAst[]} */
+  const astCommentWithLimitsArray = []
+  /** @type {DocSchemaAst[]} */
+  const astCommentWithLimitsString = []
+  /** @type {DocSchemaAst[]} */
+  const astCommentWithLimitsObjectLiteral = []
+
+  beforeAll(() => {
+    const commentWithLimitsArray = `
+    /**
+     * @type {number[]} {min: 3}
+     */
+    `
+
+    const commentWithLimitsString = `
+    /**
+     * @param {string} minVal {min: 3}
+     * @param {string} maxVal {max: 3}
+     * @param {string} lengthVal {length: 3}
+     */
+    `
+
+    const commentWithLimitsObjectLiteral = `
+    /**
+     * @type {{
+     *   minKey: string, // {min: 3}
+     * }} minVal
+     */
+    `
+
+    astCommentWithLimitsArray.push(
+      ...parser.parseComments(commentWithLimitsArray.trim())
+    )
+    astCommentWithLimitsString.push(
+      ...parser.parseComments(commentWithLimitsString.trim())
+    )
+    astCommentWithLimitsObjectLiteral.push(
+      ...parser.parseComments(commentWithLimitsObjectLiteral.trim())
+    )
+  })
+
+  test('validate limits for array', () => {
+    const [ ast ] = astCommentWithLimitsArray
+
+    expect(() => {
+      // @ts-ignore
+      validator.validateTag('type', ast, [1, 2])
+    }).toThrow(ValidationError)
+  })
+
+  test('validate limits', () => {
+    const [ ast ] = astCommentWithLimitsString
+
+    expect(() => {
+      // @ts-ignore
+      validator.validateFunctionArguments(ast, ['1', '2', '3'])
+    }).toThrow(ValidationError)
+  })
+
+  test('validate limits in object literal', () => {
+    const [ ast ] = astCommentWithLimitsObjectLiteral
+
+    expect(() => {
+      // @ts-ignore
+      validator.validateTag('type', ast, {minKey: '12'})
+    }).toThrow(ValidationError)
   })
 })

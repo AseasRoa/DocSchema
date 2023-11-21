@@ -454,12 +454,14 @@ describe('Parsers', () => {
             {
               key         : 'keys',
               valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
-              description : ''
+              description : '',
+              limits      : {}
             },
             {
               key         : 'values',
               valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
-              description : ''
+              description : '',
+              limits      : {}
             }
           ]
         }
@@ -479,7 +481,8 @@ describe('Parsers', () => {
                 { typeExpression : 'string', typeName : 'string' },
                 { typeExpression : 'NUMBER', typeName : 'number' }
               ],
-              description : ''
+              description : '',
+              limits      : {}
             },
             {
               key        : 'values',
@@ -487,7 +490,8 @@ describe('Parsers', () => {
                 { typeExpression : 'NUMBER', typeName : 'number' },
                 { typeExpression : 'MyType', typeName : 'typedef' }
               ],
-              description : ''
+              description : '',
+              limits      : {}
             }
           ]
         }
@@ -507,7 +511,8 @@ describe('Parsers', () => {
                 { typeExpression : 'string', typeName : 'string' },
                 { typeExpression : 'undefined', typeName : 'undefined' }
               ],
-              description : ''
+              description : '',
+              limits      : {}
             }
           ]
         }
@@ -532,22 +537,26 @@ describe('Parsers', () => {
             {
               key         : 'keys',
               valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
-              description : 'keys-desc'
+              description : 'keys-desc',
+              limits      : {}
             },
             {
               key         : 'values',
               valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
-              description : `array-like ['', "", \`\`, (123), /regex/] // more comment`
+              description : `array-like ['', "", \`\`, (123), /regex/] // more comment`,
+              limits      : {}
             },
             {
               key         : 'limits',
               valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
-              description : '{ min: 1, max: 2 }'
+              description : '',
+              limits      : {min: 1, max: 2}
             },
             {
               key         : 'append',
               valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
-              description : 'part 1 part 2 part 3'
+              description : 'part 1 part 2 part 3',
+              limits      : {}
             }
           ]
         }

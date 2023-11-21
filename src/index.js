@@ -1,6 +1,7 @@
 import { DocSchema } from './DocSchema.js'
 import { DocSchemaParser } from './DocSchemaParser.js'
 import { DocSchemaValidator } from './DocSchemaValidator.js'
+import { ValidationError } from './ValidationError.js'
 
 /**
  * Use this function just below a JsDoc comment.
@@ -16,4 +17,4 @@ export function docSchema() {
 
 export default docSchema
 
-export { DocSchema, DocSchemaParser, DocSchemaValidator }
+export { DocSchema, DocSchemaParser, DocSchemaValidator, ValidationError }

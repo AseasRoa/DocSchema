@@ -15,122 +15,6 @@ export async function importFileSystem() {
 }
 
 /**
- * @param {number} level
- * @returns {{
- *   fileName: string,
- *   lineNumber: number
- *   columnNumber: number
- * }}
- * @throws {Error}
- */
-export function getStackTrace(level) {
-  const stackTrace = (isBrowserEnvironment())
-    ? getStackTraceBrowser(level)
-    : getStackTraceV8(level + 2)
-
-  if (!stackTrace) {
-    throw new Error(`Could not get stack trace at level ${level}`)
-  }
-
-  return stackTrace
-}
-
-/**
- * This function works in V8 and Firefox
- *
- * @param {number} level
- * @returns {{
- *   fileName: string,
- *   lineNumber: number
- *   columnNumber: number
- * } | null}
- * @throws {Error}
- */
-function getStackTraceBrowser(level = 1) {
-  /**
-   * @type {string[]}
-   */
-  let stack = []
-
-  try {
-    throw new Error('')
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      stack = (error.stack ?? '')
-      .replaceAll('\r', '')
-      .split('\n')
-      .map((line) => line.trim())
-
-      stack = stack.splice(stack[0] === 'Error' ? 2 : 1)
-    }
-  }
-
-  if (!stack[level]) {
-    return null
-  }
-
-  const pattern = /((?:http[s]?:\/\/).*):(\d+):(\d+)/u
-  const match = pattern.exec(stack[level] ?? '')
-
-  if (!match) {
-    return null
-  }
-
-  return {
-    fileName: match[1] ?? '',
-    lineNumber: parseInt(match[2] ?? '0'),
-    columnNumber: parseInt(match[3] ?? '0')
-  }
-}
-
-/**
- * This function works only on V8
- *
- * @see https://www.tabnine.com/code/javascript/functions/builtins/Error/prepareStackTrace
- * @see https://www.npmjs.com/package/caller-callsite
- * @see https://www.npmjs.com/package/callsites
- * @param {number} [level]
- * @returns {{
- *   fileName: string,
- *   lineNumber: number
- *   columnNumber: number
- * } | null}
- * @throws {Error}
- */
-function getStackTraceV8(level = 3) {
-  /** @type {NodeJS.CallSite[]} */
-  let stack = []
-
-  const prepareStackTraceOriginal = Error.prepareStackTrace
-
-  Error.prepareStackTrace = (error, stackTraces) => stackTraces
-
-  // @ts-ignore
-  stack = new Error().stack ?? []
-
-  Error.prepareStackTrace = prepareStackTraceOriginal
-
-  if (level >= stack.length) {
-    return null
-  }
-
-  /** @type {NodeJS.CallSite | undefined} */
-  const site = stack.at(level)
-
-  if (!site) {
-    return null
-  }
-
-  const fileName = site.getFileName() ?? ''
-  // I don't know why the line number (and the column number) is wrong in Node.js
-  const lineNumber = (site.getLineNumber() ?? 0) - 1
-  const columnNumber = (site.getColumnNumber() ?? 0)
-
-  return { fileName, lineNumber, columnNumber }
-}
-
-/**
  * @see https://stackoverflow.com/questions/17575790/environment-detection-node-js-or-browser
  * @returns {boolean}
  */
@@ -474,9 +358,14 @@ export function isolateEndComment(expression) {
  * @returns {string}
  */
 export function enquoteString(value, quote = '"') {
-  return (typeof value === 'string')
-    ? `${quote}${value}${quote}`
-    : (value ?? '').toString() // Remember, don't use toString() on undefined or null
+  if (typeof value === 'string') {
+    return `${quote}${value}${quote}`
+  }
+  else if (value instanceof Object) {
+    return JSON.stringify(value)
+  }
+
+  return (value ?? '').toString() // Remember, don't use toString() on undefined or null
 }
 
 /**

@@ -20,13 +20,18 @@
  * }}
  */
 const validators = {
-  array : (parsedType, value, typedefs, typesValidator) => {
+  array : (parsedType, value, typedefs, limits, typesValidator) => {
     if (!(Array.isArray(value))) {
       return false
     }
 
     for (const arrayValue of value) {
-      const result = typesValidator(parsedType?.types ?? [], arrayValue, typedefs)
+      const result = typesValidator(
+        parsedType?.types ?? [],
+        arrayValue,
+        typedefs,
+        {}
+      )
 
       if (!result) return false
     }
@@ -34,7 +39,7 @@ const validators = {
     return true
   },
 
-  object : (parsedType, value, typedefs, typesValidator) => {
+  object : (parsedType, value, typedefs, limits, typesValidator) => {
     if (!(value instanceof Object)) {
       return false
     }
@@ -43,11 +48,11 @@ const validators = {
 
     for (const pair of pairs) {
       for (const key in value) {
-        let result = typesValidator(pair.keyTypes, key, typedefs)
+        let result = typesValidator(pair.keyTypes, key, typedefs, limits)
 
         if (!result) return false
 
-        result = typesValidator(pair.valueTypes, value[key], typedefs)
+        result = typesValidator(pair.valueTypes, value[key], typedefs, limits)
 
         if (!result) return false
       }
@@ -56,7 +61,7 @@ const validators = {
     return true
   },
 
-  objectLiteral : (parsedType, value, typedefs, typesValidator) => {
+  objectLiteral : (parsedType, value, typedefs, limits, typesValidator) => {
     if (!(value instanceof Object)) {
       return false
     }
@@ -69,11 +74,11 @@ const validators = {
        * undefined, which means that it's possible to Not have the key at all.
        *
        * if (!(pair.key in value)) {
-       *  return new TypeError(`Missing key '${pair.key}'`)
+       *  return new ValidationError(`Missing key '${pair.key}'`)
        * }
        */
 
-      const result = typesValidator(pair.valueTypes, value[pair.key], typedefs)
+      const result = typesValidator(pair.valueTypes, value[pair.key], typedefs, pair.limits)
 
       if (!result) return false
     }
@@ -97,7 +102,7 @@ const validators = {
 
   symbol : (parsedType, value) => tryPrimitiveType(parsedType, value),
 
-  typedef : (parsedType, value, typedefs, typesValidator) => {
+  typedef : (parsedType, value, typedefs, limits, typesValidator) => {
     // 1) Try typedefs
 
     for (const typedef of typedefs) {
@@ -108,7 +113,8 @@ const validators = {
       const result = typesValidator(
         typedef.elements.typedef?.types ?? [],
         value,
-        typedefs
+        typedefs,
+        typedef.elements.typedef?.limits
       )
 
       return result

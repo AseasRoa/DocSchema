@@ -5,6 +5,7 @@ import {
   removeWrappingBraces,
   splitTypeExpression
 } from './functions.js'
+import { separateDescriptionAndLimits } from './limits.js'
 
 /**
  * Primitive types
@@ -218,18 +219,24 @@ const complexTypeParsers = {
      */
     const pairExpressions = splitTypeExpression((match?.[1] ?? '').trim(), [','])
 
-    /** @type {DocSchemaObjectLiteralPairs} */
+    /** @type {DocSchemaObjectLiteralPair[]} */
     const pairs = []
 
     for (const pairExpression of pairExpressions) {
-      let description = ''
-
       const frontCommentTuple = isolateFrontComment(pairExpression)
       const pairsLength       = pairs.length
 
       if (pairsLength > 0) {
+        const { description, limits } = separateDescriptionAndLimits(
+          frontCommentTuple[0],
+          // @ts-ignore
+          pairs[pairsLength - 1].valueTypes
+        )
+
         // @ts-ignore
-        pairs[pairsLength - 1].description = frontCommentTuple[0]
+        pairs[pairsLength - 1].description = description
+        // @ts-ignore
+        pairs[pairsLength - 1].limits = limits
       }
 
       // Only comment found => it's the comment of the last pair
@@ -237,12 +244,10 @@ const complexTypeParsers = {
         continue
       }
 
-      const pair = splitTypeExpression(frontCommentTuple[1], [':'])
-      const endCommentTuple = isolateEndComment(pair[1] ?? '')
+      const nameTypePair    = splitTypeExpression(frontCommentTuple[1], [':'])
+      const endCommentTuple = isolateEndComment(nameTypePair[1] ?? '')
 
-      description = endCommentTuple[1]
-
-      let key     = (pair[0] ?? '').replaceAll(' ', '')
+      let key     = (nameTypePair[0] ?? '').replaceAll(' ', '')
       const types = (endCommentTuple[0]).replaceAll(' ', '')
 
       let valueTypes = typeParser(types)
@@ -257,7 +262,15 @@ const complexTypeParsers = {
         valueTypes = valueTypes.concat(typeParser('undefined'))
       }
 
-      pairs.push({ key, valueTypes, description })
+      const { description, limits } = separateDescriptionAndLimits(
+        endCommentTuple[1],
+        valueTypes
+      )
+
+      /** @type {DocSchemaObjectLiteralPair} */
+      const pair = { key, valueTypes, description, limits }
+
+      pairs.push(pair)
     }
 
     return {

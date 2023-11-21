@@ -8,11 +8,40 @@ type DocSchemaAstScope = {
 
 type DocSchemaAstTypeNames = DocSchemaPrimitives|'any'|'array'|'object'|'objectLiteral'|'typedef'
 
-type DocSchemaObjectLiteralPairs = Array<{
+type DocSchemaLimits = {
+  min?: number,
+  max?: number,
+  length?: number,
+  startsWith?: string,
+  endsWith?: string,
+  includes?: string,
+  excludes?: string,
+  email?: boolean,
+  url?: boolean,
+  ip?: boolean,
+  ipv4?: boolean,
+  ipv6?: boolean,
+  uuid?: boolean,
+  ulid?: boolean,
+  cuid?: boolean,
+  cuid2?: boolean,
+  pattern?: RegExp,
+  gte?: number,
+  gt?: number,
+  lte?: number,
+  lt?: number,
+  int?: boolean,
+  step?: number,
+  finite?: boolean,
+  safeInt?: boolean
+}
+
+type DocSchemaObjectLiteralPair = {
   key: string,
   valueTypes: DocSchemaParsedType[],
-  description: string
-}>
+  description: string,
+  limits: DocSchemaLimits
+}
 
 type DocSchemaObjectPairs = Array<{
   keyTypes: DocSchemaParsedType[],
@@ -25,7 +54,7 @@ type DocSchemaParsedType = {
   value?: any, // If not defined, it means any value
   types?: DocSchemaParsedType[], // Used for Array
   typePairs?: DocSchemaObjectPairs, // Used for Object types
-  pairs?: DocSchemaObjectLiteralPairs // Used for Object literal types
+  pairs?: DocSchemaObjectLiteralPair[] // Used for Object literal types
 }
 
 type DocSchemaParsedTag = {
@@ -34,6 +63,7 @@ type DocSchemaParsedTag = {
   typeExpression: string,
   name: string,
   description: string,
+  limits: DocSchemaLimits,
   optional: boolean,
   defaultValue: string | undefined,
   destructured: [string, string] | undefined // \[ Param name, Property name \] tuple
@@ -60,14 +90,32 @@ type DocSchemaAst = {
   typedefs: DocSchemaAst[] // Other parsed AST from the same file that are 'typedef'
 }
 
-type DocSchemaTypeParser = (typeExpression: string) => DocSchemaParsedType[]
+type DocSchemaTypeParser = (
+  typeExpression: string
+) => DocSchemaParsedType[]
 
-type DocSchemaSimpleParserFunction = (typeExpression: string) => DocSchemaParsedType | false
+type DocSchemaSimpleParserFunction = (
+  typeExpression: string
+) => DocSchemaParsedType | false
 
-type DocSchemaComplexParserFunction = (typeExpression: string, typeParser: DocSchemaTypeParser) => DocSchemaParsedType | false
+type DocSchemaComplexParserFunction = (
+  typeExpression: string,
+  typeParser: DocSchemaTypeParser
+) => DocSchemaParsedType | false
 
 type DocSchemaParserFunction = DocSchemaSimpleParserFunction | DocSchemaComplexParserFunction
 
-type JsDocTypesChecker = (types: DocSchemaParsedType[], value: any, typedefs: DocSchemaAst[]) => boolean
+type DocTypesValidator = (
+  types: DocSchemaParsedType[],
+  value: any,
+  typedefs: DocSchemaAst[],
+  limits: DocSchemaLimits
+) => boolean
 
-type JsDocCheckerFunction = (parsedType: DocSchemaParsedType, value: any, typedefs: DocSchemaAst[], typesChecker: JsDocTypesChecker) => boolean
+type DocCheckerFunction = (
+  parsedType: DocSchemaParsedType,
+  value: any,
+  typedefs: DocSchemaAst[],
+  limits: DocSchemaLimits,
+  typesValidator: DocTypesValidator
+) => boolean

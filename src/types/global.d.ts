@@ -7,6 +7,9 @@
 type DocSchemaAst = import('./app').DocSchemaAst
 
 declare module 'docschema' {
+  export class ValidationError extends Error {
+  }
+
   //export { DocSchemaParser, DocSchemaValidator } from 'src/index'
   // type DocSchema = typeof import('src/DocSchema')
   export class DocSchema {
@@ -15,7 +18,7 @@ declare module 'docschema' {
     ): boolean
 
     /**
-     * @throws {TypeError}
+     * @throws {ValidationError}
      */
     validate(
       value: any
@@ -62,7 +65,7 @@ declare module 'docschema' {
       ast: DocSchemaAst,
       value: any,
       throwOnError?: boolean
-    ) : TypeError | Error
+    ) : ValidationError | Error
   }
 
   /**

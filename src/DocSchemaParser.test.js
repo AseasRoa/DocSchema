@@ -7,6 +7,8 @@ describe('DocSchemaParser', () => {
   const astComments           = []
   /** @type {DocSchemaAst[]} */
   const astCommentsWithScopes = []
+  /** @type {DocSchemaAst[]} */
+  const astCommentsWithLimits = []
 
   beforeAll(() => {
     const comments = `
@@ -77,11 +79,29 @@ describe('DocSchemaParser', () => {
      */
     `
 
+    const commentsWithLimits = `
+    /**
+     * @param {string} name {min: 1,max: 3} Description one
+     * @param {string} name
+     * {
+     *   min: 1,
+     *   max: 3
+     * }
+     * Description two
+     * @param {string} name - Description
+     * {min: 1,max: 3}
+     * three
+     */
+    `
+
     astComments.push(
       ...parser.parseComments(comments.trim())
     )
     astCommentsWithScopes.push(
       ...parser.parseComments(commentsWithScopes.trim())
+    )
+    astCommentsWithLimits.push(
+      ...parser.parseComments(commentsWithLimits.trim())
     )
   })
 
@@ -121,6 +141,21 @@ describe('DocSchemaParser', () => {
       expect(params?.[1]?.description).toBe('description two')
       expect(params?.[2]?.description).toBe('description three')
       expect(params?.[3]?.description).toBe('this is multiline description')
+    })
+  })
+
+  describe('Limits', () => {
+    test('detect correct param limits', () => {
+      const params = astCommentsWithLimits[0]?.elements.param
+
+      expect(params?.[0]?.description).toBe('Description one')
+      expect(params?.[0]?.limits).toStrictEqual({min: 1,max: 3})
+
+      expect(params?.[1]?.description).toBe('Description two')
+      expect(params?.[1]?.limits).toStrictEqual({min: 1,max: 3})
+
+      expect(params?.[2]?.description).toBe('Description three')
+      expect(params?.[2]?.limits).toStrictEqual({min: 1,max: 3})
     })
   })
 
