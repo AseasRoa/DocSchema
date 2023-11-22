@@ -26,7 +26,7 @@
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "benchmark": "node src/benchmarks/index.js",
+    "benchmark": "node src/_benchmarks/index.js",
     "build": "vite build"
   },
   "private": false,
