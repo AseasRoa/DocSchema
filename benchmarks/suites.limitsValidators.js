@@ -1,6 +1,6 @@
 import Benchmark from 'benchmark'
 import { cycleCallback } from './functions.js'
-import { limitsValidators } from '../limitsValidators.js'
+import { limitsValidators } from '../src/limitsValidators.js'
 
 const validatorSuite = new Benchmark.Suite('DocSchemaValidator')
 

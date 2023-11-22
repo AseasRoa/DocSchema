@@ -1,5 +1,5 @@
 import Benchmark from 'benchmark'
-import { simpleTypeParsers } from '../parsers.js'
+import { simpleTypeParsers } from '../src/parsers.js'
 import { cycleCallback } from './functions.js'
 
 const simpleTypeParsersSuite = new Benchmark.Suite('simpleTypeParsers')
