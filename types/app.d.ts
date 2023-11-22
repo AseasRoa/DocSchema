@@ -99,16 +99,16 @@ type TypeParser = (
   typeExpression: string
 ) => ParsedType[]
 
-type SimpleParserFunction = (
+type ParserFunctionSimple = (
   typeExpression: string
 ) => ParsedType | false
 
-type ComplexParserFunction = (
+type ParserFunctionComplex = (
   typeExpression: string,
   typeParser: TypeParser
 ) => ParsedType | false
 
-type ParserFunction = SimpleParserFunction | ComplexParserFunction
+type ParserFunction = ParserFunctionSimple | ParserFunctionComplex
 
 type TypesValidator = (
   types: ParsedType[],
@@ -117,10 +117,17 @@ type TypesValidator = (
   limits: Limits
 ) => boolean
 
-type ValidatorFunction = (
-  parsedType: ParsedType,
-  value: any,
-  typedefs: Ast[],
-  limits: Limits,
-  typesValidator: TypesValidator
+type ValidatorFunctionSimple = (
+    parsedType: ParsedType,
+    value: any
 ) => boolean
+
+type ValidatorFunctionComplex = (
+    parsedType: ParsedType,
+    value: any,
+    typedefs: Ast[],
+    limits: Limits,
+    typesValidator: TypesValidator
+) => boolean
+
+type ValidatorFunction = ValidatorFunctionSimple | ValidatorFunctionComplex

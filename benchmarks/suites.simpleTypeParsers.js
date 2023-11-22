@@ -1,24 +1,24 @@
 import Benchmark from 'benchmark'
-import { simpleTypeParsers } from '../lib/parsers.js'
+import { parsers } from '../lib/parsers.js'
 import { cycleCallback } from './functions.js'
 
 const simpleTypeParsersSuite = new Benchmark.Suite('simpleTypeParsers')
 
 simpleTypeParsersSuite
   .add('any', () => {
-    simpleTypeParsers.any('any')
+    parsers.simple.any('any')
   })
   .add('bool', () => {
-    simpleTypeParsers.boolean('true')
+    parsers.simple.boolean('true')
   })
   .add('number', () => {
-    simpleTypeParsers.number('123.456')
+    parsers.simple.number('123.456')
   })
   .add('primitive', () => {
-    simpleTypeParsers.tryPrimitiveType('number')
+    parsers.simple.tryPrimitive('number')
   })
   .add('string', () => {
-    simpleTypeParsers.string(`'some-text'`)
+    parsers.simple.string(`'some-text'`)
   })
   .on('cycle', cycleCallback)
 

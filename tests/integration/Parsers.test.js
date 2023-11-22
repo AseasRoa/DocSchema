@@ -1,10 +1,10 @@
-import { simpleTypeParsers } from '../../lib/parsers.js'
+import { parsers } from '../../lib/parsers.js'
 import { TypesParser } from '../../lib/TypesParser.js'
 
 describe('Parsers', () => {
   describe('Simple types', () => {
     test('should parse any types - * or any', () => {
-      const parser = simpleTypeParsers.any
+      const parser = parsers.simple.any
 
       expect(parser('any'))
         .toStrictEqual({ typeName : 'any', typeExpression : 'any' })
@@ -17,7 +17,7 @@ describe('Parsers', () => {
     })
 
     test('should parse boolean values - true or false', () => {
-      const parser = simpleTypeParsers.boolean
+      const parser = parsers.simple.boolean
 
       expect(parser('true'))
         .toStrictEqual({
@@ -45,7 +45,7 @@ describe('Parsers', () => {
     })
 
     test('should parse numeric values - integer or float', () => {
-      const parser = simpleTypeParsers.number
+      const parser = parsers.simple.number
 
       expect(parser('123'))
         .toStrictEqual({
@@ -73,7 +73,7 @@ describe('Parsers', () => {
     })
 
     test('should parse primitive types - string, number, boolean...', () => {
-      const parser     = simpleTypeParsers.tryPrimitiveType
+      const parser     = parsers.simple.tryPrimitive
       const primitives = [
         'string',
         'number',
@@ -119,7 +119,7 @@ describe('Parsers', () => {
     })
 
     test('should parse string values', () => {
-      const parser = simpleTypeParsers.string
+      const parser = parsers.simple.string
 
       // ''
       expect(parser(`'a string'`))
