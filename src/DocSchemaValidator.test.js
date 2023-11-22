@@ -278,7 +278,7 @@ describe('DocSchemaValidator - Limits', () => {
       /** @type {number[]} {min: 2} */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -296,7 +296,7 @@ describe('DocSchemaValidator - Limits', () => {
       /** @type {number} {min: 2} */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -314,7 +314,7 @@ describe('DocSchemaValidator - Limits', () => {
       /** @type {string} {length: 2} */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -339,7 +339,7 @@ describe('DocSchemaValidator - Limits', () => {
        function validate(arrayArg, numberArg, stringArg) {}
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -375,7 +375,43 @@ describe('DocSchemaValidator - Limits', () => {
        */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
+
+      // correct
+      expect(
+        validator.validateTypedef(ast, {array: [1, 2], number: 2, string: '12'})
+      ).toBe(true)
+
+      // wrong array
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1], number: 2, string: '12'})
+      }).toThrow(ValidationError)
+
+      // wrong number
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1, 2], number: 1, string: '12'})
+      }).toThrow(ValidationError)
+
+      // wrong string
+      expect(() => {
+        validator.validateTypedef(ast, {array: [1, 2], number: 2, string: '1'})
+      }).toThrow(ValidationError)
+    })
+  })
+
+  describe('in @typedef (variant 2)', () => {
+    test('array, number, string', () => {
+      const [ ast ] = parser.parseComments(`
+      /**
+       * @typedef Type
+       * @type {object}
+       * @property {number[]} array {min: 2}
+       * @property {number} number {min: 2}
+       * @property {string} string {min: 2}
+       */
+      `)
+
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -410,7 +446,7 @@ describe('DocSchemaValidator - Limits', () => {
        */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(
@@ -454,7 +490,7 @@ describe('DocSchemaValidator - Limits', () => {
        */
       `)
 
-      if (!ast) throw new Error('Ast is missing')
+      if (!ast) throw new Error('Missing AST')
 
       // correct
       expect(

@@ -28,16 +28,12 @@ const validatorSuite = new Benchmark.Suite('DocSchemaValidator')
 
 validatorSuite
 .add('@type {string}', () => {
-  if (!ast1[0]) {
-    throw new Error('Missing AST')
-  }
+  if (!ast1[0]) throw new Error('Missing AST')
 
   validator.validateTag('type', ast1[0], 'hello')
 })
 .add('destructured', () => {
-  if (!ast2[0]) {
-    throw new Error('Missing AST')
-  }
+  if (!ast2[0]) throw new Error('Missing AST')
 
   validator.validateFunctionArguments(
     ast2[0],

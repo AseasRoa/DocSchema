@@ -38,14 +38,14 @@ const paramsMap = {
     excludes: types.string,
     url: types.string,
     pattern: types.RegExp,
-    ip: types.string,
-    email: types.string,
-    cuid: types.string,
-    cuid2: types.string,
-    ulid: types.string,
-    uuid: types.string,
-    ipv4: types.string,
-    ipv6: types.string,
+    ip: types.boolean,
+    email: types.boolean,
+    cuid: types.boolean,
+    cuid2: types.boolean,
+    ulid: types.boolean,
+    uuid: types.boolean,
+    ipv4: types.boolean,
+    ipv6: types.boolean,
   }
 }
 

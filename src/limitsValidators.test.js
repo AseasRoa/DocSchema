@@ -447,12 +447,12 @@ describe('limitsValidators', () => {
         {ulid: true}, '01F8MECHZX3TBDSZ7XR8H8JHAF'
       )).toBe(true)
       expect(limitsValidators.string(
-        {ulid: false}, '1234'
+        {ulid: false}, 'something'
       )).toBe(true)
 
       // ulid wrong
       expect(() => limitsValidators.string(
-        {ulid: true}, '1234'
+        {ulid: true}, 'something'
       )).toThrow(Error)
       expect(() => limitsValidators.string(
         {ulid: false}, '01F8MECHZX3TBDSZ7XR8H8JHAF'
@@ -465,12 +465,12 @@ describe('limitsValidators', () => {
         {uuid: true}, '123e4567-e89b-12d3-a456-426614174000'
       )).toBe(true)
       expect(limitsValidators.string(
-        {uuid: false}, '1234'
+        {uuid: false}, 'something'
       )).toBe(true)
 
       // uuid wrong
       expect(() => limitsValidators.string(
-        {uuid: true}, '1234'
+        {uuid: true}, 'something'
       )).toThrow(Error)
       expect(() => limitsValidators.string(
         {uuid: false}, '123e4567-e89b-12d3-a456-426614174000'
