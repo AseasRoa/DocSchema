@@ -52,9 +52,11 @@
     "useUnknownInCatchVariables": false
   },
   "include" : [
+    "benchmarks/**/*",
     "dev/**/*",
     "lib/**/*",
     "src/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "types/**/*"
   ]
 }
