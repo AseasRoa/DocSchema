@@ -55,7 +55,9 @@ const paramsMap = {
  */
 export function limitsParsers(typeName, limitsObject) {
   if (!(typeName in paramsMap)) {
-    throw new Error(`Type ${typeName} doesn't work when limits are used. Limits only work on array, number or string types.`)
+    throw new Error(
+      `Type ${typeName} doesn't work when limits are used.`
+      + ` Limits only work on array, number or string types.`)
   }
 
   for (const key in limitsObject) {
@@ -71,12 +73,18 @@ export function limitsParsers(typeName, limitsObject) {
       const typeShouldBe = shouldBe
 
       if (typeActual !== typeShouldBe) {
-        throw new Error(`The value of "${key}" has wrong type. The type is ${typeActual}, but it must be ${typeShouldBe}. In ${JSON.stringify(limitsObject)}`)
+        throw new Error(
+          `The value of "${key}" has wrong type.`
+          + ` The type is ${typeActual}, but it must be ${typeShouldBe}.`
+          + ` In ${JSON.stringify(limitsObject)}`
+        )
       }
     }
     else {
       if (!(value instanceof shouldBe)) {
-        throw new Error(`The value of "${key}" has wrong type. It must be an instance of ${shouldBe.name}. In ${JSON.stringify(limitsObject)}`)
+        throw new Error(`The value of "${key}" has wrong type.`
+          + ` It must be an instance of ${shouldBe.name}.`
+          + ` In ${JSON.stringify(limitsObject)}`)
       }
     }
   }
