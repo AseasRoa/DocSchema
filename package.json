@@ -23,7 +23,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts lib",
+    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",
