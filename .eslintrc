@@ -98,7 +98,7 @@
           "error", 2, {
             "SwitchCase": 1,
             "VariableDeclarator": "first",
-            "MemberExpression": 0,
+            "MemberExpression": 1,
             "FunctionDeclaration": {"body": 1, "parameters": "first"},
             "FunctionExpression": {"body": 1, "parameters": "first"},
             "StaticBlock": {"body": 1},
