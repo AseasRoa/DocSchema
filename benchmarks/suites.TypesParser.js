@@ -1,5 +1,5 @@
 import Benchmark from 'benchmark'
-import { TypesParser } from '../src/TypesParser.js'
+import { TypesParser } from '../lib/TypesParser.js'
 import { cycleCallback } from './functions.js'
 
 const typesParser = new TypesParser()

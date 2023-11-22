@@ -10,8 +10,6 @@ declare module 'docschema' {
   export class ValidationError extends Error {
   }
 
-  //export { DocSchemaParser, DocSchemaValidator } from 'src/index'
-  // type DocSchema = typeof import('src/DocSchema')
   export class DocSchema {
     check(
       value: any

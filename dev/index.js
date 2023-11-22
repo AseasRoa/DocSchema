@@ -1,4 +1,4 @@
-import { DocSchema } from '../src/index.js'
+import { DocSchema } from '../lib/index.js'
 
 /**
  * @enum {string}

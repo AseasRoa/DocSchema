@@ -8,22 +8,22 @@
   "license": "MIT",
   "type": "module",
   "types": "./types/global.d.ts",
-  "main": "./src/index.js",
+  "main": "lib/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
     "types": "./types/global.d.ts",
     "browser": "./dist/bundle.js",
-    "import": "./src/index.js",
-    "default": "./src/index.js"
+    "import": "./lib/index.js",
+    "default": "./lib/index.js"
   },
   "imports": {
     "#docschema": {
-      "default": "./src/index.js"
+      "default": "./lib/index.js"
     }
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
+    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts lib",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",

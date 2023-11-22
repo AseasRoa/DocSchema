@@ -1,5 +1,5 @@
-import { simpleTypeParsers } from '../../src/parsers.js'
-import { TypesParser } from '../../src/TypesParser.js'
+import { simpleTypeParsers } from '../../lib/parsers.js'
+import { TypesParser } from '../../lib/TypesParser.js'
 
 describe('Parsers', () => {
   describe('Simple types', () => {
