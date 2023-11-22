@@ -1,6 +1,5 @@
 import Benchmark from 'benchmark'
-import { DocSchemaParser } from '#docschema'
-import { DocSchemaValidator } from '#docschema'
+import { DocSchemaParser, DocSchemaValidator } from '#docschema'
 import { cycleCallback } from './functions.js'
 
 const parser = new DocSchemaParser()
