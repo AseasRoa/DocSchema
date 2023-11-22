@@ -20,16 +20,6 @@ function flattenDescription(description) {
 }
 
 /**
- * @see https://stackoverflow.com/questions/9637517/parsing-relaxed-json-without-eval
- *
- * @param {string} jsonString
- * @returns {string}
- */
-function relaxJsonString(jsonString) {
-  return jsonString.replace(/([{,])\s*([a-zA-Z_][\w]*)\s*:/ug, '$1"$2":')
-}
-
-/**
  * @param {string} inputDescription
  * @param {ParsedType[]} types
  * @returns {{
@@ -57,7 +47,7 @@ function separateDescriptionAndLimits(inputDescription, types) {
     const closeBracketPos = findClosingBracketPosition(description, openBracketPos)
 
     if (closeBracketPos > 0) {
-      let limitsStr = description.substring(
+      const limitsStr = description.substring(
         openBracketPos,
         openBracketPos + closeBracketPos + 1
       )
@@ -67,9 +57,7 @@ function separateDescriptionAndLimits(inputDescription, types) {
         + description.substring(openBracketPos + closeBracketPos + 1)
       ).trim()
 
-      limitsStr = relaxJsonString(limitsStr)
-
-      const limits = JSON.parse(limitsStr)
+      const limits = Function(`return ${limitsStr}`)()
 
       for (const type of types) {
         limitsParsers(type.typeName, limits)
