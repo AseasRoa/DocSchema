@@ -7,11 +7,11 @@
   "description": "Schema declaration and validation library using JsDoc comments",
   "license": "MIT",
   "type": "module",
-  "types": "./src/types/global.d.ts",
+  "types": "./types/global.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
-    "types": "./src/types/global.d.ts",
+    "types": "./types/global.d.ts",
     "browser": "./dist/bundle.js",
     "import": "./src/index.js",
     "default": "./src/index.js"
@@ -26,7 +26,7 @@
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "benchmark": "node src/_benchmarks/index.js",
+    "benchmark": "node benchmarks/index.js",
     "build": "vite build"
   },
   "private": false,
