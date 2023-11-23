@@ -1,26 +1,24 @@
 import Benchmark from 'benchmark'
-import { TypesParser } from '../lib/TypesParser.js'
+import { parse } from '../lib/parse-validate-types/parse.js'
 import { cycleCallback } from './functions.js'
-
-const typesParser = new TypesParser()
 
 const simpleTypesParserSuite = new Benchmark.Suite('TypeParsers (simple)')
 
 simpleTypesParserSuite
   .add('any', () => {
-    typesParser.parseType('any')
+    parse('any')
   })
   .add('bool', () => {
-    typesParser.parseType('true')
+    parse('true')
   })
   .add('number', () => {
-    typesParser.parseType('123.456')
+    parse('123.456')
   })
   .add('primitive', () => {
-    typesParser.parseType('number')
+    parse('number')
   })
   .add('string', () => {
-    typesParser.parseType(`'some-text'`)
+    parse(`'some-text'`)
   })
   .on('cycle', cycleCallback)
 
@@ -28,22 +26,22 @@ const complexTypesParserSuite = new Benchmark.Suite('TypeParsers (complex)')
 
 complexTypesParserSuite
   .add('string[]', () => {
-    typesParser.parseType('string[]')
+    parse('string[]')
   })
   .add('Array.<number>', () => {
-    typesParser.parseType('Array.<number>')
+    parse('Array.<number>')
   })
   .add('Array<number | string>', () => {
-    typesParser.parseType('Array<number | string>')
+    parse('Array<number | string>')
   })
   .add('Object.<string, number>', () => {
-    typesParser.parseType('Object.<string, number>')
+    parse('Object.<string, number>')
   })
   .add('{keys: string, values: number}', () => {
-    typesParser.parseType(`{keys: string, values: number}`)
+    parse(`{keys: string, values: number}`)
   })
   .add('keys: ( string & NUMBER ) , values: ( NUMBER | MyType )', () => {
-    typesParser.parseType(`keys: ( string & NUMBER ) , values: ( NUMBER | MyType )`)
+    parse(`keys: ( string & NUMBER ) , values: ( NUMBER | MyType )`)
   })
   .on('cycle', cycleCallback)
 
