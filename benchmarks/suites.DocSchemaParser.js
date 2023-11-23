@@ -26,7 +26,7 @@ parserSuite
        * @property {string} string
        */`)
   })
-  .add('@typedef with limits', () => {
+  .add('@typedef with filters', () => {
     parser.parseComments(`
       /**
        * @typedef firstArg

@@ -455,13 +455,13 @@ describe('Parsers', () => {
                 key         : 'keys',
                 valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
                 description : '',
-                limits      : {}
+                filters     : {}
               },
               {
                 key         : 'values',
                 valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
                 description : '',
-                limits      : {}
+                filters     : {}
               }
             ]
           }
@@ -482,7 +482,7 @@ describe('Parsers', () => {
                   { typeExpression : 'NUMBER', typeName : 'number' }
                 ],
                 description : '',
-                limits      : {}
+                filters     : {}
               },
               {
                 key        : 'values',
@@ -491,7 +491,7 @@ describe('Parsers', () => {
                   { typeExpression : 'MyType', typeName : 'typedef' }
                 ],
                 description : '',
-                limits      : {}
+                filters     : {}
               }
             ]
           }
@@ -512,7 +512,7 @@ describe('Parsers', () => {
                   { typeExpression : 'undefined', typeName : 'undefined' }
                 ],
                 description : '',
-                limits      : {}
+                filters     : {}
               }
             ]
           }
@@ -522,7 +522,7 @@ describe('Parsers', () => {
         // reject-this-comment
         keys: string, // keys-desc
         values: number, // array-like ['', "", \`\`, (123), /regex/] // more comment
-        limits: number, // { min: 1, max: 2 }
+        filters: number, // { min: 1, max: 2 }
         append: string, // part 1
         // part 2
         // part 3
@@ -538,25 +538,25 @@ describe('Parsers', () => {
                 key         : 'keys',
                 valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
                 description : 'keys-desc',
-                limits      : {}
+                filters     : {}
               },
               {
                 key         : 'values',
                 valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
                 description : `array-like ['', "", \`\`, (123), /regex/] // more comment`,
-                limits      : {}
+                filters     : {}
               },
               {
-                key         : 'limits',
+                key         : 'filters',
                 valueTypes  : [{ typeExpression : 'number', typeName : 'number' }],
                 description : '',
-                limits      : {min: 1, max: 2}
+                filters     : {min: 1, max: 2}
               },
               {
                 key         : 'append',
                 valueTypes  : [{ typeExpression : 'string', typeName : 'string' }],
                 description : 'part 1 part 2 part 3',
-                limits      : {}
+                filters     : {}
               }
             ]
           }

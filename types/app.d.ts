@@ -10,7 +10,7 @@ type AstScope = {
 type AstTypeNames =
   Primitives|'any'|'array'|'object'|'objectLiteral'|'typedef'
 
-type Limits = {
+type Filters = {
   // array, number, string
   min?: number,
   max?: number,
@@ -45,7 +45,7 @@ type ObjectLiteralPair = {
   key: string,
   valueTypes: ParsedType[],
   description: string,
-  limits: Limits
+  filters: Filters
 }
 
 type ObjectPairs = Array<{
@@ -68,7 +68,7 @@ type ParsedTag = {
   typeExpression: string,
   name: string,
   description: string,
-  limits: Limits,
+  filters: Filters,
   optional: boolean,
   defaultValue: string | undefined,
   destructured: [string, string] | undefined // \[ Param name, Property name \] tuple
@@ -114,7 +114,7 @@ type TypesValidator = (
   types: ParsedType[],
   value: any,
   typedefs: Ast[],
-  limits: Limits
+  filters: Filters
 ) => boolean
 
 type ValidatorFunctionSimple = (
@@ -126,7 +126,7 @@ type ValidatorFunctionComplex = (
     parsedType: ParsedType,
     value: any,
     typedefs: Ast[],
-    limits: Limits,
+    filters: Filters,
     typesValidator: TypesValidator
 ) => boolean
 
