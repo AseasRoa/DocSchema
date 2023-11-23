@@ -23,9 +23,9 @@ const ast2 = parser.parseComments(`
    function check({ arg1, arg2, arg3 }) {}
   `)
 
-const validatorSuite = new Benchmark.Suite('DocSchemaValidator')
+const suiteDocSchemaValidator = new Benchmark.Suite('DocSchemaValidator')
 
-validatorSuite
+suiteDocSchemaValidator
   .add('@type {string}', () => {
     if (!ast1[0]) throw new Error('Missing AST')
 
@@ -45,4 +45,4 @@ validatorSuite
   })
   .on('cycle',cycleCallback)
 
-export default { suites: [ validatorSuite ] }
+export { suiteDocSchemaValidator }

@@ -2,9 +2,9 @@ import Benchmark from 'benchmark'
 import { parse } from '../lib/parse-validate-types/parse.js'
 import { cycleCallback } from './functions.js'
 
-const simpleTypesParserSuite = new Benchmark.Suite('TypeParsers (simple)')
+const suiteTypesParserSimple = new Benchmark.Suite('Types Parser (Simple Types)')
 
-simpleTypesParserSuite
+suiteTypesParserSimple
   .add('any', () => {
     parse('any')
   })
@@ -22,9 +22,9 @@ simpleTypesParserSuite
   })
   .on('cycle', cycleCallback)
 
-const complexTypesParserSuite = new Benchmark.Suite('TypeParsers (complex)')
+const suiteTypesParserComplex = new Benchmark.Suite('Types Parser (Complex Types)')
 
-complexTypesParserSuite
+suiteTypesParserComplex
   .add('string[]', () => {
     parse('string[]')
   })
@@ -45,4 +45,4 @@ complexTypesParserSuite
   })
   .on('cycle', cycleCallback)
 
-export default { suites: [ simpleTypesParserSuite, complexTypesParserSuite ] }
+export { suiteTypesParserSimple, suiteTypesParserComplex }

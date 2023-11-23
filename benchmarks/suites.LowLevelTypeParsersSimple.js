@@ -2,9 +2,9 @@ import Benchmark from 'benchmark'
 import { parsers } from '../lib/parse-validate-types/parsers.js'
 import { cycleCallback } from './functions.js'
 
-const simpleTypeParsersSuite = new Benchmark.Suite('simpleTypeParsers')
+const suitesLowLevelTypeParsersSimple = new Benchmark.Suite('Simple Type Parsers (Low Level)')
 
-simpleTypeParsersSuite
+suitesLowLevelTypeParsersSimple
   .add('any', () => {
     parsers.simple.any('any')
   })
@@ -22,4 +22,4 @@ simpleTypeParsersSuite
   })
   .on('cycle', cycleCallback)
 
-export default { suites: [ simpleTypeParsersSuite ] }
+export { suitesLowLevelTypeParsersSimple }

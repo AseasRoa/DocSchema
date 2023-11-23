@@ -4,9 +4,9 @@ import { cycleCallback } from './functions.js'
 
 const parser = new DocSchemaParser()
 
-const parserSuite = new Benchmark.Suite('DocSchemaParser')
+const suiteDocSchemaParser = new Benchmark.Suite('DocSchemaParser')
 
-parserSuite
+suiteDocSchemaParser
   .add('@type {string}', () => {
     parser.parseComments(`/** @type {string} */`)
   })
@@ -49,4 +49,4 @@ parserSuite
   })
   .on('cycle',cycleCallback)
 
-export default { suites: [ parserSuite ] }
+export { suiteDocSchemaParser }

@@ -2,226 +2,226 @@ import Benchmark from 'benchmark'
 import { cycleCallback } from './functions.js'
 import { validate } from '../lib/parse-validate-filters/validate.js'
 
-const validatorSuite = new Benchmark.Suite('DocSchemaValidator')
+const suiteFiltersValidate = new Benchmark.Suite('Filters Validate')
 
-validatorSuite
-  .add('invalid: array unsupported validation', () => {
+suiteFiltersValidate
+  .add('array unsupported validation', () => {
     try {
       validate({gte: 2}, [1, 2])
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: array min', () => {
+  .add('array min --- valid', () => {
     validate({min: 2}, [1, 2])
   })
-  .add('invalid: array min', () => {
+  .add('array min - invalid', () => {
     try {
       validate({min: 2}, [1])
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: array max', () => {
+  .add('array max --- valid', () => {
     validate({max: 2}, [1, 2])
   })
-  .add('invalid: array max', () => {
+  .add('array max - invalid', () => {
     try {
       validate({max: 2}, [1, 2, 3])
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: array length', () => {
+  .add('array length --- valid', () => {
     validate({length: 2}, [1, 2])
   })
-  .add('invalid: array length', () => {
+  .add('array length - invalid', () => {
     try {
       validate({length: 2}, [1])
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: number min', () => {
-    validate({length: 2}, 2)
+  .add('number min --- valid', () => {
+    validate({min: 2}, 2)
   })
-  .add('invalid: number min', () => {
+  .add('number min - invalid', () => {
     try {
-      validate({length: 2}, 1.99)
+      validate({min: 2}, 1.99)
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: number int', () => {
+  .add('number int --- valid', () => {
     validate({int: true}, 3)
   })
-  .add('invalid: number int', () => {
+  .add('number int - invalid', () => {
     try {
       validate({int: false}, 3.01)
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string min', () => {
+  .add('string min --- valid', () => {
     validate({min: 2}, '12')
   })
-  .add('invalid: string min', () => {
+  .add('string min - invalid', () => {
     try {
       validate({min: 2}, '1')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string startsWith', () => {
+  .add('string startsWith --- valid', () => {
     validate({startsWith: 'he'}, 'hello')
   })
-  .add('invalid: string startsWith', () => {
+  .add('string startsWith - invalid', () => {
     try {
       validate({startsWith: 'he'}, 'bello')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string endsWith', () => {
+  .add('string endsWith --- valid', () => {
     validate({endsWith: 'lo'}, 'hello')
   })
-  .add('invalid: string endsWith', () => {
+  .add('string endsWith - invalid', () => {
     try {
       validate({endsWith: 'lo'}, 'hells')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string includes', () => {
+  .add('string includes --- valid', () => {
     validate({includes: 'lo'}, 'hello')
   })
-  .add('invalid: string includes', () => {
+  .add('string includes - invalid', () => {
     try {
       validate({includes: 'lo'}, 'hi')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string url', () => {
+  .add('string url --- valid', () => {
     validate({url: true}, 'https://github.com')
   })
-  .add('invalid: string url', () => {
+  .add('string url - invalid', () => {
     try {
       validate({url: true}, '1234')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string pattern', () => {
+  .add('string pattern --- valid', () => {
     validate({pattern: /[a-z]/u}, 'text')
   })
-  .add('invalid: string pattern', () => {
+  .add('string pattern - invalid', () => {
     try {
       validate({pattern: /[a-z]/u}, '1')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string ip', () => {
+  .add('string ip --- valid', () => {
     validate({ip: true}, '192.168.0.1')
   })
-  .add('invalid: string ip', () => {
+  .add('string ip - invalid', () => {
     try {
       validate({ip: true}, '1234')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string ipv4', () => {
+  .add('string ipv4 --- valid', () => {
     validate({ipv4: true}, '192.168.0.1')
   })
-  .add('invalid: string ipv4', () => {
+  .add('string ipv4 - invalid', () => {
     try {
       validate({ipv4: true}, '1234')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string ipv6', () => {
+  .add('string ipv6 --- valid', () => {
     validate({ipv6: true}, '2001:db8::ff00:42:8329')
   })
-  .add('invalid: string ipv6', () => {
+  .add('string ipv6 - invalid', () => {
     try {
       validate({ipv6: true}, '1234')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string email', () => {
+  .add('string email --- valid', () => {
     validate({email: true}, 'name@email.com')
   })
-  .add('invalid: string email', () => {
+  .add('string email - invalid', () => {
     try {
       validate({email: true}, 'name')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string cuid', () => {
+  .add('string cuid --- valid', () => {
     validate({cuid: true}, 'ch72gsb320000udocl363eofy')
   })
-  .add('invalid: string cuid', () => {
+  .add('string cuid - invalid', () => {
     try {
       validate({cuid: true}, 'something')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string cuid2', () => {
+  .add('string cuid2 --- valid', () => {
     validate({cuid2: true}, 'itp2u4ozr4')
   })
-  .add('invalid: string cuid2', () => {
+  .add('string cuid2 - invalid', () => {
     try {
       validate({cuid2: true}, '1234')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string ulid', () => {
+  .add('string ulid --- valid', () => {
     validate({ulid: true}, '01F8MECHZX3TBDSZ7XR8H8JHAF')
   })
-  .add('invalid: string ulid', () => {
+  .add('string ulid - invalid', () => {
     try {
       validate({ulid: true}, 'something')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
-  .add('valid: string uuid', () => {
+  .add('string uuid --- valid', () => {
     validate({uuid: true}, '123e4567-e89b-12d3-a456-426614174000')
   })
-  .add('invalid: string uuid', () => {
+  .add('string uuid - invalid', () => {
     try {
       validate({uuid: true}, 'something')
     }
     catch (e) {
-    // nothing
+      // nothing
     }
   })
   .on('cycle',cycleCallback)
 
-export default { suites: [ validatorSuite ] }
+export { suiteFiltersValidate }
