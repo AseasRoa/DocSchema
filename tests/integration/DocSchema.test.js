@@ -85,4 +85,16 @@ describe('DocSchema', () => {
     expect(schema.validate({ key1: '1', key2: { a: '', b: 0 }})).toBe(true)
     expect(schema.check({ key1: '1', key2: { a: '', b: 0 }})).toBe(true)
   })
+
+  test('correct invalidation with filters', () => {
+    /**
+     * @enum {{
+     *   key1: number, // {min: 3}
+     * }}
+     */
+    const schema = docSchema()
+
+    expect(() => schema.validate({ key1: 1})).toThrow(ValidationError)
+    expect(schema.check({ key1: 1})).toBe(false)
+  })
 })

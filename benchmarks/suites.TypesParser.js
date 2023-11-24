@@ -1,5 +1,5 @@
 import Benchmark from 'benchmark'
-import { parse } from '../lib/parse-validate-types/parse.js'
+import { parse } from '../lib/parse-check-types/parse.js'
 import { cycleCallback } from './functions.js'
 
 const suiteTypesParserSimple = new Benchmark.Suite('Types Parser (Simple Types)')

@@ -110,24 +110,27 @@ type ParserFunctionComplex = (
 
 type ParserFunction = ParserFunctionSimple | ParserFunctionComplex
 
-type TypesValidator = (
+type TypesChecker = (
   types: ParsedType[],
   value: any,
   typedefs: Ast[],
   filters: Filters
 ) => boolean
 
-type ValidatorFunctionSimple = (
+type CheckerFunctionSimple = (
     parsedType: ParsedType,
     value: any
 ) => boolean
 
-type ValidatorFunctionComplex = (
+type CheckerFunctionComplex = (
     parsedType: ParsedType,
     value: any,
     typedefs: Ast[],
     filters: Filters,
-    typesValidator: TypesValidator
+    typesValidator: TypesChecker
 ) => boolean
 
-type ValidatorFunction = ValidatorFunctionSimple | ValidatorFunctionComplex
+type LastError = {
+  message: string,
+  code: string
+}
