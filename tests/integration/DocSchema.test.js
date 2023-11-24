@@ -16,7 +16,7 @@ describe('DocSchema', () => {
       // No JsDoc comment at all
 
       const schema = docSchema()
-    }).toThrow(Error)
+    }).toThrow(SyntaxError)
 
     expect(() => {
       /**
@@ -26,7 +26,7 @@ describe('DocSchema', () => {
        */
 
       const schema = docSchema()
-    }).toThrow(Error)
+    }).toThrow(SyntaxError)
 
     expect(() => {
       /* eslint-disable-next-line jsdoc/no-bad-blocks */
@@ -36,7 +36,7 @@ describe('DocSchema', () => {
        * @enum {string}
        */
       const schema = docSchema()
-    }).toThrow(Error)
+    }).toThrow(SyntaxError)
   })
 
   test('correct validation', () => {

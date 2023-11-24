@@ -95,8 +95,15 @@ type Ast = {
   typedefs: Ast[] // Other parsed AST from the same file that are 'typedef'
 }
 
+type CurrentLocation = {
+  file: string,
+  startLine: number,
+  endLine: number
+}
+
 type TypeParser = (
-  typeExpression: string
+  typeExpression: string,
+  currentLocation?: CurrentLocation
 ) => ParsedType[]
 
 type ParserFunctionSimple = (
@@ -105,7 +112,8 @@ type ParserFunctionSimple = (
 
 type ParserFunctionComplex = (
   typeExpression: string,
-  typeParser: TypeParser
+  typeParser: TypeParser,
+  currentLocation?: CurrentLocation
 ) => ParsedType | false
 
 type ParserFunction = ParserFunctionSimple | ParserFunctionComplex
