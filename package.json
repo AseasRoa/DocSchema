@@ -47,9 +47,8 @@
   },
   "homepage": "https://github.com/AseasRoa/DocSchema",
   "keywords": [
+    "schema",
     "validation",
-    "jsdoc",
-    "frontend",
-    "backend"
+    "jsdoc"
   ]
 }
