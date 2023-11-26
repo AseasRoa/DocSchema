@@ -12,40 +12,46 @@ type AstTypeNames =
 
 type Filters = {
   // array, number, string
-  min?: number,
-  max?: number,
-  length?: number,
+  min?: number | [number, string],
+  max?: number | [number, string],
+  length?: number | [number, string],
   // number
-  gte?: number,
-  gt?: number,
-  lte?: number,
-  lt?: number,
-  int?: boolean,
-  step?: number,
-  finite?: boolean,
-  safeInt?: boolean,
+  gte?: number | [number, string],
+  gt?: number | [number, string],
+  lte?: number | [number, string],
+  lt?: number | [number, string],
+  int?: boolean | [boolean, string],
+  step?: number | [number, string],
+  finite?: boolean | [boolean, string],
+  safeInt?: boolean | [boolean, string],
   // string
-  startsWith?: string,
-  endsWith?: string,
-  includes?: string,
-  excludes?: string,
-  email?: boolean,
-  url?: boolean,
-  ip?: boolean,
-  ipv4?: boolean,
-  ipv6?: boolean,
-  uuid?: boolean,
-  ulid?: boolean,
-  cuid?: boolean,
-  cuid2?: boolean,
-  pattern?: RegExp
+  startsWith?: string | [string, string],
+  endsWith?: string | [string, string],
+  includes?: string | [string, string],
+  excludes?: string | [string, string],
+  email?: boolean | [boolean, string],
+  url?: boolean | [boolean, string],
+  ip?: boolean | [boolean, string],
+  ipv4?: boolean | [boolean, string],
+  ipv6?: boolean | [boolean, string],
+  uuid?: boolean | [boolean, string],
+  ulid?: boolean | [boolean, string],
+  cuid?: boolean | [boolean, string],
+  cuid2?: boolean | [boolean, string],
+  pattern?: RegExp | [RegExp, string]
 }
+
+type TransformToTupleFilters<T> = {
+  [P in keyof T]?: [T[P], string]
+}
+
+type TupleFilters = TransformToTupleFilters<Filters>
 
 type ObjectLiteralPair = {
   key: string,
   valueTypes: ParsedType[],
   description: string,
-  filters: Filters
+  filters: TupleFilters
 }
 
 type ObjectPairs = Array<{
@@ -68,7 +74,7 @@ type ParsedTag = {
   typeExpression: string,
   name: string,
   description: string,
-  filters: Filters,
+  filters: TupleFilters,
   optional: boolean,
   defaultValue: string | undefined,
   destructured: [string, string] | undefined // \[ Param name, Property name \] tuple
@@ -122,7 +128,7 @@ type TypesChecker = (
   types: ParsedType[],
   value: any,
   typedefs: Ast[],
-  filters: Filters
+  filters: TupleFilters
 ) => boolean
 
 type CheckerFunctionSimple = (
@@ -134,7 +140,7 @@ type CheckerFunctionComplex = (
     parsedType: ParsedType,
     value: any,
     typedefs: Ast[],
-    filters: Filters,
+    filters: TupleFilters,
     typesValidator: TypesChecker
 ) => boolean
 
