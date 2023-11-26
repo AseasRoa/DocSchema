@@ -9,6 +9,21 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+      # setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+      # run
+      - run: npm install
+      - run: npm run lint
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest
@@ -29,5 +44,4 @@ jobs:
       # run
       - run: npm install
       - run: npm run build --if-present
-      - run: npm run lint
       - run: npm run test
