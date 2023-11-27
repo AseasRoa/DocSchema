@@ -9,6 +9,7 @@ at runtime.
 - Zero dependencies
 - Works in Node.js and modern browsers
 - Validates the types and has additional filters
+- Comes with typings
 
 ## How to use
 
@@ -22,21 +23,40 @@ import { DocSchema } from 'docschema'
  */
 const personSchema = new DocSchema()
 ```
+Or, like this:
+```javascript
+import { docSchema } from 'docschema'
+// import docSchema from 'docschema' // Also valid
+
+/**
+ * @param {string} name
+ * @param {number} age
+ */
+const personSchema = docSchema() // Alias to new DocSchema()
+```
 - Validate your data
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
 personSchema.validate(correctData)
-personSchema.validate(wrongData) // throws ValidationError
+personSchema.validate(wrongData) // Throws ValidationError
 ```
 - Or, check your data
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
-personSchema.check(correctData) // returns true
-personSchema.check(wrongData) // returns false
+personSchema.check(correctData) // Returns an object
+personSchema.check(wrongData) // Returns an object, containing error data
+```
+- Or, approve your data (get a boolean result)
+```javascript
+const correctData = { name: 'John', age: 31 }
+const wrongData   = { name: 'John', age: '31' }
+
+personSchema.approves(correctData) // Returns true
+personSchema.approves(wrongData) // Returns false
 ```
 
 ## Schemas
@@ -135,9 +155,9 @@ In the example below, there are two filters: *{ min: 1 }* and *{ min: 18 }*:
  */
 const personSchema = new DocSchema()
 
-personSchema.validate({ name: 'John', age: 31 }) // pass
-personSchema.validate({ name: '', age: 31 }) // throws ValidationError
-personSchema.validate({ name: 'John', age: 15 }) // throws ValidationError
+personSchema.validate({ name: 'John', age: 31 }) // Pass
+personSchema.validate({ name: '', age: 31 }) // Throws ValidationError
+personSchema.validate({ name: 'John', age: 15 }) // Throws ValidationError
 ```
 
 And you can also add an actual description for each parameter, which can be placed

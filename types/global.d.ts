@@ -5,15 +5,28 @@
  */
 
 type DocSchemaAst = import('./app').Ast
+type DocSchemaCheckResult = import('./app').CheckResult
 
 declare module 'docschema' {
   export class ValidationError extends Error {
+    expectedType: string
+    filter: undefined | { name: '' | keyof Filters, value: boolean | number | string | RegExp }
+    kind: 'type' | 'filter' | ''
+    message: string
+    pass: boolean
+    tag: string
+    value: any
+    valuePath: PropertyKey[]
   }
 
   export class DocSchema {
-    check(
+    approves(
       value: any
     ): boolean
+
+    check(
+      value: any
+    ): CheckResult
 
     /**
      * @throws {ValidationError}

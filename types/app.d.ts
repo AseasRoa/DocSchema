@@ -127,6 +127,7 @@ type ParserFunction = ParserFunctionSimple | ParserFunctionComplex
 type TypesChecker = (
   types: ParsedType[],
   value: any,
+  key: PropertyKey,
   typedefs: Ast[],
   filters: TupleFilters
 ) => boolean
@@ -144,7 +145,13 @@ type CheckerFunctionComplex = (
     typesValidator: TypesChecker
 ) => boolean
 
-type LastError = {
+type CheckResult = {
+  expectedType: string,
+  filter: undefined | { name: '' | keyof Filters, value: boolean | number | string | RegExp },
+  kind: 'type' | 'filter' | ''
   message: string,
-  code: string
+  pass: boolean,
+  tag: string,
+  value: any,
+  valuePath: PropertyKey[],
 }
