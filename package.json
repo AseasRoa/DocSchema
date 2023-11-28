@@ -1,6 +1,6 @@
 {
   "name": "docschema",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "author": {
     "name": "AseasRoa"
   },
@@ -22,7 +22,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "types"
   ],
   "scripts": {
     "dev": "vite",
