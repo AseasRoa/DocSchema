@@ -21,13 +21,17 @@
       "default": "./lib/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",
-    "build": "vite build"
+    "build": "vite build",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "private": false,
   "devDependencies": {
