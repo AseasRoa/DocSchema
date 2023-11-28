@@ -18,6 +18,7 @@ at runtime.
 - [Key Features](#key-features)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
+- [Preserve JsDoc Comments](#preserve-jsdoc-comments)
 - [Schemas](#schemas)
   - [@enum](#enum)
   - [@param](#param)
@@ -87,13 +88,25 @@ const wrongData   = { name: 'John', age: '31' }
 personSchema.check(correctData) // Returns an object
 personSchema.check(wrongData) // Returns an object, containing error data
 ```
-- Or, approve your data (get a boolean result)
+- Or, approve your data
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
 personSchema.approves(correctData) // Returns true
 personSchema.approves(wrongData) // Returns false
+```
+## Preserve JsDoc Comments
+
+When JavaScript files are minified, JsDoc comments are removed. We don't want that to
+happen to our JsDoc schemas. To preserve them, use the `@preserve` (or `@license`) tag:
+
+```javascript
+/**
+ * @param {string} name
+ * @param {number} age
+ * @preserve
+ */
 ```
 
 ## Schemas
