@@ -1,6 +1,6 @@
 # see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: test
 
 on:
   push:
