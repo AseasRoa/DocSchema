@@ -1,7 +1,32 @@
 ## DocSchema
 
+![Static Badge](https://img.shields.io/badge/100%25%20JavaScript-F0DB4F?style=for-the-badge&logo=JavaScript&labelColor=black)
+![Static Badge](https://img.shields.io/badge/NodeJs-3C873A?style=for-the-badge&logo=node.js&labelColor=black)
+
+[![npm version](https://img.shields.io/npm/v/docschema.svg?logo=npm&color=cb3837)](https://www.npmjs.com/package/docschema)
+![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/docschema?color=cb3837)
+![npm downloads](https://img.shields.io/npm/dm/docschema?color=cb3837)
+![npm type definitions](https://img.shields.io/npm/types/docschema)
+[![test](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml/badge.svg)](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml)
+![license](https://img.shields.io/npm/l/docschema)
+
 DocSchema allows you to create schemas from JsDoc comments and use them to validate data
 at runtime.
+
+## Table of Contents
+
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Schemas](#schemas)
+  - [@enum](#enum)
+  - [@param](#param)
+  - [@typedef](#typedef)
+- [Filters](#filters)
+  - [Array-specific filters](#array-specific-filters)
+  - [Number-specific filters](#number-specific-filters)
+  - [String-specific-filters](#string-specific-filters)
+- [Error Handling](#error-handling)
 
 ## Key Features
 
@@ -11,7 +36,19 @@ at runtime.
 - Validates the types and has additional filters to validate the value
 - Comes with typings
 
-## How to use
+## Installation
+
+```bash [npm]
+npm install docschema
+```
+```bash [pnpm]
+pnpm add docschema
+```
+```bash [yarn]
+yarn add docschema
+```
+
+## Basic Usage
 
 - Create a schema
 ```javascript
@@ -135,7 +172,7 @@ const personSchema = new DocSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
-## Filters (additional validations) overview
+## Filters
 
 Sometimes validating only the type is not enough. Maybe you want a number with minimum
 value, or a string with certain contents? Use filters for that.
@@ -211,8 +248,6 @@ get an error in your IDE, or depending on your ESLint settings.
  */
 const personSchema = new DocSchema()
 ```
-
-## Available filters
 
 ### Array-specific filters
 - With `numeric` value:
