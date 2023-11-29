@@ -21,11 +21,6 @@
       "default": "./lib/index.js"
     }
   },
-  "files": [
-    "dist",
-    "lib",
-    "types"
-  ],
   "scripts": {
     "dev": "vite",
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
