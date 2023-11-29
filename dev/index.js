@@ -1,10 +1,10 @@
 import { DocSchema } from '#docschema'
 
 /**
- * @enum {string}
+ * @param {Date} key
  * @preserve
  */
 const schema = new DocSchema()
-const result = schema.check('hello')
+const result = schema.check({key: 3445})
 
 console.log(result)
