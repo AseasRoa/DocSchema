@@ -1,10 +1,17 @@
 import { DocSchema } from '#docschema'
 
 /**
- * @param {Date} key
+ * @param {string} name
+ * @param {number} age
  * @preserve
  */
-const schema = new DocSchema()
-const result = schema.check({key: 3445})
+const personSchema = new DocSchema()
 
-console.log(result)
+const correctData = { name: 'John', age: 31 }
+const wrongData   = { name: 'John', age: '31' }
+
+const resultOnCorrectData = personSchema.check(correctData)
+const resultOnWrongData = personSchema.check(wrongData)
+
+console.log('resultOnCorrectData: ', resultOnCorrectData)
+console.log('resultOnWrongData: ', resultOnWrongData)

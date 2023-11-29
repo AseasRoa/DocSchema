@@ -26,7 +26,7 @@ declare module 'docschema' {
 
     check(
       value: any
-    ): CheckResult
+    ): DocSchemaCheckResult
 
     /**
      * @throws {ValidationError}
