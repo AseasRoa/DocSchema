@@ -28,6 +28,7 @@ at runtime.
   - [Number-specific filters](#number-specific-filters)
   - [String-specific-filters](#string-specific-filters)
 - [Error Handling](#error-handling)
+- [How it Works](#how-it-works)
 
 ## Key Features
 
@@ -51,7 +52,9 @@ yarn add docschema
 
 ## Basic Usage
 
-- Create a schema
+- Create a schema with `new DocSchema()` or `docSchema()`:
+
+Note: `docSchema()` is just a wrapper function around `new DocSchema()`.
 ```javascript
 import { DocSchema } from 'docschema'
 
@@ -61,7 +64,6 @@ import { DocSchema } from 'docschema'
  */
 const personSchema = new DocSchema()
 ```
-Or, like this:
 ```javascript
 import { docSchema } from 'docschema'
 // import docSchema from 'docschema' // Also valid
@@ -72,7 +74,7 @@ import { docSchema } from 'docschema'
  */
 const personSchema = docSchema() // new DocSchema() alias
 ```
-- Validate your data
+- Validate your data:
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
@@ -80,15 +82,15 @@ const wrongData   = { name: 'John', age: '31' }
 personSchema.validate(correctData)
 personSchema.validate(wrongData) // Throws ValidationError
 ```
-- Or, check your data
+- Or, check your data:
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
-personSchema.check(correctData) // Returns an object
-personSchema.check(wrongData) // Returns an object, containing error data
+personSchema.check(correctData) // Returns a special object
+personSchema.check(wrongData) // Returns a special object with the error data
 ```
-- Or, approve your data
+- Or, approve your data:
 ```javascript
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
@@ -99,20 +101,20 @@ personSchema.approves(wrongData) // Returns false
 ## Preserve JsDoc Comments
 
 When JavaScript files are minified, JsDoc comments are removed. We don't want that to
-happen to our JsDoc schemas. To preserve them, use the `@preserve` (or `@license`) tag:
+happen to our JsDoc schemas. To preserve them, try using `@preserve` or `@license` tag:
 
 ```javascript
 /**
+ * @preserve
  * @param {string} name
  * @param {number} age
- * @preserve
  */
 ```
 
 ## Schemas
 
 To define a schema, some of the standard JsDoc tags are used, but in a little bit
-different way. These tags are `@enum`, `@param` (one or more) and `@typedef`.
+different way. These tags are `@enum`, `@param` and `@typedef`.
 
 ### @enum
 
@@ -347,3 +349,17 @@ as a separate string values in the array.
   - With simple value it is an empty array `[]`.
   - With Object `{ foo: { bar: "wrong-value" } }` it is like this: `[ "foo", "bar" ]`.
   - With Array `{ foo: [ "wrong-value" ] }` it is like this: `[ "foo", "0" ]`
+
+### How it Works
+
+- When `new DocSchema()` is called, a new `Error` is thrown and its call stack is
+captured.
+- From the captured stack, information about the location of `new DocSchema()`
+is extracted. This extracted data includes file name, line and column.
+- The file is read synchronously. In browsers, [synchronous XHR request](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Synchronous_and_Asynchronous_Requests#synchronous_request)
+is used (yes, it's deprecated), but technically we already got the file in the browser's
+cache. 
+- All JsDoc comments in the file are extracted and parsed. We know where to locate our
+comment, it must be at the lines just above `new DocSchema()`. From our JsDoc comment
+we got a schema, and that schema is returned by our `new DocSchema()`.
+- Now we only have to use the methods from `new DocSchema()`.
