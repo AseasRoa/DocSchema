@@ -145,7 +145,29 @@ describe('DocSchema', () => {
       })
     })
 
-    test('object', () => {
+    test('flat object literal', () => {
+      /**
+       * @enum {{
+       *   key1: string,
+       *   key2: number
+       * }}
+       */
+      const schema = docSchema()
+
+      const result = schema.check({ key1: '', key2: ''})
+
+      expect(result).toMatchObject({
+        pass: false,
+        kind: 'type',
+        tag: 'enum',
+        expectedType: 'number',
+        filter:  undefined,
+        value: '',
+        valuePath: ['key2']
+      })
+    })
+
+    test('deep object', () => {
       /**
        * Have an extra object before the one that is
        * tested here. This tests the path better.
@@ -190,7 +212,7 @@ describe('DocSchema', () => {
       })
     })
 
-    test('object literal', () => {
+    test('deep object literal', () => {
       /**
        * Have an extra object before the one that is
        * tested here. This tests the path better.
@@ -300,6 +322,28 @@ describe('DocSchema', () => {
         value: 'wrong',
         valuePath: ['arrTwo', '2']
       })
+    })
+
+    /**
+     * This checks whether we can have 2 different results.
+     * The issue that is tested here is the fact that while checking,
+     * the check result is collected in a variable that is passed by
+     * reference. At the end, when the check result is returned, the
+     * returned value must be a clone of the variable.
+     */
+    test('correct check result when multiple checks', () => {
+      /**
+       * @enum {{
+       *   key1: string,
+       *   key2: number
+       * }}
+       */
+      const schema = docSchema()
+
+      const result1 = schema.check({ key1: '', key2: ''})
+      const result2 = schema.check({ key1: 1, key2: 2})
+
+      expect(result1).not.toStrictEqual(result2)
     })
   })
 })
