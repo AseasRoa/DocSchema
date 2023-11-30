@@ -8,7 +8,7 @@ type AstScope = {
 }
 
 type AstTypeNames =
-  Primitives|'any'|'array'|'object'|'objectLiteral'|'typedef'
+  Primitives|'any'|'array'|'arrayLiteral'|'object'|'objectLiteral'|'typedef'
 
 type Filters = {
   // array, number, string
@@ -65,7 +65,7 @@ type ParsedType = {
   value?: any, // If not defined, it means any value
   types?: ParsedType[], // Used for Array
   typePairs?: ObjectPairs, // Used for Object types
-  pairs?: ObjectLiteralPair[] // Used for Object literal types
+  pairs?: ObjectLiteralPair[] // Used for object literal and array literal types
 }
 
 type ParsedTag = {
