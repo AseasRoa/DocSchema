@@ -68,25 +68,49 @@ describe('DocSchema', () => {
       expect(schema.approves({ key1: 1, key2: '2'})).toBe(false)
     })
 
-    test('correct validation with typedefs', () => {
+    test('correct validation and invalidation with typedefs', () => {
       /**
        * @typedef {string} StringTypedef
        */
 
       /**
-       * @typedef {{ a:string, b: number }} ObjTypedef
+       * @typedef {{ a:string, b: number }} ObjTypedefOne
+       */
+
+      /**
+       * @typedef {Object} ObjTypedefTwo
+       * @type {Object}
+       * @property {string} a
+       * @property {number} b
        */
 
       /**
        * @enum {{
        *   key1: StringTypedef,
-       *   key2: ObjTypedef
+       *   key2: ObjTypedefOne,
+       *   key3: ObjTypedefTwo
        * }}
        */
       const schema = docSchema()
 
-      expect(schema.validate({ key1: '1', key2: { a: '', b: 0 }})).toBe(true)
-      expect(schema.approves({ key1: '1', key2: { a: '', b: 0 }})).toBe(true)
+      // validate
+      expect(schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      )).toBe(true)
+      expect(schema.approves(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      )).toBe(true)
+
+      // invalidate
+      expect(() => schema.validate(
+        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 }}
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' }}
+      )).toThrow(ValidationError)
     })
 
     test('correct invalidation with filters', () => {

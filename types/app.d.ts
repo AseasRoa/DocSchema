@@ -129,7 +129,8 @@ type TypesChecker = (
   value: any,
   key: PropertyKey,
   typedefs: Ast[],
-  filters: TupleFilters
+  filters: TupleFilters,
+  validator: import('../lib/DocSchemaValidator').DocSchemaValidator
 ) => boolean
 
 type CheckerFunctionSimple = (
@@ -140,8 +141,10 @@ type CheckerFunctionSimple = (
 type CheckerFunctionComplex = (
     parsedType: ParsedType,
     value: any,
+    key: PropertyKey,
     typedefs: Ast[],
     filters: TupleFilters,
+    validator: import('../lib/DocSchemaValidator').DocSchemaValidator,
     typesValidator: TypesChecker
 ) => boolean
 
