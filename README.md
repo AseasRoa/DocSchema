@@ -23,6 +23,7 @@ at runtime.
   - [@enum](#enum)
   - [@param](#param)
   - [@typedef](#typedef)
+- [External Types](#external-types)
 - [Filters](#filters)
   - [Array-specific filters](#array-specific-filters)
   - [Number-specific filters](#number-specific-filters)
@@ -33,7 +34,7 @@ at runtime.
 ## Key Features
 
 - 100% JavaScript, uses JsDoc comments to make schemas
-- Works in Node.js and modern browsers
+- Works in Node.js and modern browsers [*](#preserve-jsdoc-comments)
 - Zero dependencies
 - Validates the types and has additional filters to validate the value
 - Comes with typings
@@ -185,6 +186,49 @@ This variation is also valid:
 const personSchema = new DocSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
+```
+
+## External Types
+
+In schema comments, you can use constructor types. For example:
+
+```javascript
+class MyClass { ... }
+
+/**
+ * @param {Date} createdAt - createdAt must be an instance of Date
+ * @property {MyClass} myClass - myClass must be an instance of MyClass
+ */
+```
+
+Also, you can define custom typedefs:
+
+```javascript
+/**
+ * @typedef PersonSchema
+ * @type {Object}
+ * @property {string} name
+ * @property {number} age
+ */
+
+/**
+ * @enum {PersonSchema}
+ */
+const personSchema = new DocSchema()
+
+personSchema.validate({ name: 'John', age: 31 })
+```
+
+However, in this case the typedef definition must be in the same file. Ambient types or
+TypeScript types are not supported.
+
+```javascript
+class MyClass { ... }
+
+/**
+ * @param {Date} createdAt - createdAt must be an instance of Date
+ * @property {MyClass} myClass - myClass must be an instance of MyClass
+ */
 ```
 
 ## Filters
