@@ -80,7 +80,7 @@ const personSchema = docSchema() // new DocSchema() alias
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
-personSchema.validate(correctData)
+personSchema.validate(correctData) // Returns the input value
 personSchema.validate(wrongData) // Throws ValidationError
 ```
 - Or, check your data:
@@ -128,7 +128,7 @@ For a simple type:
 /**
  * @enum {string}
  */
-const schema = new DocSchema()
+const schema = docSchema()
 
 schema.validate('John')
 ```
@@ -139,7 +139,7 @@ For an Object, you can use the object literal syntax:
 /**
  * @enum {{ name: string, age: number }}
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
@@ -153,7 +153,7 @@ For an `Object`, you can use one or more `@param` tags:
  * @param {string} name
  * @param {number} age
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
@@ -169,7 +169,7 @@ tags:
  * @property {string} name
  * @property {number} age
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
@@ -183,7 +183,7 @@ This variation is also valid:
  * @property {string} name
  * @property {number} age
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
@@ -214,7 +214,7 @@ Also, you can define custom typedefs:
 /**
  * @enum {PersonSchema}
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
@@ -250,7 +250,7 @@ In the example below, there are two filters: `{ min: 1 }` and `{ min: 18 }`:
  * @param {string} name - { min: 1 }
  * @param {number} age - { min: 18 }
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 }) // Pass
 personSchema.validate({ name: '', age: 31 }) // Throws ValidationError
@@ -265,7 +265,7 @@ before, after or even on both sides of the filter object:
  * @param {string} name - The name should not be empty { min: 1 }
  * @param {number} age - { min: 18 } Adults only
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 ```
 
 The dash in the description is optional:
@@ -275,12 +275,15 @@ The dash in the description is optional:
  * @param {string} name The name should not be empty { min: 1 }
  * @param {number} age { min: 18 } Adults only
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 ```
 
 Also, the descriptions can be in multiple rows. In this case, keep in mind that the
 description of each parameter starts after its name and ends where the next tag is
 defined.
+
+Note that these descriptions are NOT custom error messages. They are just regular
+JsDoc descriptions.
 
 ```javascript
 /**
@@ -289,7 +292,7 @@ defined.
  * @param {number} age Adults only
  * { min: 18 }
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 ```
 
 Filters also work with object literal syntax. In this case, the description section
@@ -305,7 +308,7 @@ get an error in your IDE, or depending on your ESLint settings.
  *   age: number,  // { min: 18 }
  * }}
  */
-const personSchema = new DocSchema()
+const personSchema = docSchema()
 ```
 
 ### Array-specific filters
@@ -352,6 +355,30 @@ const personSchema = new DocSchema()
 - With `RegExp` value:
     - `pattern` - Regex pattern. `RegExp` value.
 
+### Custom error messages
+
+On each filter, you can specify a custom error message. To do that, replace the filter
+value with a tuple (array with 2 values) where the filter value is at index 0 and the
+custom error message is at index 1. For example:
+
+```javascript
+/**
+ * @param {string} name { min: [ 1, 'The name should not be empty' }
+ * @param {number} age { min: [ 18, 'Adults only' ] }
+ */
+const personSchema = docSchema()
+```
+Or:
+```javascript
+/**
+ * @enum {{
+ *   name: string, // { min: [ 1, 'The name should not be empty' }
+ *   age: number,  // { min: [ 18, 'Adults only' ] }
+ * }}
+ */
+const personSchema = docSchema()
+```
+
 ### Error Handling
 `ValidationError` is a child class of `Error` and is thrown only when using
 `.validate()`. It contains some additional properties,
@@ -396,8 +423,8 @@ as a separate string values in the array.
 
 ### How it Works
 
-- When `new DocSchema()` is called, a new `Error` is thrown and its call stack is
-captured.
+- When `new DocSchema()` is called (directly or via `docSchema()`, a new `Error` is
+thrown and its call stack is captured.
 - From the captured stack, information about the location of `new DocSchema()`
 is extracted. This extracted data includes file name, line and column.
 - The file is read synchronously. In browsers, [synchronous XHR request](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Synchronous_and_Asynchronous_Requests#synchronous_request)
