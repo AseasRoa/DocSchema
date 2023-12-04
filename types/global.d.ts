@@ -29,11 +29,12 @@ declare module 'docschema' {
     ): DocSchemaCheckResult
 
     /**
+     * @template T
+     * @param {T} value Input value
+     * @returns {T} The input value, if it's valid
      * @throws {ValidationError}
      */
-    validate(
-      value: any
-    ): boolean
+    validate<T>(value: T): T
   }
 
   export class DocSchemaParser {

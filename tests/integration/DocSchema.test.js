@@ -51,8 +51,9 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      expect(schema.validate({ key1: '1', key2: 2})).toBe(true)
-      expect(schema.approves({ key1: '1', key2: 2})).toBe(true)
+      const validValue = { key1: '1', key2: 2}
+      expect(schema.validate(validValue)).toStrictEqual(validValue)
+      expect(schema.approves(validValue)).toBe(true)
     })
 
     test('correct invalidation', () => {
@@ -94,12 +95,9 @@ describe('DocSchema', () => {
       const schema = docSchema()
 
       // validate
-      expect(schema.validate(
-        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
-      )).toBe(true)
-      expect(schema.approves(
-        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
-      )).toBe(true)
+      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      expect(schema.validate(validValue)).toStrictEqual(validValue)
+      expect(schema.approves(validValue)).toBe(true)
 
       // invalidate
       expect(() => schema.validate(
@@ -123,6 +121,20 @@ describe('DocSchema', () => {
 
       expect(() => schema.validate({ key1: 1})).toThrow(ValidationError)
       expect(schema.approves({ key1: 1})).toBe(false)
+    })
+    
+    test('correct invalidation with filters and custom error messages', () => {
+      /**
+       * @enum {{
+       *   key1: number, // { min: [ 3, 'Minimum is 3'], max: 5 }
+       * }}
+       */
+      const schema = docSchema()
+      
+      expect(() => schema.validate({ key1: 1})).toThrow('Minimum is 3')
+      expect(schema.check({ key1: 1})).toMatchObject({
+        message: 'Minimum is 3'
+      })
     })
   })
 
