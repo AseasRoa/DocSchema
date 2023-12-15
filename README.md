@@ -35,6 +35,7 @@ at runtime.
 ## Key Features
 
 - 100% JavaScript, uses JsDoc comments to make schemas
+- ES6 imports
 - Works in Node.js and modern browsers [*](#preserve-jsdoc-comments)
 - Zero dependencies
 - Validates the types and has additional filters to validate the value
@@ -224,8 +225,37 @@ const personSchema = docSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
-However, in this case the typedef definition must be in the same file. Ambient types 
-(located in another file) or TypeScript types are not supported.
+It's also possible to use ambient typedefs from external files.
+Ambient typedefs are typedefs, located in a file without imports or exports.
+Usually you don't have to import these files anywhere, as the types defined in them
+are global (ambient) anyway. However, for DocSchema you must import them.
+DocSchema does not scan for external files with ambient types by itself,
+but it will read external files, imported like this: `import './fileName.js'`:
+
+```javascript
+//---- ambientTypedefs.js ----//
+
+// This file should not have imports or exports
+
+/**
+ * @typedef PersonSchema
+ * @type {Object}
+ * @property {string} name
+ * @property {number} age
+ */
+
+
+//---- index.js ----//
+
+import './ambientTypedefs.js'
+
+/**
+ * @enum {PersonSchema}
+ */
+const personSchema = docSchema()
+
+personSchema.validate({ name: 'John', age: 31 })
+```
 
 ## Filters
 
