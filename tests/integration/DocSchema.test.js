@@ -69,8 +69,31 @@ describe('DocSchema', () => {
       expect(() => schema.validate({ key1: 1, key2: '2'})).toThrow(ValidationError)
       expect(schema.approves({ key1: 1, key2: '2'})).toBe(false)
     })
+    
+    test('correct validation and invalidation with typedef', () => {
+      // This is mostly to test whether it fails on the first wrong property in typedef
+      
+      /**
+       * @typedef NodeMake
+       * @type {object}
+       * @property {string} key1
+       * @property {number} key2
+       */
+      
+      /**
+       * @enum {NodeMake}
+       */
+      const schema = docSchema()
+      
+      // validate
+      schema.validate({ key1: '', key2: 0 })
+      
+      // invalidate
+      expect(() => schema.validate({ key1: 0, key2: 0 })).toThrow(ValidationError)
+      expect(() => schema.validate({ key1: '', key2: '' })).toThrow(ValidationError)
+    })
 
-    test('correct validation and invalidation with typedefs', () => {
+    test('correct validation and invalidation with inner typedefs', () => {
       /**
        * @typedef {string} StringTypedef
        */
@@ -111,7 +134,7 @@ describe('DocSchema', () => {
         { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' }}
       )).toThrow(ValidationError)
     })
-    
+
     test('correct validation and invalidation with ambient typedefs', () => {
       /**
        * @enum {{
