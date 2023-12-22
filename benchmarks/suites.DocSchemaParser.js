@@ -8,13 +8,13 @@ const suiteDocSchemaParser = new Benchmark.Suite('DocSchemaParser')
 
 suiteDocSchemaParser
   .add('@type {string}', () => {
-    parser.parseComments(`/** @type {string} */`)
+    parser.parseComments('/** @type {string} */')
   })
   .add('@type {bool}', () => {
-    parser.parseComments(`/** @type {bool} */`)
+    parser.parseComments('/** @type {bool} */')
   })
   .add('@type {Date}', () => {
-    parser.parseComments(`/** @type {Date} */`)
+    parser.parseComments('/** @type {Date} */')
   })
   .add('@typedef', () => {
     parser.parseComments(`
@@ -47,6 +47,6 @@ suiteDocSchemaParser
        * @param {string} lastArg
        */`)
   })
-  .on('cycle',cycleCallback)
+  .on('cycle', cycleCallback)
 
 export { suiteDocSchemaParser }

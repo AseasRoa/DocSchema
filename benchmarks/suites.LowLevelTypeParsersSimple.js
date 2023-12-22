@@ -18,7 +18,7 @@ suitesLowLevelTypeParsersSimple
     parsers.simple.tryPrimitive('number')
   })
   .add('string', () => {
-    parsers.simple.string(`'some-text'`)
+    parsers.simple.string('\'some-text\'')
   })
   .on('cycle', cycleCallback)
 

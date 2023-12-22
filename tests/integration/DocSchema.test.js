@@ -22,7 +22,8 @@ describe('DocSchema', () => {
 
       expect(() => {
         /**
-         * This JsDoc comment has an empty space below, which makes it invalid
+         * This JsDoc comment has an empty space below,
+         * which makes it invalid
          *
          * @enum {string}
          */
@@ -33,7 +34,8 @@ describe('DocSchema', () => {
       expect(() => {
         /* eslint-disable-next-line jsdoc/no-bad-blocks */
         /*
-         * This JsDoc comment is wrong, because it doesn't start with two stars
+         * This JsDoc comment is wrong, because it doesn't
+         * start with two stars
          *
          * @enum {string}
          */
@@ -52,7 +54,7 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      const validValue = { key1: '1', key2: 2}
+      const validValue = { key1: '1', key2: 2 }
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)
     })
@@ -66,31 +68,38 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      expect(() => schema.validate({ key1: 1, key2: '2'})).toThrow(ValidationError)
-      expect(schema.approves({ key1: 1, key2: '2'})).toBe(false)
+      expect(() => schema.validate({ key1: 1, key2: '2' })).toThrow(ValidationError)
+      expect(schema.approves({ key1: 1, key2: '2' })).toBe(false)
     })
-    
+
     test('correct validation and invalidation with typedef', () => {
-      // This is mostly to test whether it fails on the first wrong property in typedef
-      
+      /*
+       * This is mostly to test whether it fails on the first
+       * wrong property in typedef
+       */
+
       /**
        * @typedef NodeMake
        * @type {object}
        * @property {string} key1
        * @property {number} key2
        */
-      
+
       /**
        * @enum {NodeMake}
        */
       const schema = docSchema()
-      
+
       // validate
       schema.validate({ key1: '', key2: 0 })
-      
+
       // invalidate
-      expect(() => schema.validate({ key1: 0, key2: 0 })).toThrow(ValidationError)
-      expect(() => schema.validate({ key1: '', key2: '' })).toThrow(ValidationError)
+      expect(
+        () => schema.validate({ key1: 0, key2: 0 })
+      ).toThrow(ValidationError)
+      expect(
+        () => schema.validate({ key1: '', key2: '' })
+      ).toThrow(ValidationError)
     })
 
     test('correct validation and invalidation with inner typedefs', () => {
@@ -119,19 +128,19 @@ describe('DocSchema', () => {
       const schema = docSchema()
 
       // validate
-      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)
 
       // invalidate
       expect(() => schema.validate(
-        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
       )).toThrow(ValidationError)
       expect(() => schema.validate(
-        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 }}
+        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 } }
       )).toThrow(ValidationError)
       expect(() => schema.validate(
-        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' }}
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
       )).toThrow(ValidationError)
     })
 
@@ -146,22 +155,22 @@ describe('DocSchema', () => {
       const schema = docSchema()
 
       // validate
-      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)
 
       // invalidate
       expect(() => schema.validate(
-        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 }}
+        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
       )).toThrow(ValidationError)
       expect(() => schema.validate(
-        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 }}
+        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 } }
       )).toThrow(ValidationError)
       expect(() => schema.validate(
-        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' }}
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
       )).toThrow(ValidationError)
     })
-    
+
     test('correct invalidation with filters', () => {
       /**
        * @enum {{
@@ -170,10 +179,10 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      expect(() => schema.validate({ key1: 1})).toThrow(ValidationError)
-      expect(schema.approves({ key1: 1})).toBe(false)
+      expect(() => schema.validate({ key1: 1 })).toThrow(ValidationError)
+      expect(schema.approves({ key1: 1 })).toBe(false)
     })
-    
+
     test('correct invalidation with filters and custom error messages', () => {
       /**
        * @enum {{
@@ -181,9 +190,9 @@ describe('DocSchema', () => {
        * }}
        */
       const schema = docSchema()
-      
-      expect(() => schema.validate({ key1: 1})).toThrow('Minimum is 3')
-      expect(schema.check({ key1: 1})).toMatchObject({
+
+      expect(() => schema.validate({ key1: 1 })).toThrow('Minimum is 3')
+      expect(schema.check({ key1: 1 })).toMatchObject({
         message: 'Minimum is 3'
       })
     })
@@ -245,7 +254,7 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      const result = schema.check({ key1: '', key2: ''})
+      const result = schema.check({ key1: '', key2: '' })
 
       expect(result).toMatchObject({
         pass: false,
@@ -264,8 +273,12 @@ describe('DocSchema', () => {
        * tested here. This tests the path better.
        *
        * @enum {{
-       *   objOne: Object<string, Object<string, Object<string, number>>>,
-       *   objTwo: Object<string, Object<string, Object<string, number>>>,
+       * objOne: Object<string,
+       *   Object<string, Object<string, number>>
+       * >,
+       * objTwo: Object<string,
+       *   Object<string, Object<string, number>>
+       * >
        * }} obj
        */
       const schema = docSchema()
@@ -417,10 +430,11 @@ describe('DocSchema', () => {
 
     /**
      * This checks whether we can have 2 different results.
-     * The issue that is tested here is the fact that while checking,
-     * the check result is collected in a variable that is passed by
-     * reference. At the end, when the check result is returned, the
-     * returned value must be a clone of the variable.
+     * The issue that is tested here is the fact that while
+     * checking, the check result is collected in a variable
+     * that is passed by reference. At the end, when the check
+     * result is returned, the returned value must be a clone
+     * of the variable.
      */
     test('correct check result when multiple checks', () => {
       /**
@@ -431,8 +445,8 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      const result1 = schema.check({ key1: '', key2: ''})
-      const result2 = schema.check({ key1: 1, key2: 2})
+      const result1 = schema.check({ key1: '', key2: '' })
+      const result2 = schema.check({ key1: 1, key2: 2 })
 
       expect(result1).not.toStrictEqual(result2)
     })

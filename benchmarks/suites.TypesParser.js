@@ -18,7 +18,7 @@ suiteTypesParserSimple
     parse('number')
   })
   .add('string', () => {
-    parse(`'some-text'`)
+    parse('\'some-text\'')
   })
   .on('cycle', cycleCallback)
 
@@ -38,10 +38,10 @@ suiteTypesParserComplex
     parse('Object.<string, number>')
   })
   .add('{keys: string, values: number}', () => {
-    parse(`{keys: string, values: number}`)
+    parse('{keys: string, values: number}')
   })
   .add('keys: ( string & NUMBER ) , values: ( NUMBER | MyType )', () => {
-    parse(`keys: ( string & NUMBER ) , values: ( NUMBER | MyType )`)
+    parse('keys: ( string & NUMBER ) , values: ( NUMBER | MyType )')
   })
   .on('cycle', cycleCallback)
 

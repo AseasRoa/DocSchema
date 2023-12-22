@@ -38,11 +38,11 @@ suiteDocSchemaValidator
       ast2[0],
       [
         'firstArg',
-        { arg1 : 'string', arg2 : true, arg3 : 123 },
+        { arg1: 'string', arg2: true, arg3: 123 },
         'lastArg'
       ]
     )
   })
-  .on('cycle',cycleCallback)
+  .on('cycle', cycleCallback)
 
 export { suiteDocSchemaValidator }

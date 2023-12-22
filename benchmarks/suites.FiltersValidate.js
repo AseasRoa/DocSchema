@@ -127,6 +127,6 @@ suiteFiltersValidate
   .add('string uuid - invalid', () => {
     check({ uuid: [true, ''] }, 'something')
   })
-  .on('cycle',cycleCallback)
+  .on('cycle', cycleCallback)
 
 export { suiteFiltersValidate }
