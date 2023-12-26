@@ -19,24 +19,6 @@ declare module 'docschema' {
     valuePath: PropertyKey[]
   }
 
-  export class DocSchema {
-    approves(
-      value: any
-    ): boolean
-
-    check(
-      value: any
-    ): DocSchemaCheckResult
-
-    /**
-     * @template T
-     * @param {T} value Input value
-     * @returns {T} The input value, if it's valid
-     * @throws {ValidationError}
-     */
-    validate<T>(value: T): T
-  }
-
   export class DocSchemaParser {
     parseComments(
       code: string,
@@ -78,6 +60,24 @@ declare module 'docschema' {
       value: any,
       throwOnError?: boolean
     ) : ValidationError | Error
+  }
+
+  export class DocSchema {
+    approves(
+      value: any
+    ): boolean
+
+    check(
+      value: any
+    ): DocSchemaCheckResult
+
+    /**
+     * @template T
+     * @param {T} value Input value
+     * @returns {T} The input value, if it's valid
+     * @throws {ValidationError}
+     */
+    validate<T>(value: T): T
   }
 
   /**
