@@ -4,8 +4,8 @@
  * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
  */
 
-type DocSchemaAst = import('./app').Ast
-type DocSchemaCheckResult = import('./app').CheckResult
+type DocSchemaAst = import('../lib/types/app').Ast
+type DocSchemaCheckResult = import('../lib/types/app').CheckResult
 
 declare module 'docschema' {
   export class ValidationError extends Error {

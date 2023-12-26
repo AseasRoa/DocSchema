@@ -7,11 +7,11 @@
   "description": "Schema declaration and validation library using JsDoc comments",
   "license": "MIT",
   "type": "module",
-  "types": "./types/global.d.ts",
+  "types": "./types/index.d.ts",
   "main": "./lib/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
-    "types": "./types/global.d.ts",
+    "types": "./types/index.d.ts",
     "browser": "./dist/bundle.js",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
