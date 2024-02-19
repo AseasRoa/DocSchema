@@ -80,8 +80,8 @@ personSchema.validate(wrongData) // Throws ValidationError
 const correctData = { name: 'John', age: 31 }
 const wrongData   = { name: 'John', age: '31' }
 
-personSchema.check(correctData) // Returns a special object
-personSchema.check(wrongData) // Returns a special object with the error data
+personSchema.check(correctData) // Returns an object (explained later)
+personSchema.check(wrongData) // Returns an object with the error data
 ```
 - Or, approve your data:
 ```javascript
@@ -401,7 +401,7 @@ const personSchema = docSchema()
 `ValidationError` is a child class of `Error` and is thrown only when using
 `.validate()`. It contains some additional properties,
 providing information about the validation error. The same properties are returned by
-`.check()`, but as an `Object`.
+`.check()`, but as an object.
 
 On validation success, the properties are mostly empty, except `pass` and `tag`:
 
