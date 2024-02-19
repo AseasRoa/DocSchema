@@ -55,18 +55,8 @@ yarn add docschema
 
 ## Basic Usage
 
-- Create a schema with `docSchema()` or `new DocSchema()`:
+- Use `docSchema()` to create a schema:
 
-Note: `docSchema()` is just a wrapper function around `new DocSchema()`.
-```javascript
-import { DocSchema } from 'docschema'
-
-/**
- * @param {string} name
- * @param {number} age
- */
-const personSchema = new DocSchema()
-```
 ```javascript
 import { docSchema } from 'docschema'
 // import docSchema from 'docschema' // Also valid
@@ -75,7 +65,7 @@ import { docSchema } from 'docschema'
  * @param {string} name
  * @param {number} age
  */
-const personSchema = docSchema() // new DocSchema() alias
+const personSchema = docSchema()
 ```
 - Validate your data:
 ```javascript
@@ -116,11 +106,13 @@ happen to our JsDoc schemas. To preserve them, try using `@preserve` or `@licens
 
 ## Schemas
 
-To define a schema, some of the standard JsDoc tags are used, but in a little bit
-different way. These tags are `@enum`, `@param` and `@typedef`.
+To define a schema, some of the standard JsDoc tags are used, but not in the way they
+are supposed to be used. The tags are `@enum`, `@typedef` and `@param`. They are chosen,
+because when they are used directly above a constant or variable definition, they don't
+set the type of that constant or variable.
 
 ### @enum
-For a simple type:
+For a simple type that is only one word:
 
 ```javascript
 /**
@@ -142,25 +134,9 @@ const personSchema = docSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
-Why `@enum`, but not `@type`? Because `@type` sets the type of the variable below
-without respecting the other type returned by `docSchema()`, and we don't want that.
-With `@enum`, the variable gets both types in a way that can be used with TypeScript.
-
-### @param
-
-For an object, you can also use one or more `@param` tags:
-
-```javascript
-/**
- * @param {string} name
- * @param {number} age
- */
-const personSchema = docSchema()
-
-personSchema.validate({ name: 'John', age: 31 })
-```
-However, the type information doesn't "escape" the JsDoc comment. This can be used in a
-very narrow scope.
+Why `@enum`, but not `@type`? Because `@type` sets the type of the constant below,
+which is something we don't want in DocSchema. What we want is to use the information in
+the JsDoc comment as a schema, for the purpose of `validate()`.
 
 ### @typedef
 
@@ -177,10 +153,10 @@ const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
-Now you can do the validations, but there is also a type `PersonSchema` that "escapes"
-the JsDoc comment. This can be used in the scope of a file.
+Now not only you can do the validations, but the type `PersonSchema` can alo be used
+somewhere else in the same file. The use case for this will be demonstrated later.
 
-This variation is also valid:
+By the way, this variation is also valid:
 
 ```javascript
 /**
@@ -193,6 +169,22 @@ const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
+
+### @param
+
+For an object, you can also use one or more `@param` tags:
+
+```javascript
+/**
+ * @param {string} name
+ * @param {number} age
+ */
+const personSchema = docSchema()
+
+personSchema.validate({ name: 'John', age: 31 })
+```
+However, the type information can only be used to make the schema for `personSchema`.
+This can be used in a very narrow scope.
 
 ## External Types
 
@@ -449,17 +441,17 @@ as a separate string values in the array.
 
 ## How it Works?
 
-- When `new DocSchema()` is called (directly or via `docSchema()`, a new `Error` is
-thrown and its call stack is captured.
-- From the captured stack, information about the location of `new DocSchema()`
-is extracted. This extracted data includes file name, line and column.
-- The file is read synchronously. In browsers, [synchronous XHR request](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Synchronous_and_Asynchronous_Requests#synchronous_request)
-is used (yes, it's deprecated), but technically we already got the file in the browser's
-cache. 
+- When `docSchema()` is called, a new `Error` is thrown internally and its call stack
+is captured.
+- From the captured stack, information about the location of `docSchema()` is
+extracted - file name, line and column.
+- The file (where `docSchema()` is located) is read synchronously. In browsers,
+[synchronous XHR request](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Synchronous_and_Asynchronous_Requests#synchronous_request)
+is used. Yes, this is deprecated for a good reason, but in our case we already got the
+file in the browser's cache. 
 - All JsDoc comments in the file are extracted and parsed. We know where to locate our
-comment, it must be at the lines just above `new DocSchema()`. From our JsDoc comment
-we got a schema, and that schema is returned by our `new DocSchema()`.
-- Now we only have to use the methods from `new DocSchema()`.
+comment, it must be at the lines just above `docSchema()`. From our JsDoc comment
+we got a schema, and that schema is returned by `docSchema()`.
 
 ## How to Use?
 
