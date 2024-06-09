@@ -106,7 +106,8 @@ type Ast = {
   startLine: number,
   endLine: number,
   lineAfterComment: string, // The contents of the first non-empty line after the comment
-  typedefs: Ast[] // Other parsed AST from the same file that are 'typedef'
+  localTypedefs: Ast[], // Other parsed AST from the same file that are 'typedef'
+  ambientTypedefs: Ast[] // Ambient typedefs from other files
 }
 
 type CheckResult = {

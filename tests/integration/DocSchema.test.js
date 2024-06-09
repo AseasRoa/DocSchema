@@ -1,5 +1,6 @@
 import { docSchema, DocSchema, ValidationError } from '#docschema'
 import './assets/ambientTypedefs.js'
+import './assets/ambientTypedefs2.js'
 
 describe('DocSchema', () => {
   describe('Schema Creation', () => {
@@ -102,7 +103,7 @@ describe('DocSchema', () => {
       ).toThrow(ValidationError)
     })
 
-    test('correct validation and invalidation with inner typedefs', () => {
+    test('correct validation and invalidation with local typedefs', () => {
       /**
        * @typedef {string} StringTypedef
        */
@@ -147,15 +148,19 @@ describe('DocSchema', () => {
     test('correct validation and invalidation with ambient typedefs', () => {
       /**
        * @enum {{
-       *   key1: AmbientStringTypedef,
-       *   key2: AmbientObjTypedefOne,
-       *   key3: AmbientObjTypedefTwo
+       *   key1: AmbientString,
+       *   key2: AmbientObjOne,
+       *   key3: AmbientObjTwo
        * }}
        */
       const schema = docSchema()
 
       // validate
-      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
+      const validValue = {
+        key1: '',
+        key2: { a: '', b: 0 },
+        key3: { a: '', b: 0 }
+      }
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)
 
@@ -168,6 +173,30 @@ describe('DocSchema', () => {
       )).toThrow(ValidationError)
       expect(() => schema.validate(
         { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
+      )).toThrow(ValidationError)
+    })
+
+    test('correct validation and invalidation with ambient typedefs (remote)', () => {
+      /**
+       * @enum {{
+       *   key1: AmbientObjThree
+       * }}
+       */
+      const schema = docSchema()
+
+      // validate
+      const validValue = {
+        key1: { a: '' }
+      }
+      expect(schema.validate(validValue)).toStrictEqual(validValue)
+      expect(schema.approves(validValue)).toBe(true)
+
+      // invalidate
+      expect(() => schema.validate(
+        { key1: 1 }
       )).toThrow(ValidationError)
     })
 
