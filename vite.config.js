@@ -11,9 +11,9 @@ export default defineConfig({
     hmr: true,
   },
   /**
-   * When building in Library Mode (lib), the 'es' build contains
-   * whitespaces and even JSDoc comments when minified.
-   * When Rollup is used (via rollupOptions), it works as in only
+   * When building in Library Mode (lib), the minified 'es' build
+   * contains whitespaces and even JsDoc comments.
+   * When Rollup is used (via rollupOptions), it works as if only
    * Rollup is used.
    *
    * @see https://vitejs.dev/guide/build.html
