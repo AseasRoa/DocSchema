@@ -1,6 +1,15 @@
-import { docSchema, DocSchema, ValidationError } from '#docschema'
+import {
+  docSchema,
+  DocSchema,
+  DocSchemaParser,
+  DocSchemaValidator,
+  ValidationError
+} from '#docschema'
 import './assets/ambientTypedefs.js'
 import './assets/ambientTypedefs2.js'
+
+const parser = new DocSchemaParser()
+const validator = new DocSchemaValidator()
 
 describe('DocSchema', () => {
   describe('Schema Creation', () => {
@@ -224,6 +233,29 @@ describe('DocSchema', () => {
       expect(schema.check({ key1: 1 })).toMatchObject({
         message: 'Minimum is 3'
       })
+    })
+
+    test('correct validation and invalidation with strict typedef', () => {
+      /**
+       * @typedef TypedefValidateStrict
+       * @type {object}
+       * @property {string} key1
+       * @property {number} key2
+       * @strict
+       */
+
+      /**
+       * @enum {TypedefValidateStrict}
+       */
+      const schema = docSchema()
+
+      // validate
+      schema.validate({ key1: '', key2: 0 })
+
+      // invalidate
+      expect(
+        () => schema.validate({ key1: '', key2: 0, key3: 1 })
+      ).toThrow(ValidationError)
     })
   })
 
@@ -478,6 +510,84 @@ describe('DocSchema', () => {
       const result2 = schema.check({ key1: 1, key2: 2 })
 
       expect(result1).not.toStrictEqual(result2)
+    })
+
+    test('correct check result when strict typedef', () => {
+      /**
+       * @typedef TypedefCheckStrict
+       * @type {object}
+       * @property {string} key1
+       * @property {number} key2
+       * @strict
+       */
+
+      /**
+       * @enum {TypedefCheckStrict}
+       */
+      const schema = docSchema()
+
+      // validate
+      expect(schema.check({ key1: '', key2: 0 }).pass).toBe(true)
+
+      // invalidate
+      const result = schema.check({ key1: '', key2: 0, key3: 1 })
+
+      expect(result).toMatchObject({
+        pass: false,
+        kind: '',
+        tag: 'enum',
+        expectedType: '',
+        filter: undefined,
+        value: undefined,
+        valuePath: []
+      })
+    })
+
+    test('correct check result when strict params', () => {
+      /**
+       * @param {string} key1
+       * @param {number} key2
+       * @strict
+       */
+      const schema = docSchema()
+
+      // validate
+      expect(schema.check({ key1: '', key2: 0 }).pass).toBe(true)
+
+      // invalidate
+      const result = schema.check({ key1: '', key2: 0, key3: 1 })
+
+      expect(result).toMatchObject({
+        pass: false,
+        kind: '',
+        tag: 'param',
+        expectedType: '',
+        filter: undefined,
+        value: undefined,
+        valuePath: []
+      })
+    })
+
+    test('correct check result when strict function params', () => {
+      const [ ast ] = parser.parseComments(`
+        /**
+         * @param {number} numberArg
+         * @strict
+         */
+         function validate(numberArg) {}
+        `)
+
+      if (!ast) throw new Error('Missing AST')
+
+      // correct
+      expect(
+        validator.validateFunctionArguments(ast, [1])
+      ).toMatchObject({ pass: true })
+
+      // wrong
+      expect(() => {
+        validator.validateFunctionArguments(ast, [1, 2])
+      }).toThrow(ValidationError)
     })
   })
 })

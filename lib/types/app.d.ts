@@ -27,7 +27,8 @@ type TypesChecker = (
   key: PropertyKey,
   ast: Ast,
   filters: TupleFilters,
-  validator: import('../DocSchemaValidator').DocSchemaValidator
+  validator: import('../DocSchemaValidator').DocSchemaValidator,
+  throwOnError: boolean
 ) => boolean
 
 type CheckerFunctionSimple = (
@@ -42,5 +43,6 @@ type CheckerFunctionComplex = (
   ast: Ast,
   filters: TupleFilters,
   validator: import('../DocSchemaValidator').DocSchemaValidator,
-  typesValidator: TypesChecker
+  typesValidator: TypesChecker,
+  throwOnError: boolean
 ) => boolean

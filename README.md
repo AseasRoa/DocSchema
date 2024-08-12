@@ -249,6 +249,25 @@ const personSchema = docSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
+## Strict
+
+```javascript
+/**
+* @typedef PersonSchema
+* @type {Object}
+* @property {string} name
+* @property {number} age
+* @strict
+*/
+const personSchema = docSchema()
+
+personSchema.validate({ name: 'John', age: 31, child: 'Jane' })
+```
+
+With `@strict`, the validation will not be successful if the input object
+contains properties that are not in the schema. In the example above, the
+object contains one extra property `child` that doesn't exist in the schema.
+
 ## Filters
 
 Sometimes validating only the type is not enough. Maybe you want a number with minimum

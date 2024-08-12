@@ -97,7 +97,8 @@ type AstElements = {
   callback: ParsedTat | null,
   typedef: ParsedTag | null,
   yields: ParsedTag | null,
-  property: ParsedTag[]
+  property: ParsedTag[],
+  strict: boolean
 }
 
 type Ast = {
@@ -108,6 +109,7 @@ type Ast = {
   lineAfterComment: string, // The contents of the first non-empty line after the comment
   localTypedefs: Ast[], // Other parsed AST from the same file that are 'typedef'
   ambientTypedefs: Ast[] // Ambient typedefs from other files
+  strict: boolean
 }
 
 type CheckResult = {
