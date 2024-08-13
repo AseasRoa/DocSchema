@@ -518,11 +518,11 @@ describe('DocSchema', () => {
        * @type {object}
        * @property {string} key1
        * @property {number} key2
-       * @strict
        */
 
       /**
        * @enum {TypedefCheckStrict}
+       * @strict
        */
       const schema = docSchema()
 
