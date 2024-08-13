@@ -444,7 +444,8 @@ On validation failure, the properties are as follows:
 - `tag` - String. The name of the tag where the validation failed.
 <br>For example `"enum"`,
 - `message` - String. Error message, containing information about the problem.
-- `kind` - `"type"` on type checking failure or `"filter"` on filter checking failure.
+- `kind` - `"type"` on type checking failure, `"filter"` on filter checking 
+failure, or "strict" on failure when `@strict` is used.
 - `expectedType` - String. The expected type.
 `"param"`, `"property"`.
 - `filter` - Object with two properties - name and value. It appears on filter

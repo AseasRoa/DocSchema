@@ -115,7 +115,7 @@ type Ast = {
 type CheckResult = {
   expectedType: string,
   filter?: { name: '' | keyof Filters, value: boolean | number | string | RegExp },
-  kind: 'type' | 'filter' | ''
+  kind: 'type' | 'filter' | 'strict' | ''
   message: string,
   pass: boolean,
   tag: string,

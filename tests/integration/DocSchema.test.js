@@ -534,7 +534,7 @@ describe('DocSchema', () => {
 
       expect(result).toMatchObject({
         pass: false,
-        kind: '',
+        kind: 'strict',
         tag: 'enum',
         expectedType: '',
         filter: undefined,
@@ -559,7 +559,7 @@ describe('DocSchema', () => {
 
       expect(result).toMatchObject({
         pass: false,
-        kind: '',
+        kind: 'strict',
         tag: 'param',
         expectedType: '',
         filter: undefined,
