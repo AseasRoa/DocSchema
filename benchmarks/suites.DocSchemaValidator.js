@@ -29,7 +29,7 @@ suiteDocSchemaValidator
   .add('@type {string}', () => {
     if (!ast1[0]) throw new Error('Missing AST')
 
-    validator.validateTag('type', ast1[0], 'hello')
+    validator.validate(ast1[0], 'hello')
   })
   .add('destructured', () => {
     if (!ast2[0]) throw new Error('Missing AST')
