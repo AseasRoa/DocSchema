@@ -78,7 +78,9 @@ describe('DocSchema', () => {
        */
       const schema = docSchema()
 
-      expect(() => schema.validate({ key1: 1, key2: '2' })).toThrow(ValidationError)
+      expect(
+        () => schema.validate({ key1: 1, key2: '2' })
+      ).toThrow(ValidationError)
       expect(schema.approves({ key1: 1, key2: '2' })).toBe(false)
     })
 
@@ -138,7 +140,11 @@ describe('DocSchema', () => {
       const schema = docSchema()
 
       // validate
-      const validValue = { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
+      const validValue = {
+        key1: '',
+        key2: { a: '', b: 0 },
+        key3: { a: '', b: 0 }
+      }
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)
 
@@ -188,26 +194,29 @@ describe('DocSchema', () => {
       )).toThrow(ValidationError)
     })
 
-    test('correct validation and invalidation with ambient typedefs (remote)', () => {
-      /**
-       * @enum {{
-       *   key1: AmbientObjThree
-       * }}
-       */
-      const schema = docSchema()
+    test(
+      'correct validation and invalidation with ambient typedefs (remote)',
+      () => {
+        /**
+         * @enum {{
+         *   key1: AmbientObjThree
+         * }}
+         */
+        const schema = docSchema()
 
-      // validate
-      const validValue = {
-        key1: { a: '' }
+        // validate
+        const validValue = {
+          key1: { a: '' }
+        }
+        expect(schema.validate(validValue)).toStrictEqual(validValue)
+        expect(schema.approves(validValue)).toBe(true)
+
+        // invalidate
+        expect(() => schema.validate(
+          { key1: 1 }
+        )).toThrow(ValidationError)
       }
-      expect(schema.validate(validValue)).toStrictEqual(validValue)
-      expect(schema.approves(validValue)).toBe(true)
-
-      // invalidate
-      expect(() => schema.validate(
-        { key1: 1 }
-      )).toThrow(ValidationError)
-    })
+    )
 
     test('correct invalidation with filters', () => {
       /**
