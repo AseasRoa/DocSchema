@@ -23,7 +23,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
+    "lint": "tsc --noEmit && eslint --config eslint.config.js ./",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",
@@ -32,15 +32,15 @@
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^22.2.0",
-    "@vitest/coverage-v8": "^2.0.5",
+    "@types/node": "^22.7.4",
+    "@vitest/coverage-v8": "^2.1.2",
     "benchmark": "^2.1.4",
-    "eslint": "^8.57.0",
-    "eslint-plugin-jsdoc": "^48.2.9",
-    "eslint-plugin-vitest": "^0.4.1",
+    "eslint": "^9.11.1",
+    "eslint-plugin-jsdoc": "^50.3.1",
+    "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vitest-globals": "^1.5.0",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.2"
   },
   "repository": {
     "type": "git",
