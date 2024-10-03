@@ -246,7 +246,6 @@ export default [
     rules: {
       ...jsdoc.configs.recommended.rules,
       'jsdoc/check-line-alignment': 'error',
-      'jsdoc/check-template-names': 'error',
       'jsdoc/check-types': 'off',
       'jsdoc/no-bad-blocks': 'error',
       'jsdoc/no-blank-block-descriptions': 'error',
@@ -286,7 +285,6 @@ export default [
       'vitest/no-standalone-expect': 'error',
       'vitest/no-test-prefixes': 'error',
       'vitest/no-test-return-statement': 'error',
-      'vitest/prefer-comparison-matcher': 'error',
       'vitest/prefer-each': 'error',
       'vitest/prefer-expect-resolves': 'warn',
       'vitest/prefer-hooks-in-order': 'error',
