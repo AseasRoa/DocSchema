@@ -45,4 +45,4 @@ suiteTypesParserComplex
   })
   .on('cycle', cycleCallback)
 
-export { suiteTypesParserSimple, suiteTypesParserComplex }
+export { suiteTypesParserComplex, suiteTypesParserSimple }

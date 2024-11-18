@@ -1,6 +1,6 @@
 import Benchmark from 'benchmark'
-import { cycleCallback } from './functions.js'
 import { check } from '../lib/parse-check-filters/check.js'
+import { cycleCallback } from './functions.js'
 
 const suiteFiltersValidate = new Benchmark.Suite('Filters Validate')
 
