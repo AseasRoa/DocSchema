@@ -607,7 +607,7 @@ export { PersonSchema }
 //---- index.js ----//
 
 /**
- * @import { PersonSchema } grom './schemas.js'
+ * @import { PersonSchema } from './schemas.js'
  */
 
 /**
