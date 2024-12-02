@@ -10,8 +10,8 @@
 [![test](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml/badge.svg)](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml)
 ![license](https://img.shields.io/npm/l/docschema)
 
-DocSchema allows you to create schemas from JsDoc comments and use them to validate data
-at runtime.
+DocSchema allows you to create schemas from JsDoc comments and use them to
+validate data at runtime.
 
 ## Table of Contents
 
@@ -93,8 +93,9 @@ personSchema.approves(wrongData) // Returns false
 ```
 ## Preserve JsDoc Comments
 
-When JavaScript files are minified, JsDoc comments are removed. We don't want that to
-happen to our JsDoc schemas. To preserve them, try using `@preserve` or `@license` tag:
+When JavaScript files are minified, JsDoc comments are removed. We don't want
+that to happen to our JsDoc schemas. To preserve them, try using `@preserve`
+or `@license` tag:
 
 ```javascript
 /**
@@ -106,10 +107,10 @@ happen to our JsDoc schemas. To preserve them, try using `@preserve` or `@licens
 
 ## Schemas
 
-To define a schema, some of the standard JsDoc tags are used, but not in the way they
-are supposed to be used. The tags are `@enum`, `@typedef` and `@param`. They are chosen,
-because when they are used directly above a constant or variable definition, they don't
-set the type of that constant or variable.
+To define a schema, some of the standard JsDoc tags are used, but not in the
+way they are supposed to be used. The tags are `@enum`, `@typedef` and `@param`.
+They are chosen, because when they are used directly above a constant or
+variable definition, they don't set the type of that constant or variable.
 
 ### @enum
 For a simple type that is only one word:
@@ -134,14 +135,15 @@ const personSchema = docSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
-Why `@enum`, but not `@type`? Because `@type` sets the type of the constant below,
-which is something we don't want in DocSchema. What we want is to use the information in
-the JsDoc comment as a schema, for the purpose of `validate()`.
+Why `@enum`, but not `@type`? Because `@type` sets the type of the constant
+below, which is something we don't want in DocSchema. What we want is to use
+the information in the JsDoc comment as a schema, for the purpose of
+`validate()`.
 
 ### @typedef
 
-For an object, you can also use one `@typedef` tag with type `Object` and one or more
-`@property` tags:
+For an object, you can also use one `@typedef` tag with type `Object` and one
+or more `@property` tags:
 
 ```javascript
 /**
@@ -153,8 +155,9 @@ const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
-Now not only you can do the validations, but the type `PersonSchema` can alo be used
-somewhere else in the same file. The use case for this will be demonstrated later.
+Now not only you can do the validations, but the type `PersonSchema` can alo be
+used somewhere else in the same file. The use case for this will be demonstrated
+later.
 
 By the way, this variation is also valid:
 
@@ -183,8 +186,8 @@ const personSchema = docSchema()
 
 personSchema.validate({ name: 'John', age: 31 })
 ```
-However, the type information can only be used to make the schema for `personSchema`.
-This can be used in a very narrow scope.
+However, the type information can only be used to make the schema for
+`personSchema`. This can be used in a very narrow scope.
 
 ## External Types
 
@@ -217,10 +220,35 @@ const personSchema = docSchema()
 personSchema.validate({ name: 'John', age: 31 })
 ```
 
+You can also import types from other files using the @import tag:
+
+```javascript
+//---- types.js ----//
+/**
+ * @typedef PersonSchema
+ * @type {Object}
+ * @property {string} name
+ * @property {number} age
+ */
+ 
+//---- index.js ----//
+ 
+/**
+ * @import { PersonSchema } from './types.js'
+ */
+
+/**
+ * @enum {PersonSchema}
+ */
+const personSchema = docSchema()
+
+personSchema.validate({ name: 'John', age: 31 })
+```
+
 It's also possible to use ambient typedefs from external files.
 Ambient typedefs are typedefs, located in a file without imports or exports.
-Usually you don't have to import these files anywhere, as the types defined in them
-are global (ambient) anyway. However, for DocSchema you must import them.
+Usually you don't have to import these files anywhere, as the types defined in
+them are global (ambient) anyway. However, for DocSchema you must import them.
 DocSchema does not scan for external files with ambient types by itself,
 but it will read external files, imported like this: `import './fileName.js'`:
 
@@ -270,13 +298,14 @@ object contains one extra property `child` that doesn't exist in the schema.
 
 ## Filters
 
-Sometimes validating only the type is not enough. Maybe you want a number with minimum
-value, or a string with certain contents? Use filters for that.
+Sometimes validating only the type is not enough. Maybe you want a number with
+minimum value, or a string with certain contents? Use filters for that.
 
-The syntax is like a normal JavaScript Object, but only some key-value pairs would work.
-The filters are placed in the description section of each parameter. Unfortunately, 
-because of that in your IDE you will not get linting or code completion for the filters.
-However, if you define them incorrectly, you should get errors
+The syntax is like a normal JavaScript Object, but only some key-value pairs
+would work. The filters are placed in the description section of each parameter.
+Unfortunately, because of that in your IDE you will not get linting or code
+completion for the filters. However, if you define them incorrectly, you should
+get errors
 ([`SyntaxError`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError))
 at parse time.
 
@@ -294,8 +323,8 @@ personSchema.validate({ name: '', age: 31 }) // Throws ValidationError
 personSchema.validate({ name: 'John', age: 15 }) // Throws ValidationError
 ```
 
-And you can also add an actual description for each parameter, which can be placed
-before, after or even on both sides of the filter object:
+And you can also add an actual description for each parameter, which can be
+placed before, after or even on both sides of the filter object:
 
 ```javascript
 /**
@@ -315,12 +344,12 @@ The dash in the description is optional:
 const personSchema = docSchema()
 ```
 
-Also, the descriptions can be in multiple rows. In this case, keep in mind that the
-description of each parameter starts after its name and ends where the next tag is
-defined.
+Also, the descriptions can be in multiple rows. In this case, keep in mind that
+the description of each parameter starts after its name and ends where the next
+tag is defined.
 
-Note that these descriptions are NOT custom error messages. They are just regular
-JsDoc descriptions.
+Note that these descriptions are NOT custom error messages. They are just
+regular JsDoc descriptions.
 
 ```javascript
 /**
@@ -332,11 +361,11 @@ JsDoc descriptions.
 const personSchema = docSchema()
 ```
 
-Filters also work with object literal syntax. In this case, the description section
-looks more like a comment.
+Filters also work with object literal syntax. In this case, the description
+section looks more like a comment.
 
-Note: Having descriptions like that is not a standard practice in JsDoc and you may
-get an error in your IDE, or depending on your ESLint settings.
+Note: Having descriptions like that is not a standard practice in JsDoc and
+you may get an error in your IDE, or depending on your ESLint settings.
 
 ```javascript
 /**
@@ -365,7 +394,8 @@ const personSchema = docSchema()
   - `step` - The number must be divisible by the number of "step".
 - With boolean value (either true or false):
   - `int` - The number must (or not) be integer.
-  - `finite` - The number must (or not) be finite (not `Infinity` and not `-Infinity`)
+  - `finite` - The number must (or not) be finite (not `Infinity` and not
+`-Infinity`)
   - `safeInt` - The number must (or not) be safe integer (between 
   `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`)
 
@@ -394,9 +424,9 @@ const personSchema = docSchema()
 
 ### Custom error messages
 
-On each filter, you can specify a custom error message. To do that, replace the filter
-value with a tuple (array with 2 values) where the filter value is at index 0 and the
-custom error message is at index 1. For example:
+On each filter, you can specify a custom error message. To do that, replace the
+filter value with a tuple (array with 2 values) where the filter value is at
+index 0 and the custom error message is at index 1. For example:
 
 ```javascript
 /**
@@ -419,8 +449,8 @@ const personSchema = docSchema()
 ## Error Handling
 `ValidationError` is a child class of `Error` and is thrown only when using
 `.validate()`. It contains some additional properties,
-providing information about the validation error. The same properties are returned by
-`.check()`, but as an object.
+providing information about the validation error. The same properties are
+returned by `.check()`, but as an object.
 
 On validation success, the properties are mostly empty, except `pass` and `tag`:
 
@@ -452,42 +482,45 @@ failure, or "strict" on failure when `@strict` is used.
 validation failure only and provides information about the filter that was used.
 <br>For example, on input number 5: `{ name: "min", value: 10 }`
 - `value` - The value at which the validation failure happened.
-- `valuePath` - Array. The path to the value at which the validation failure happened,
-as a separate string values in the array.
+- `valuePath` - Array. The path to the value at which the validation failure
+happened, as a separate string values in the array.
 <br>For example:
   - With simple value it is an empty array `[]`.
-  - With Object `{ foo: { bar: "wrong-value" } }` it is like this: `[ "foo", "bar" ]`.
+  - With Object `{ foo: { bar: "wrong-value" } }` it is like this:
+  `[ "foo", "bar" ]`.
   - With Array `{ foo: [ "wrong-value" ] }` it is like this: `[ "foo", "0" ]`
 
 ## How it Works?
 
-- When `docSchema()` is called, a new `Error` is thrown internally and its call stack
-is captured.
+- When `docSchema()` is called, a new `Error` is thrown internally and its call
+stack is captured.
 - From the captured stack, information about the location of `docSchema()` is
 extracted - file name, line and column.
 - The file (where `docSchema()` is located) is read synchronously. In browsers,
 [synchronous XHR request](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Synchronous_and_Asynchronous_Requests#synchronous_request)
-is used. Yes, this is deprecated for a good reason, but in our case we already got the
-file in the browser's cache. 
-- All JsDoc comments in the file are extracted and parsed. We know where to locate our
-comment, it must be at the lines just above `docSchema()`. From our JsDoc comment
-we got a schema, and that schema is returned by `docSchema()`.
+is used. Yes, this is deprecated for a good reason, but in our case we already
+got the file in the browser's cache. 
+- All JsDoc comments in the file are extracted and parsed. We know where to
+locate our comment, it must be at the lines just above `docSchema()`. From our
+JsDoc comment we got a schema, and that schema is returned by `docSchema()`.
 
 ## How to Use?
 
 ### TypeScript?
 
 DocSchema is intended to be used in JavaScript & JsDoc environment, along with
-TypeScript for type-checking only. TypeScript understands JsDoc comments very well,
-which allows us to use them for type definitions. For this, TypeScript needs to be
-configured with [allowJs](https://www.typescriptlang.org/tsconfig#allowJs)
+TypeScript for type-checking only. TypeScript understands JsDoc comments very
+well, which allows us to use them for type definitions. For this, TypeScript
+needs to be configured with
+[allowJs](https://www.typescriptlang.org/tsconfig#allowJs)
 and [checkJs](https://www.typescriptlang.org/tsconfig#checkJs) set to `true`.
-DocSchema itself is configured like this, and you can see its `tsconfig.js` file for
-reference.
+DocSchema itself is configured like this, and you can see its `tsconfig.js`
+file for reference.
 
 ### Infer Type from Schema
 
-Ideally, we want to use the same JsDoc type definition for the schema and as a type.
+Ideally, we want to use the same JsDoc type definition for the schema and as a
+type.
 
 With `@param` we have a problem:
 ```javascript
@@ -497,8 +530,9 @@ With `@param` we have a problem:
  */
 const personSchema = docSchema()
 ```
-Here the JsDoc comment is consumed by `docSchema()`, but it can't be used as a type
-somewhere else. `personSchema` has the type that is returned by `docSchema()`.
+Here the JsDoc comment is consumed by `docSchema()`, but it can't be used as a
+type somewhere else. `personSchema` has the type that is returned by
+`docSchema()`.
 
 With `@typedef`:
 ```javascript
@@ -509,9 +543,9 @@ With `@typedef`:
 */
 const personSchema = docSchema()
 ```
-Here we have a type `PersonSchema` and it can be used somewhere else in the same file.
-We can't use `PersonSchema` outside this file. And it's probably not a good idea to use
-`PersonSchema` as a type in the same file anyway.
+Here we have a type `PersonSchema` and it can be used somewhere else in the same
+file. We can't use `PersonSchema` outside this file. And it's probably not a
+good idea to use `PersonSchema` as a type in the same file anyway.
 
 With `@enum`:
 ```javascript
@@ -528,11 +562,11 @@ const person = { name: 'John', age: 31 }
 // Validate
 PersonSchema.validate(person)
 ```
-Something interesting happens here. `PersonSchema` now acts both as a schema validator
-and as a type.
+Something interesting happens here. `PersonSchema` now acts both as a schema
+validator and as a type.
 
-TypeScript will give you an error if you assign a value to `person` that doesn't match
-the type in the `@enum`:
+TypeScript will give you an error if you assign a value to `person` that doesn't
+match the type in the `@enum`:
 ```javascript
 /**
  * @type {PersonSchema}
@@ -548,14 +582,15 @@ const person = { name: 'John', age: '31' }
 // TS2322: Type 'string' is not assignable to type 'number'
 ```
 
-TypeScript will also give you an error if you are not using `PersonSchema` properly:
+TypeScript will also give you an error if you are not using `PersonSchema`
+properly:
 ```javascript
 // Validate
 PersonSchema.validateee(person)
 // TS2551: Property 'validateee' does not exist on type 'DocSchema'. Did you mean 'validate'?
 ```
 
-This means that we can also separate our schemas in a separate file, like this:
+We can also separate our schemas in a separate file, like this:
 ```javascript
 //---- schemas.js ----//
 
@@ -571,7 +606,9 @@ export { PersonSchema }
 
 //---- index.js ----//
 
-import { PersonSchema } from './schemas.js'
+/**
+ * @import { PersonSchema } grom './schemas.js'
+ */
 
 /**
  * @type {PersonSchema}
