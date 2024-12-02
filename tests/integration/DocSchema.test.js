@@ -7,6 +7,15 @@ import {
 } from '#docschema'
 import './assets/ambientTypedefs.js'
 import './assets/ambientTypedefs2.js'
+/**
+ * @import {
+ * TypedefToImportString,
+ * TypedefToImportObjOne,
+ * TypedefToImportObjTwo,
+ * TypedefToImportObjThree,
+ * }
+ * from './assets/typedefsToImport.js'
+ */
 
 const parser = new DocSchemaParser()
 const validator = new DocSchemaValidator()
@@ -217,6 +226,40 @@ describe('DocSchema', () => {
         )).toThrow(ValidationError)
       }
     )
+
+    test('correct validation and invalidation with @import typedefs', () => {
+      /**
+       * @enum {{
+       *   key1: TypedefToImportString,
+       *   key2: TypedefToImportObjOne,
+       *   key3: TypedefToImportObjTwo,
+       * }}
+       */
+      const schema = docSchema()
+
+      // validate
+      const validValue = {
+        key1: '',
+        key2: { a: '', b: 0 },
+        key3: { a: '', b: 0 }
+      }
+      expect(schema.validate(validValue)).toStrictEqual(validValue)
+      expect(schema.approves(validValue)).toBe(true)
+
+      // invalidate
+      expect(() => schema.validate(
+        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
+      )).toThrow(ValidationError)
+    })
 
     test('correct invalidation with filters', () => {
       /**
