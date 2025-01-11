@@ -23,7 +23,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config eslint.config.js ./",
+    "check": "npm run check:tsc & npm run check:eslint",
+    "check:eslint": "eslint --config eslint.config.js ./",
+    "check:tsc": "tsc --noEmit",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",
