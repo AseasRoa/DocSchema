@@ -94,7 +94,7 @@ type AstElements = {
   param: ParsedTag[],
   enum: ParsedTag | null,
   type: ParsedTag | null,
-  callback: ParsedTat | null,
+  callback: ParsedTag | null,
   typedef: ParsedTag | null,
   yields: ParsedTag | null,
   property: ParsedTag[],
