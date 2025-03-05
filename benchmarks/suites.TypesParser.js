@@ -2,7 +2,8 @@ import Benchmark from 'benchmark'
 import { parse } from '../lib/parse-check-types/parse.js'
 import { cycleCallback } from './functions.js'
 
-const suiteTypesParserSimple = new Benchmark.Suite('Types Parser (Simple Types)')
+export const suiteTypesParserSimple
+  = new Benchmark.Suite('Types Parser (Simple Types)')
 
 suiteTypesParserSimple
   .add('any', () => {
@@ -22,7 +23,8 @@ suiteTypesParserSimple
   })
   .on('cycle', cycleCallback)
 
-const suiteTypesParserComplex = new Benchmark.Suite('Types Parser (Complex Types)')
+export const suiteTypesParserComplex
+  = new Benchmark.Suite('Types Parser (Complex Types)')
 
 suiteTypesParserComplex
   .add('string[]', () => {
@@ -44,5 +46,3 @@ suiteTypesParserComplex
     parse('keys: ( string & NUMBER ) , values: ( NUMBER | MyType )')
   })
   .on('cycle', cycleCallback)
-
-export { suiteTypesParserComplex, suiteTypesParserSimple }

@@ -2,7 +2,7 @@ import Benchmark from 'benchmark'
 import { check } from '../lib/parse-check-filters/check.js'
 import { cycleCallback } from './functions.js'
 
-const suiteFiltersValidate = new Benchmark.Suite('Filters Validate')
+export const suiteFiltersValidate = new Benchmark.Suite('Filters Validate')
 
 suiteFiltersValidate
   .add('array unsupported validation', () => {
@@ -128,5 +128,3 @@ suiteFiltersValidate
     check({ uuid: [true, ''] }, 'something')
   })
   .on('cycle', cycleCallback)
-
-export { suiteFiltersValidate }

@@ -4,7 +4,7 @@ import { DocSchemaParser } from '#docschema'
 
 const parser = new DocSchemaParser()
 
-const suiteDocSchemaParser = new Benchmark.Suite('DocSchemaParser')
+export const suiteDocSchemaParser = new Benchmark.Suite('DocSchemaParser')
 
 suiteDocSchemaParser
   .add('@type {string}', () => {
@@ -48,5 +48,3 @@ suiteDocSchemaParser
        */`)
   })
   .on('cycle', cycleCallback)
-
-export { suiteDocSchemaParser }

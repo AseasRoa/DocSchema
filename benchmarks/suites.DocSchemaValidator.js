@@ -23,7 +23,7 @@ const ast2 = parser.parseComments(`
    function check({ arg1, arg2, arg3 }) {}
   `)
 
-const suiteDocSchemaValidator = new Benchmark.Suite('DocSchemaValidator')
+export const suiteDocSchemaValidator = new Benchmark.Suite('DocSchemaValidator')
 
 suiteDocSchemaValidator
   .add('@type {string}', () => {
@@ -44,5 +44,3 @@ suiteDocSchemaValidator
     )
   })
   .on('cycle', cycleCallback)
-
-export { suiteDocSchemaValidator }

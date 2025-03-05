@@ -2,7 +2,8 @@ import Benchmark from 'benchmark'
 import { parsers } from '../lib/parse-check-types/parsers.js'
 import { cycleCallback } from './functions.js'
 
-const suitesLowLevelTypeParsersSimple = new Benchmark.Suite('Simple Type Parsers (Low Level)')
+export const suitesLowLevelTypeParsersSimple
+  = new Benchmark.Suite('Simple Type Parsers (Low Level)')
 
 suitesLowLevelTypeParsersSimple
   .add('any', () => {
@@ -21,5 +22,3 @@ suitesLowLevelTypeParsersSimple
     parsers.simple.string('\'some-text\'')
   })
   .on('cycle', cycleCallback)
-
-export { suitesLowLevelTypeParsersSimple }

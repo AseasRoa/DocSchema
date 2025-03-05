@@ -599,9 +599,7 @@ import { docSchema } from 'docschema'
 /**
  * @enum {{ name: string, age: number }}
  */
-const PersonSchema = docSchema()
-
-export { PersonSchema }
+export const PersonSchema = docSchema()
 
 
 //---- index.js ----//
