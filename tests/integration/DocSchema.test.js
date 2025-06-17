@@ -94,6 +94,28 @@ describe('DocSchema', () => {
       expect(schema.approves({ key1: 1, key2: '2' })).toBe(false)
     })
 
+    test(
+      'correct validation and invalidation with typedef with description',
+      () => {
+        /**
+         * @typedef {{ str: string }} ObjTypedef1 Description
+         */
+
+        /**
+         * @enum {ObjTypedef1}
+         */
+        const schema = docSchema()
+
+        // validate
+        schema.validate({ str: '' })
+
+        // invalidate
+        expect(
+          () => schema.validate({ str: 123 })
+        ).toThrow(ValidationError)
+      }
+    )
+
     test('correct validation and invalidation with typedef', () => {
       /*
        * This is mostly to test whether it fails on the first
@@ -101,14 +123,14 @@ describe('DocSchema', () => {
        */
 
       /**
-       * @typedef NodeMake
+       * @typedef ObjTypedef2
        * @type {object}
        * @property {string} key1
        * @property {number} key2
        */
 
       /**
-       * @enum {NodeMake}
+       * @enum {ObjTypedef2}
        */
       const schema = docSchema()
 
