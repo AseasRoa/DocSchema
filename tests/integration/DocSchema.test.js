@@ -94,28 +94,6 @@ describe('DocSchema', () => {
       expect(schema.approves({ key1: 1, key2: '2' })).toBe(false)
     })
 
-    test(
-      'correct validation and invalidation with typedef with description',
-      () => {
-        /**
-         * @typedef {{ str: string }} ObjTypedef1 Description
-         */
-
-        /**
-         * @enum {ObjTypedef1}
-         */
-        const schema = docSchema()
-
-        // validate
-        schema.validate({ str: '' })
-
-        // invalidate
-        expect(
-          () => schema.validate({ str: 123 })
-        ).toThrow(ValidationError)
-      }
-    )
-
     test('correct validation and invalidation with typedef', () => {
       /*
        * This is mostly to test whether it fails on the first
@@ -145,6 +123,52 @@ describe('DocSchema', () => {
         () => schema.validate({ key1: '', key2: '' })
       ).toThrow(ValidationError)
     })
+
+    test(
+      'correct validation and invalidation with typedef with description',
+      () => {
+        /**
+         * @typedef {{ str: string }} ObjTypedef1 Description
+         */
+
+        /**
+         * @enum {ObjTypedef1}
+         */
+        const schema = docSchema()
+
+        // validate
+        schema.validate({ str: '' })
+
+        // invalidate
+        expect(
+          () => schema.validate({ str: 123 })
+        ).toThrow(ValidationError)
+      }
+    )
+
+    test(
+      'correct validation and invalidation with typedef with import',
+      () => {
+        /**
+         * @typedef {(
+         *   import('./assets/typedefsToImport.js').TypedefToImportObjOne
+         * )} TypedefWithImport
+         */
+
+        /**
+         * @enum {TypedefWithImport}
+         */
+        const schema = docSchema()
+
+        // validate
+        schema.validate({ a: '', b: 1 })
+
+        // invalidate
+        expect(
+          () => schema.validate({ a: 1, b: '' })
+        ).toThrow(ValidationError)
+      }
+    )
 
     test('correct validation and invalidation with local typedefs', () => {
       /**
