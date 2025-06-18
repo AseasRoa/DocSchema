@@ -125,6 +125,28 @@ describe('DocSchema', () => {
     })
 
     test(
+      'correct validation and invalidation with typedef with curly braces',
+      () => {
+        /**
+         * @typedef {string} TypedefWithCurly
+         */
+
+        /**
+         * @enum {(TypedefWithCurly)}
+         */
+        const schema = docSchema()
+
+        // validate
+        schema.validate('')
+
+        // invalidate
+        expect(
+          () => schema.validate(1)
+        ).toThrow(ValidationError)
+      }
+    )
+
+    test(
       'correct validation and invalidation with typedef with description',
       () => {
         /**
