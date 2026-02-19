@@ -238,6 +238,57 @@ describe('DocSchema', () => {
       )).toThrow(ValidationError)
     })
 
+    test('correct validation and invalidation with local typedefs and inline "type"', () => {
+      /**
+       * @typedef {string} StringTypedef
+       */
+
+      /**
+       * @typedef {{ a:string, b: number }} ObjTypedefOne
+       */
+
+      /**
+       * @typedef {Object} ObjTypedefTwo
+       * @type {Object}
+       * @property {string} a
+       * @property {number} b
+       */
+
+      /**
+       * @typedef {{
+       *   key1: StringTypedef,
+       *   key2: ObjTypedefOne,
+       *   key3: ObjTypedefTwo
+       * }} Schema
+       */
+
+      const schema = docSchema(/** @type {Schema} */ null)
+
+      // validate
+      const validValue = {
+        key1: '',
+        key2: { a: '', b: 0 },
+        key3: { a: '', b: 0 }
+      }
+      const value = schema.validate(validValue)
+
+      if (value) value.key1 = 'k'
+
+      expect(schema.validate(validValue)).toStrictEqual(validValue)
+      expect(schema.approves(validValue)).toBe(true)
+
+      // invalidate
+      expect(() => schema.validate(
+        { key1: 1, key2: { a: '', b: 0 }, key3: { a: '', b: 0 } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: '' }, key3: { a: '', b: 0 } }
+      )).toThrow(ValidationError)
+      expect(() => schema.validate(
+        { key1: '', key2: { a: '', b: 0 }, key3: { a: '', b: '' } }
+      )).toThrow(ValidationError)
+    })
+
     test('correct validation and invalidation with ambient typedefs', () => {
       /**
        * @enum {{

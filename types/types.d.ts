@@ -1,4 +1,4 @@
-export class DocSchema {
+export class DocSchema<T> {
   ast: Ast
 
   approves(
@@ -11,11 +11,11 @@ export class DocSchema {
 
   /**
    * @template T
-   * @param {T} value Input value
+   * @param {any} value Input value
    * @returns {T} The input value, if it's valid
    * @throws {ValidationError}
    */
-  validate<T>(value: T): T
+  validate(value: any): T
 }
 
 export class DocSchemaParser {
@@ -86,7 +86,9 @@ export class ValidationError extends Error {
 }
 
 /**
- * @returns {DocSchema}
+ * @template T
+ * @param {T} [typeCarrier]
+ * @returns {DocSchema<T>}
  * @throws {Error}
  */
-export function docSchema(): DocSchema
+export function docSchema<T>(typeCarrier: T): DocSchema<T>
