@@ -4,7 +4,8 @@ import {
   DocSchema,
   DocSchemaParser,
   DocSchemaValidator,
-  ValidationError
+  type,
+  ValidationError,
 } from '#docschema'
 import './assets/ambientTypedefs.js'
 import './assets/ambientTypedefs2.js'
@@ -262,7 +263,7 @@ describe('DocSchema', () => {
        * }} Schema
        */
 
-      const schema = docSchema(/** @type {Schema} */ null)
+      const schema = docSchema(/** @type {Schema} */ type)
 
       // validate
       const validValue = {
@@ -272,7 +273,7 @@ describe('DocSchema', () => {
       }
       const value = schema.validate(validValue)
 
-      if (value) value.key1 = 'k'
+      value.key1 = 'k'
 
       expect(schema.validate(validValue)).toStrictEqual(validValue)
       expect(schema.approves(validValue)).toBe(true)

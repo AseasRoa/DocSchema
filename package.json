@@ -7,11 +7,11 @@
   "description": "Schema declaration and validation library using JsDoc comments",
   "license": "MIT",
   "type": "module",
-  "types": "./types/index.d.ts",
+  "types": "./dist/types/lib/index.d.ts",
   "main": "./lib/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
-    "types": "./types/index.d.ts",
+    "types": "./dist/types/lib/index.d.ts",
     "browser": "./dist/bundle.js",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
@@ -31,7 +31,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "benchmark": "node benchmarks/index.js",
-    "build": "vite build",
+    "build": "vite build & tsc",
     "prepublishOnly": "npm run test && npm run build"
   },
   "devDependencies": {
