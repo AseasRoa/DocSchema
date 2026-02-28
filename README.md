@@ -105,7 +105,36 @@ or `@license` tag:
  */
 ```
 
-## Schemas
+## Schemas (new way)
+
+### @type
+```javascript
+import { docSchema, type } from 'docschema'
+
+/**
+ * @typedef {object} Person
+ * @property {string} name
+ * @property {number} age
+ */
+
+
+const personSchema
+  = docSchema(/** @type {Person} */ type)
+
+personSchema.validate({ name: 'John', age: 31 })
+```
+This is the newest experimental way to define a schema, but a strong candidate
+to remain the only way to create schemas, because it uses more intuitive `@type`
+tag and the value that is returned from `.validate()` has the expected typed.
+
+It's important for `/** @type {...} */` to be on the same line where
+`docSchema()` is.
+
+The variable named `type` is just an `any` type variable used for better
+recognition of the `Person` type, especially for the returned value
+of `.validate()`.
+
+## Schemas (old, but still working way)
 
 To define a schema, some of the standard JsDoc tags are used, but not in the
 way they are supposed to be used. The tags are `@enum`, `@typedef` and `@param`.
