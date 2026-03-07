@@ -109,7 +109,7 @@ or `@license` tag:
 
 ### @type
 ```javascript
-import { docSchema, type } from 'docschema'
+import { docSchema } from 'docschema'
 
 /**
  * @typedef {object} Person
@@ -119,7 +119,7 @@ import { docSchema, type } from 'docschema'
 
 
 const personSchema
-  = docSchema(/** @type {Person} */ type)
+  = docSchema(/** @type {Person} */ ({}))
 
 personSchema.validate({ name: 'John', age: 31 })
 ```

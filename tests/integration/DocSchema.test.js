@@ -4,7 +4,6 @@ import {
   DocSchema,
   DocSchemaParser,
   DocSchemaValidator,
-  type,
   ValidationError,
 } from '#docschema'
 import './assets/ambientTypedefs.js'
@@ -263,7 +262,7 @@ describe('DocSchema', () => {
        * }} Schema
        */
 
-      const schema = docSchema(/** @type {Schema} */ type)
+      const schema = docSchema(/** @type {Schema} */ ({}))
 
       // validate
       const validValue = {

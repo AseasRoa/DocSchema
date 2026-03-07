@@ -5,6 +5,8 @@
  * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
  */
 
+type Schema = Record<string, any>
+
 type Filters = {
   // array, number, string
   min?: number | [number, string],
