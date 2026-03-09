@@ -1,8 +1,10 @@
 import Benchmark from 'benchmark'
+import { FilesReader } from '../lib/FilesReader.js'
 import { cycleCallback } from './functions.js'
 import { DocSchemaParser } from '#docschema'
 
-const parser = new DocSchemaParser()
+const filesReader = new FilesReader()
+const parser = new DocSchemaParser(filesReader)
 
 export const suiteDocSchemaParser = new Benchmark.Suite('DocSchemaParser')
 

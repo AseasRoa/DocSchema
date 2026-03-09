@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { FilesReader } from '../../lib/FilesReader.js'
 import {
   docSchema,
   DocSchema,
@@ -8,6 +9,7 @@ import {
 } from '#docschema'
 import './assets/ambientTypedefs.js'
 import './assets/ambientTypedefs2.js'
+
 /**
  * @import {
  * TypedefToImportString,
@@ -18,7 +20,8 @@ import './assets/ambientTypedefs2.js'
  * from './assets/typedefsToImport.js'
  */
 
-const parser = new DocSchemaParser()
+const filesReader = new FilesReader()
+const parser = new DocSchemaParser(filesReader)
 const validator = new DocSchemaValidator()
 
 describe('DocSchema', () => {
@@ -125,14 +128,14 @@ describe('DocSchema', () => {
     })
 
     test(
-      'correct validation and invalidation with typedef with curly braces',
+      'correct validation and invalidation with typedef with parentheses',
       () => {
         /**
-         * @typedef {string} TypedefWithCurly
+         * @typedef {string} TypedefWithParentheses
          */
 
         /**
-         * @enum {(TypedefWithCurly)}
+         * @enum {(TypedefWithParentheses)}
          */
         const schema = docSchema()
 
@@ -262,7 +265,9 @@ describe('DocSchema', () => {
        * }} Schema
        */
 
-      const schema = docSchema(/** @type {Schema} */ ({}))
+      const schema = docSchema(
+        /** @type {Schema} */ ({})
+      )
 
       // validate
       const validValue = {

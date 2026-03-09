@@ -119,8 +119,12 @@ type Ast = {
   elements: AstElements,
   file: string,
   startLine: number,
+  startColumn: number,
+  startIndex: number,
   endLine: number,
   // The contents of the first non-empty line after the comment
+  endColumn: number,
+  endIndex: number,
   lineAfterComment: string,
   // Other parsed AST from the same file that are 'typedef'
   localTypedefs: Ast[],
