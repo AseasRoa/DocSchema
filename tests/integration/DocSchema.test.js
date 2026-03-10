@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest'
-import { FilesReader } from '../../lib/FilesReader.js'
 import {
   docSchema,
   DocSchema,
@@ -20,8 +19,7 @@ import './assets/ambientTypedefs2.js'
  * from './assets/typedefsToImport.js'
  */
 
-const filesReader = new FilesReader()
-const parser = new DocSchemaParser(filesReader)
+const parser = new DocSchemaParser()
 const validator = new DocSchemaValidator()
 
 describe('DocSchema', () => {
